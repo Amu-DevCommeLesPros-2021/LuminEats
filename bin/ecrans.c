@@ -2,7 +2,23 @@
 
 #include <stdio.h>
 
-void principal(vector* pile)
+char prompt(
+    char const* line)
+{
+    char input;
+    do
+    {
+        printf("%s", line);
+        input = getchar();
+    }
+    while(input == '\n');
+    getchar();
+
+    return input;
+}
+
+void principal(
+    vector* pile)
 {
     printf("\n\
 *** Bienvenu sur LuminEats, la livraison à vitesse luminique ***\n\
@@ -13,13 +29,10 @@ Vous êtes :\n\
 1. Un·e restaurateur·trice\n\
 2. Un·e livreur·se\n\
 3. Un·e client·e\n\
-\n\
-Votre choix ('q' pour quitter) : ");
+\n");
 
-    char c;
-    scanf("%c%*c", &c);
-
-    switch(c)
+    char choice = prompt("Votre choix ('q' pour quitter) : ");
+    switch(choice)
     {
         case '1':
             {
@@ -37,7 +50,8 @@ Votre choix ('q' pour quitter) : ");
     }
 }
 
-void connexion_restaurateur(vector* pile)
+void connexion_restaurateur(
+    vector* pile)
 {
     printf("\n\
 * Menu Restaurateur *\n\
@@ -45,13 +59,10 @@ void connexion_restaurateur(vector* pile)
 Vous voulez :\n\
 1. Vous connecter à votre compte\n\
 2. Créer un nouveau compte\n\
-\n\
-Votre choix ('q' pour quitter, 'p' pour menu précédent) : \n");
+\n");
 
-    char c;
-    scanf("%c%*c", &c);
-
-    switch(c)
+    char choice = prompt("Votre choix ('q' pour quitter, 'p' pour menu précédent) : ");
+    switch(choice)
     {
         case '1':
             {
@@ -72,7 +83,8 @@ Votre choix ('q' pour quitter, 'p' pour menu précédent) : \n");
     }
 }
 
-void restaurateur(vector* pile)
+void restaurateur(
+    vector* pile)
 {
     printf("\n\
 * Menu Restaurateur *\n\
@@ -81,13 +93,11 @@ Vous voulez :\n\
 1. Supprimer votre compte\n\
 2. Modifier votre menu (ajouter/modifier/supprimer)\n\
 3. Confirmer votre solde\n\
-\n\
-Votre choix ('q' pour quitter, 'p' pour menu précédent) : ");
+\n");
+    char choice = prompt("Votre choix ('q' pour quitter, 'p' pour menu précédent) : ");
+    valid = true;
 
-    char c;
-    scanf("%c%*c", &c);
-
-    switch(c)
+    switch(choice)
     {
         case '1':
             break;
@@ -100,6 +110,9 @@ Votre choix ('q' pour quitter, 'p' pour menu précédent) : ");
             break;
         case 'q':
             clear(pile);
+            break;
+        default:
+            valid = false;
             break;
     }
 }
