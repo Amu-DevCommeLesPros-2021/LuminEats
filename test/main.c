@@ -48,6 +48,8 @@ int main()
         ecriture_table_restaurants(test_db_restaurants_copie, &restaurants);
         fclose(test_db_restaurants_copie);
         TEST_FILE("build/test-db/restaurants.csv", "build/test-db/restaurants-copie.csv");
+
+        destroy(&restaurants);
     }
 
     // Tests de lecture et d'écriture de la table 'items'.
@@ -80,6 +82,8 @@ int main()
         ecriture_table_items(test_db_items_copie, &items);
         fclose(test_db_items_copie);
         TEST_FILE("build/test-db/items.csv", "build/test-db/items-copie.csv");
+
+        destroy(&items);
     }
 
     // Tests de lecture et d'écriture de la table 'livreurs'.
@@ -117,6 +121,8 @@ int main()
         ecriture_table_livreurs(test_db_livreurs_copie, &livreurs);
         fclose(test_db_livreurs_copie);
         TEST_FILE("build/test-db/livreurs.csv", "build/test-db/livreurs-copie.csv");
+
+        destroy(&livreurs);
     }
 
     // Tests de lecture et d'écriture de la table 'clients'.
@@ -145,6 +151,8 @@ int main()
         ecriture_table_clients(test_db_clients_copie, &clients);
         fclose(test_db_clients_copie);
         TEST_FILE("build/test-db/clients.csv", "build/test-db/clients-copie.csv");
+
+        destroy(&clients);
     }
 
     return 0;
