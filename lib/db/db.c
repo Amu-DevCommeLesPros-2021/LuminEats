@@ -15,6 +15,7 @@ vector lecture_table_restaurant(
 
     char *buffer = NULL;
     size_t buffer_size;
+    getline(&buffer, &buffer_size, fichier); // Skip the header line.
     while(getline(&buffer, &buffer_size, fichier) != -1)
     {
         restaurant r;
@@ -23,7 +24,7 @@ vector lecture_table_restaurant(
         // Parse string of semicolon separated items.
         memset(r.items, 0, sizeof(r.items));
         int i = 0;
-        for(char *item = strtok(r.items_s, ";"); item; item = strtok(r.items_s, ";"))
+        for(char *item = strtok(r.items_s, ";"); item; item = strtok(NULL, ";"))
         {
             r.items[i++] = atoi(item);
         }

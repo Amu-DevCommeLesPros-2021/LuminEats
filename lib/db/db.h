@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#define TAILLE_CHAMP_NOM 36
+#define TAILLE_CHAMP_NOM 72
 #define TAILLE_CHAMP_CODEPOSTAL 6
 #define TAILLE_CHAMP_TELEPHONE 15
 #define TAILLE_CHAMP_TYPE 36
