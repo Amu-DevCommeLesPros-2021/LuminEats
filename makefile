@@ -10,10 +10,17 @@ clean:
 build:
 	mkdir -p build
 
+build/libvector.a: lib/vector/vector_api.c lib/vector/vector_api.h lib/vector/vector_types.h lib/vector/vector.h | build
+	gcc -Wall -Wextra -Werror --debug -I lib/vector -c lib/vector/vector_api.c -o build/vector_api.o
+	ar crs build/libvector.a build/vector_api.o
+
+build/test: build/libvector.a test/main.c | build
+	gcc -Wall -Wextra -Werror --debug test/main.c -I lib -L build -l vector -o build/test
+ 
 # S'assure de l'existence tout les programmes finaux (application, test, etc.)
 # Par exemple : all: build/test build/appli
-all:
+all: build/test
 
 # Lance le programme de test.
-check:
-	false
+check: build/test
+	./build/test
