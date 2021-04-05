@@ -40,11 +40,13 @@ void ecriture_table_restaurant(
     FILE* fichier,
     vector const* db)
 {
+    fprintf(fichier, "id,nom,code postal,telephone,type,menu,solde\n"); // Header line.
+
     for(iterator i = begin(db); compare(i, end(db)) != 0; increment(&i, 1))
     {
         restaurant *r = (restaurant*)value(i);
 
-        fprintf(fichier, "%zu,%s,%s,%s,%s", r->index, r->nom, r->code_postal, r->telephone, r->type);
+        fprintf(fichier, "%zu,%s,%s,%s,%s,", r->index, r->nom, r->code_postal, r->telephone, r->type);
 
         for(int i = 0; r->items[i] != 0 && i != TAILLE_ITEMS; ++i)
         {
@@ -55,6 +57,6 @@ void ecriture_table_restaurant(
             }
         }
 
-        fprintf(fichier, "%zu\n", r->solde);
+        fprintf(fichier, ",%zu\n", r->solde);
     }
 }
