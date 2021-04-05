@@ -88,3 +88,13 @@ vector lecture_table_clients(
 void ecriture_table_clients(
     FILE* fichier,
     vector const* db);
+
+// Lit toutes les tables de la DB.
+// 'dossier' est le dossier où se trouvent les tables.
+void lecture_db(
+    char const* dossier, vector* restaurants, vector* items, vector* livreurs, vector* clients);
+
+// Écrit toutes les tables de la DB.
+// 'dossier' est le dossier où seront écrites les tables.
+void ecriture_db(
+    char const* dossier, vector* restaurants, vector* items, vector* livreurs, vector* clients);

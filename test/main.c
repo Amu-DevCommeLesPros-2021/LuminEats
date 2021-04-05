@@ -6,11 +6,13 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 72;
+int const tests_total = 84;
 int const test_column_width = 60;
 
 int main()
 {
+    float const growth_factor = 2.0;
+
     // Tests de lecture et d'écriture de la table 'restaurants'.
     {
         FILE *test_db_restaurants = fopen("build/test-db/restaurants.csv", "r");
@@ -152,6 +154,39 @@ int main()
         fclose(test_db_clients_copie);
         TEST_FILE("build/test-db/clients.csv", "build/test-db/clients-copie.csv");
 
+        destroy(&clients);
+    }
+
+    // Tests des fonctions de convénience de lecture et d'écriture de la DB.
+    {
+        vector restaurants = make_vector(sizeof(restaurant), 0, growth_factor);
+        vector items = make_vector(sizeof(item), 0, growth_factor);
+        vector livreurs = make_vector(sizeof(livreur), 0, growth_factor);
+        vector clients = make_vector(sizeof(client), 0, growth_factor);
+
+        lecture_db("build/test-db", &restaurants, &items, &livreurs, &clients);
+
+        TEST(size(restaurants) == 3);
+        TEST(strcmp(((restaurant*)value(begin(&restaurants)))->nom, "Chez Michel") == 0);
+
+        TEST(size(items) == 7);
+        TEST(strcmp(((item*)value(begin(&items)))->nom, "bouillabaise") == 0);
+
+        TEST(size(livreurs) == 3);
+        TEST(strcmp(((livreur*)value(begin(&livreurs)))->nom, "Francois Pignon") == 0);
+
+        TEST(size(clients) == 3);
+        TEST(strcmp(((client*)value(begin(&clients)))->nom, "Francoise Perrin") == 0);
+
+        ecriture_db("build/test-db/ecriture", &restaurants, &items, &livreurs, &clients);
+        TEST_FILE("build/test-db/restaurants.csv", "build/test-db/ecriture/restaurants.csv");
+        TEST_FILE("build/test-db/items.csv", "build/test-db/ecriture/items.csv");
+        TEST_FILE("build/test-db/livreurs.csv", "build/test-db/ecriture/livreurs.csv");
+        TEST_FILE("build/test-db/clients.csv", "build/test-db/ecriture/clients.csv");
+
+        destroy(&restaurants);
+        destroy(&items);
+        destroy(&livreurs);
         destroy(&clients);
     }
 

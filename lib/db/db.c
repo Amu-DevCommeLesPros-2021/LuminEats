@@ -3,6 +3,7 @@
 #include "vector/vector_api.h"
 #include "vector/vector_types.h"
 
+#include <limits.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -204,4 +205,72 @@ void ecriture_table_clients(
 
         fprintf(fichier, "%zu,%s,%s,%s,%zu\n", c->index, c->nom, c->code_postal, c->telephone, c->solde);
     }
+}
+
+void lecture_db(
+    char const* dossier, vector* restaurants, vector* items, vector* livreurs, vector* clients)
+{
+    char chemin[PATH_MAX];
+    
+    // Read and copy restaurants.
+    sprintf(chemin, "%s/%s", dossier, "restaurants.csv");
+    FILE *test_db_restaurants = fopen(chemin, "r");
+    vector r = lecture_table_restaurants(test_db_restaurants);
+    fclose(test_db_restaurants);
+
+    assign(restaurants, begin(&r), end(&r));
+    destroy(&r);
+
+    // Read and copy items.
+    sprintf(chemin, "%s/%s", dossier, "items.csv");
+    FILE *test_db_items = fopen(chemin, "r");
+    vector i = lecture_table_items(test_db_items);
+    fclose(test_db_items);
+
+    assign(items, begin(&i), end(&i));
+    destroy(&i);
+
+    // Read and copy deliverers.
+    sprintf(chemin, "%s/%s", dossier, "livreurs.csv");
+    FILE *test_db_livreurs = fopen(chemin, "r");
+    vector l = lecture_table_livreurs(test_db_livreurs);
+    fclose(test_db_livreurs);
+
+    assign(livreurs, begin(&l), end(&l));
+    destroy(&l);
+
+    // Read and copy customers.
+    sprintf(chemin, "%s/%s", dossier, "clients.csv");
+    FILE *test_db_clients = fopen(chemin, "r");
+    vector c = lecture_table_clients(test_db_clients);
+    fclose(test_db_clients);
+
+    assign(clients, begin(&c), end(&c));
+    destroy(&c);
+}
+
+void ecriture_db(
+    char const* dossier, vector* restaurants, vector* items, vector* livreurs, vector* clients)
+{
+    char chemin[PATH_MAX];
+    
+    sprintf(chemin, "%s/%s", dossier, "restaurants.csv");
+    FILE *test_db_restaurants = fopen(chemin, "w");
+    ecriture_table_restaurants(test_db_restaurants, restaurants);
+    fclose(test_db_restaurants);
+
+    sprintf(chemin, "%s/%s", dossier, "items.csv");
+    FILE *test_db_items = fopen(chemin, "w");
+    ecriture_table_items(test_db_items, items);
+    fclose(test_db_items);
+
+    sprintf(chemin, "%s/%s", dossier, "livreurs.csv");
+    FILE *test_db_livreurs = fopen(chemin, "w");
+    ecriture_table_livreurs(test_db_livreurs, livreurs);
+    fclose(test_db_livreurs);
+
+    sprintf(chemin, "%s/%s", dossier, "clients.csv");
+    FILE *test_db_clients = fopen(chemin, "w");
+    ecriture_table_clients(test_db_clients, clients);
+    fclose(test_db_clients);
 }

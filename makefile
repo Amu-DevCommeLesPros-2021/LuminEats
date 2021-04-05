@@ -9,7 +9,7 @@ clean:
 # Crée le répertoire qui acceuille les fichiers temporaires et les produits finaux.
 build:
 	mkdir -p build
-	mkdir -p build/test-db
+	mkdir -p build/test-db/ecriture
 
 build/libvector.a: lib/vector/vector_api.c lib/vector/vector_api.h lib/vector/vector_types.h lib/vector/vector.h | build
 	gcc -Wall -Wextra -Werror --debug -I lib -c lib/vector/vector_api.c -o build/vector_api.o
