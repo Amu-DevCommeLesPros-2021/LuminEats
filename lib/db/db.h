@@ -72,3 +72,19 @@ vector lecture_table_livreurs(
 void ecriture_table_livreurs(
     FILE* fichier,
     vector const* db);
+
+typedef struct client
+{
+    cle_t index;   // Clé primaire.
+    char nom[TAILLE_CHAMP_NOM];
+    char telephone[TAILLE_CHAMP_TELEPHONE];
+    char code_postal[TAILLE_CHAMP_CODEPOSTAL];
+    size_t solde;
+} client;
+
+vector lecture_table_clients(
+    FILE* fichier);
+
+void ecriture_table_clients(
+    FILE* fichier,
+    vector const* db);

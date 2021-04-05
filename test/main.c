@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 60;
+int const tests_total = 72;
 int const test_column_width = 60;
 
 int main()
@@ -117,6 +117,34 @@ int main()
         ecriture_table_livreurs(test_db_livreurs_copie, &livreurs);
         fclose(test_db_livreurs_copie);
         TEST_FILE("build/test-db/livreurs.csv", "build/test-db/livreurs-copie.csv");
+    }
+
+    // Tests de lecture et d'écriture de la table 'clients'.
+    {
+        FILE *test_db_clients = fopen("build/test-db/clients.csv", "r");
+        vector clients = lecture_table_clients(test_db_clients);
+        fclose(test_db_clients);
+
+        TEST(size(clients) == 3);
+
+        client *c = (client*)value(begin(&clients));
+        TEST(c->index == 1);
+        TEST(strcmp(c->nom, "Francoise Perrin") == 0);
+        TEST(strcmp(c->code_postal, "13005") == 0);
+        TEST(strcmp(c->telephone, "04 10 20 30 40") == 0);
+        TEST(c->solde == 0);
+
+        c = (client*)value(at(&clients, 2));
+        TEST(c->index == 3);
+        TEST(strcmp(c->nom, "Quentin Tarantino") == 0);
+        TEST(strcmp(c->code_postal, "13008") == 0);
+        TEST(strcmp(c->telephone, "06 99 88 77 66") == 0);
+        TEST(c->solde == 15);
+
+        FILE *test_db_clients_copie = fopen("build/test-db/clients-copie.csv", "w");
+        ecriture_table_clients(test_db_clients_copie, &clients);
+        fclose(test_db_clients_copie);
+        TEST_FILE("build/test-db/clients.csv", "build/test-db/clients-copie.csv");
     }
 
     return 0;

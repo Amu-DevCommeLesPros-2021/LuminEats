@@ -76,7 +76,7 @@ vector lecture_table_items(
         item i;
         sscanf(buffer, "%zu,%[^,],%[^,],%zu\n", &i.index, i.nom, i.ingredients_s, &i.prix);
         
-        // Parse string of semicolon separated items.
+        // Parse string of semicolon separated ingredients.
         memset(i.ingredients, 0, TAILLE_INGREDIENTS * TAILLE_CHAMP_INGREDIENT);
         int j = 0;
         for(char *ingredient = strtok(i.ingredients_s, ";"); ingredient; ingredient = strtok(NULL, ";"))
@@ -131,7 +131,7 @@ vector lecture_table_livreurs(
         livreur l;
         sscanf(buffer, "%zu,%[^,],%[^,],%[^,],%zu,%zu\n", &l.index, l.nom, l.telephone, l.deplacements_s, &l.restaurant, &l.solde);
         
-        // Parse string of semicolon separated items.
+        // Parse string of semicolon separated postal codes.
         memset(l.deplacements, 0, TAILLE_DEPLACEMENTS * TAILLE_CHAMP_CODEPOSTAL);
         int j = 0;
         for(char *deplacement = strtok(l.deplacements_s, ";"); deplacement; deplacement = strtok(NULL, ";"))
@@ -168,5 +168,40 @@ void ecriture_table_livreurs(
         }
 
         fprintf(fichier, ",%zu,%zu\n", l->restaurant, l->solde);
+    }
+}
+
+vector lecture_table_clients(
+    FILE* fichier)
+{
+    vector clients = make_vector(sizeof(client), 0, 2.0);
+
+    rewind(fichier);
+
+    char *buffer = NULL;
+    size_t buffer_size;
+    getline(&buffer, &buffer_size, fichier); // Skip the header line.
+    while(getline(&buffer, &buffer_size, fichier) != -1)
+    {
+        client c;
+        sscanf(buffer, "%zu,%[^,],%[^,],%[^,],%zu\n", &c.index, c.nom, c.code_postal, c.telephone, &c.solde);
+        push_back(&clients, &c);
+    }
+    free(buffer);
+
+    return clients;
+}
+
+void ecriture_table_clients(
+    FILE* fichier,
+    vector const* db)
+{
+    fprintf(fichier, "id,nom,code postal,telephone,solde\n"); // Header line.
+
+    for(iterator j = begin(db); compare(j, end(db)) != 0; increment(&j, 1))
+    {
+        client *c = (client*)value(j);
+
+        fprintf(fichier, "%zu,%s,%s,%s,%zu\n", c->index, c->nom, c->code_postal, c->telephone, c->solde);
     }
 }
