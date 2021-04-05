@@ -52,3 +52,23 @@ vector lecture_table_items(
 void ecriture_table_items(
     FILE* fichier,
     vector const* db);
+
+#define TAILLE_DEPLACEMENTS 10
+
+typedef struct livreur
+{
+    cle_t index;   // Clé primaire.
+    char nom[TAILLE_CHAMP_NOM];
+    char telephone[TAILLE_CHAMP_TELEPHONE];
+    char deplacements_s[TAILLE_DEPLACEMENTS * TAILLE_CHAMP_CODEPOSTAL];
+    char deplacements[TAILLE_DEPLACEMENTS][TAILLE_CHAMP_CODEPOSTAL];
+    cle_t restaurant;
+    size_t solde;
+} livreur;
+
+vector lecture_table_livreurs(
+    FILE* fichier);
+
+void ecriture_table_livreurs(
+    FILE* fichier,
+    vector const* db);
