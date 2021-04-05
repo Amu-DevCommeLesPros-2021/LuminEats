@@ -25,7 +25,7 @@ build/libdb.a: lib/db/db.c lib/db/db.h | build
 
 build/test: build/libalgorithm.a build/libdb.a build/libvector.a test/main.c | build
 	gcc -Wall -Wextra -Werror --debug test/main.c -I lib -L build -l algorithm -l db -l vector -o build/test
-	cp -r test/db build/test-db
+	cp -a test/db build/test-db
 
 build/lumineats: build/libalgorithm.a build/libdb.a build/libvector.a bin/main.c | build
 	gcc -Wall -Wextra -Werror --debug bin/main.c -I lib -L build -l algorithm -l db -l vector -o build/lumineats

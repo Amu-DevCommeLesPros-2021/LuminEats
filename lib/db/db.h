@@ -7,10 +7,14 @@
 #include <stdio.h>
 
 #define TAILLE_CHAMP_NOM 72
+
 #define TAILLE_CHAMP_CODEPOSTAL 6
 #define TAILLE_CHAMP_TELEPHONE 15
 #define TAILLE_CHAMP_TYPE 36
 #define TAILLE_ITEMS 10
+
+#define TAILLE_INGREDIENTS 5
+#define TAILLE_CHAMP_INGREDIENT 36
 
 typedef size_t cle_t;
 
@@ -30,5 +34,21 @@ vector lecture_table_restaurant(
     FILE* fichier);
 
 void ecriture_table_restaurant(
+    FILE* fichier,
+    vector const* db);
+
+typedef struct item
+{
+    cle_t index;   // Clé primaire.
+    char nom[TAILLE_CHAMP_NOM];
+    char ingredients_s[TAILLE_INGREDIENTS * TAILLE_CHAMP_INGREDIENT];
+    char ingredients[TAILLE_INGREDIENTS][TAILLE_CHAMP_INGREDIENT];
+    size_t prix;
+} item;
+
+vector lecture_table_item(
+    FILE* fichier);
+
+void ecriture_table_item(
     FILE* fichier,
     vector const* db);

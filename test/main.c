@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 23;
+int const tests_total = 39;
 int const test_column_width = 60;
 
 int main()
@@ -50,7 +50,37 @@ int main()
         TEST_FILE("build/test-db/restaurants.csv", "build/test-db/restaurants-copie.csv");
     }
 
+    // Tests de lecture et d'écriture de la table 'copie'.
+    {
+        FILE *test_db_items = fopen("build/test-db/items.csv", "r");
+        vector items = lecture_table_item(test_db_items);
+        fclose(test_db_items);
 
+        TEST(size(items) == 7);
+
+        item *i = (item*)value(begin(&items));
+        TEST(i->index == 1);
+        TEST(strcmp(i->nom, "bouillabaise") == 0);
+        TEST(strcmp(i->ingredients[0], "poissons de roche") == 0);
+        TEST(strcmp(i->ingredients[1], "pommes de terre") == 0);
+        TEST(strcmp(i->ingredients[2], "") == 0);
+        TEST(i->prix == 25);
+
+        i = (item*)value(at(&items, 6));
+        TEST(i->index == 7);
+        TEST(strcmp(i->nom, "petit-dej du champion") == 0);
+        TEST(strcmp(i->ingredients[0], "oeufs") == 0);
+        TEST(strcmp(i->ingredients[1], "toast") == 0);
+        TEST(strcmp(i->ingredients[2], "bacon") == 0);
+        TEST(strcmp(i->ingredients[3], "pomme de terre") == 0);
+        TEST(strcmp(i->ingredients[4], "") == 0);
+        TEST(i->prix == 12);
+
+        FILE *test_db_items_copie = fopen("build/test-db/items-copie.csv", "w");
+        ecriture_table_item(test_db_items_copie, &items);
+        fclose(test_db_items_copie);
+        TEST_FILE("build/test-db/items.csv", "build/test-db/items-copie.csv");
+    }
 
     return 0;
 }
