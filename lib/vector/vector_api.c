@@ -71,6 +71,12 @@ void* pop_back(
     return v->data + v->size * v->element_size;
 }
 
+void* back(
+    vector* v)
+{
+    return v->data + (v->size - 1) * v->element_size;
+}
+
 void insert(
     vector* v,
     iterator const i,

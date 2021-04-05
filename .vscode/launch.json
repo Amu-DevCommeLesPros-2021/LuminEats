@@ -8,12 +8,13 @@
             "name": "test",
             "type": "cppdbg",
             "request": "launch",
-            "preLaunchTask": "make test",
-            "program": "${workspaceFolder}/build/test",
+            "preLaunchTask": "make all",
+            "program": "${workspaceFolder}/build/lumineats",
             "args": [],
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "stopAtEntry": true,
+            "externalConsole": true,
+            "stopAtEntry": false,
             "linux": {
                 "MIMode": "gdb",
                 "setupCommands": [

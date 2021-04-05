@@ -41,6 +41,9 @@ void push_back(
 void* pop_back(
     vector* v);
 
+// Renvoie la valeur du dernier élément.
+void* back(
+    vector* v);
 
 // Insère un nouvel élément au vecteur immédiatement après l'itérateur donné.
 void insert(

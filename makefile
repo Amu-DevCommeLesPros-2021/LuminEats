@@ -27,8 +27,8 @@ build/test: build/libalgorithm.a build/libdb.a build/libvector.a test/main.c | b
 	gcc -Wall -Wextra -Werror --debug test/main.c -I lib -L build -l algorithm -l db -l vector -o build/test
 	cp -a test/db/. build/test-db
 
-build/lumineats: build/libalgorithm.a build/libdb.a build/libvector.a bin/main.c | build
-	gcc -Wall -Wextra -Werror --debug bin/main.c -I lib -L build -l algorithm -l db -l vector -o build/lumineats
+build/lumineats: build/libalgorithm.a build/libdb.a build/libvector.a bin/ecrans.c bin/ecrans.h bin/main.c | build
+	gcc -Wall -Wextra -Werror --debug bin/ecrans.c bin/main.c -I lib -L build -l algorithm -l db -l vector -o build/lumineats
 
 # S'assure de l'existence tout les programmes finaux (application, test, etc.)
 # Par exemple : all: build/test build/appli
