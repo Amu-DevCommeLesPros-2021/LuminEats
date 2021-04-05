@@ -20,10 +20,13 @@ build/libalgorithm.a: lib/algorithm/algorithm.c lib/algorithm/algorithm.h | buil
 
 build/test: build/libalgorithm.a build/libvector.a test/main.c | build
 	gcc -Wall -Wextra -Werror --debug test/main.c -I lib -L build -l algorithm -l vector -o build/test
- 
+
+build/lumineats: build/libalgorithm.a build/libvector.a bin/main.c | build
+	gcc -Wall -Wextra -Werror --debug bin/main.c -I lib -L build -l algorithm -l vector -o build/lumineats
+
 # S'assure de l'existence tout les programmes finaux (application, test, etc.)
 # Par exemple : all: build/test build/appli
-all: build/test
+all: build/lumineats build/test
 
 # Lance le programme de test.
 check: build/test
