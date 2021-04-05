@@ -30,10 +30,10 @@ typedef struct restaurant
     size_t solde;
 } restaurant;
 
-vector lecture_table_restaurant(
+vector lecture_table_restaurants(
     FILE* fichier);
 
-void ecriture_table_restaurant(
+void ecriture_table_restaurants(
     FILE* fichier,
     vector const* db);
 
@@ -46,9 +46,9 @@ typedef struct item
     size_t prix;
 } item;
 
-vector lecture_table_item(
+vector lecture_table_items(
     FILE* fichier);
 
-void ecriture_table_item(
+void ecriture_table_items(
     FILE* fichier,
     vector const* db);

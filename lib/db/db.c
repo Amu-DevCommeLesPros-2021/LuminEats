@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
-vector lecture_table_restaurant(
+vector lecture_table_restaurants(
     FILE* fichier)
 {
     vector restaurants = make_vector(sizeof(restaurant), 0, 2.0);
@@ -36,7 +36,7 @@ vector lecture_table_restaurant(
     return restaurants;
 }
 
-void ecriture_table_restaurant(
+void ecriture_table_restaurants(
     FILE* fichier,
     vector const* db)
 {
@@ -61,7 +61,7 @@ void ecriture_table_restaurant(
     }
 }
 
-vector lecture_table_item(
+vector lecture_table_items(
     FILE* fichier)
 {
     vector items = make_vector(sizeof(item), 0, 2.0);
@@ -91,7 +91,7 @@ vector lecture_table_item(
     return items;
 }
 
-void ecriture_table_item(
+void ecriture_table_items(
     FILE* fichier,
     vector const* db)
 {
