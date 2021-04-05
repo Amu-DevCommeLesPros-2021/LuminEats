@@ -14,8 +14,12 @@ build/libvector.a: lib/vector/vector_api.c lib/vector/vector_api.h lib/vector/ve
 	gcc -Wall -Wextra -Werror --debug -I lib/vector -c lib/vector/vector_api.c -o build/vector_api.o
 	ar crs build/libvector.a build/vector_api.o
 
-build/test: build/libvector.a test/main.c | build
-	gcc -Wall -Wextra -Werror --debug test/main.c -I lib -L build -l vector -o build/test
+build/libalgorithm.a: lib/algorithm/algorithm.c lib/algorithm/algorithm.h | build
+	gcc -Wall -Wextra -Werror --debug -I lib/vector -c lib/algorithm/algorithm.c -o build/algorithm.o
+	ar crs build/libalgorithm.a build/algorithm.o
+
+build/test: build/libalgorithm.a build/libvector.a test/main.c | build
+	gcc -Wall -Wextra -Werror --debug test/main.c -I lib -L build -l algorithm -l vector -o build/test
  
 # S'assure de l'existence tout les programmes finaux (application, test, etc.)
 # Par exemple : all: build/test build/appli
