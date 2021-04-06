@@ -22,7 +22,7 @@ void le_creer_compte_restaurateur(
     strcpy(r.telephone, telephone);
     strcpy(r.type, type);
     memset(r.items_s, '\0', TAILLE_ITEMS * 2 + TAILLE_ITEMS);
-    memset(r.items, 0, TAILLE_ITEMS);
+    memset(r.items, 0, sizeof(int) * TAILLE_ITEMS);
 
     push_back(&table_restaurants, &r);
 }
