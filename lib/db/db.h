@@ -89,12 +89,15 @@ void ecriture_table_clients(
     FILE* fichier,
     vector const* db);
 
+// Tables (globales) de la DB.
+extern vector table_restaurants, table_items, table_livreurs, table_clients;
+
 // Lit toutes les tables de la DB.
-// 'dossier' est le dossier où se trouvent les tables.
-void lecture_db(
-    char const* dossier, vector* restaurants, vector* items, vector* livreurs, vector* clients);
+// 'dossier' est le dossier où se trouvent les fichiers '.csv'.
+void ouverture_db(
+    char const* dossier);
 
 // Écrit toutes les tables de la DB.
-// 'dossier' est le dossier où seront écrites les tables.
-void ecriture_db(
-    char const* dossier, vector* restaurants, vector* items, vector* livreurs, vector* clients);
+// 'dossier' est le dossier où seront écrits les fichiers '.csv'.
+void fermeture_db(
+    char const* dossier);
