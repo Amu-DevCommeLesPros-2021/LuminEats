@@ -23,12 +23,16 @@ build/libdb.a: lib/db/db.c lib/db/db.h | build
 	gcc -Wall -Wextra -Werror --debug -I lib -c lib/db/db.c -o build/db.o
 	ar crs build/libdb.a build/db.o
 
-build/test: build/libalgorithm.a build/libdb.a build/libvector.a test/main.c | build
-	gcc -Wall -Wextra -Werror --debug test/main.c -I lib -L build -l algorithm -l db -l vector -o build/test
+build/liblogger.a: lib/logger/logger.c lib/logger/logger.h | build
+	gcc -Wall -Wextra -Werror --debug -I lib -c lib/logger/logger.c -o build/logger.o
+	ar crs build/liblogger.a build/logger.o
+
+build/test: build/libalgorithm.a build/libdb.a build/liblogger.a build/libvector.a test/main.c | build
+	gcc -Wall -Wextra -Werror --debug test/main.c -I lib -L build -l algorithm -l db -l logger -l vector -o build/test
 	cp -a test/db/. build/test-db
 
-build/lumineats: build/libalgorithm.a build/libdb.a build/libvector.a bin/ecrans.c bin/ecrans.h bin/main.c | build
-	gcc -Wall -Wextra -Werror --debug bin/ecrans.c bin/main.c -I lib -L build -l algorithm -l db -l vector -o build/lumineats
+build/lumineats: build/libalgorithm.a build/libdb.a build/liblogger.a build/libvector.a bin/ecrans.c bin/ecrans.h bin/main.c | build
+	gcc -Wall -Wextra -Werror --debug bin/ecrans.c bin/main.c -I lib -L build -l algorithm -l db -l logger -l vector -o build/lumineats
 
 # S'assure de l'existence tout les programmes finaux (application, test, etc.)
 # Par exemple : all: build/test build/appli
