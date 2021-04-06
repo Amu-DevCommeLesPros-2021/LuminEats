@@ -10,11 +10,6 @@ clean:
 build:
 	mkdir -p build
 
-# Removes old testing folders and copies the standrd set of tables to it.
-prep-test-db: | build
-	rm -rf build/test-db
-	cp -a test/db/. build/test-db
-
 build/libvector.a: lib/vector/vector_api.c lib/vector/vector_api.h lib/vector/vector_types.h lib/vector/vector.h | build
 	gcc -Wall -Wextra -Werror --debug -I lib -c lib/vector/vector_api.c -o build/vector_api.o
 	ar crs build/libvector.a build/vector_api.o
@@ -39,12 +34,12 @@ build/test: build/libalgorithm.a build/libdb.a build/liblogger.a build/liblumine
 	gcc -Wall -Wextra -Werror --debug test/main.c -I lib -L build -l lumineats -l algorithm -l db -l logger -l vector -o build/test
 
 build/lumineats: build/libalgorithm.a build/libdb.a build/liblogger.a build/liblumineats.a build/libvector.a bin/ecrans.c bin/ecrans.h bin/main.c | build
-	gcc -Wall -Wextra -Werror --debug bin/ecrans.c bin/main.c -I lib -L build -l lumineats -l algorithm -l db -l logger -l vector -o build/lumineats
+	gcc -Wall -Wextra -Werror --debug bin/ecrans.c bin/main.c -I bin -I lib -L build -l lumineats -l algorithm -l db -l logger -l vector -o build/lumineats
 
 # S'assure de l'existence tout les programmes finaux (application, test, etc.)
 # Par exemple : all: build/test build/appli
-all: build/lumineats build/test prep-test-db
+all: build/lumineats build/test
 
 # Lance le programme de test.
-check: build/test prep-test-db
+check: build/test
 	./build/test

@@ -6,6 +6,7 @@
 #include "vector/vector.h"
 
 #include <sys/stat.h>
+#include <unistd.h>
 
 #include <stdio.h>
 
@@ -15,7 +16,9 @@ int const test_column_width = 60;
 
 int main()
 {
+    rmdir("build/test-db");
     mkdir("build/test-db", 0755);
+    system("cp -a test/db/. build/test-db");
     mkdir("build/test-db/ecriture", 0755);
     mkdir("build/test-db/creation-compte", 0755);
 
@@ -209,7 +212,6 @@ int main()
 
     // Tests de creation de compte
     {
-        mkdir("build/test-db/creation-compte", 0755);
         ouverture_db("build/test-db/creation-compte");
         le_creer_compte_restaurateur("Snack-Bar Chez Raymond", "13001", "04 00 00 00 00", "fast food");
         fermeture_db("build/test-db/creation-compte");
