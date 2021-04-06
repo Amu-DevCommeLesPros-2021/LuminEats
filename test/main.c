@@ -11,14 +11,12 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 86;
+int const tests_total = 88;
 int const test_column_width = 60;
 
 int main()
 {
-    rmdir("build/test-db");
-    mkdir("build/test-db", 0755);
-    system("cp -a test/db/. build/test-db");
+    system("rm -rf build/test-db && mkdir -p build/test-db && cp -a test/db/. build/test-db");
     mkdir("build/test-db/ecriture", 0755);
     mkdir("build/test-db/creation-compte", 0755);
 
@@ -210,8 +208,9 @@ int main()
         remove(chemin_journal);
     }
 
-    // Tests de creation de compte
+    // Tests de creation de comptes.
     {
+        // Création d'un compte Restaurateur.
         ouverture_db("build/test-db/creation-compte");
         le_creer_compte_restaurateur("Snack-Bar Chez Raymond", "13001", "04 00 00 00 00", "fast food");
         fermeture_db("build/test-db/creation-compte");
@@ -224,8 +223,34 @@ int main()
 
         TEST(strcmp(buffer, "1,Snack-Bar Chez Raymond,13001,04 00 00 00 00,fast food,,0\n") == 0);
 
-        free(buffer);
         fclose(restaurants);
+
+        // Création d'un compte Livreur
+        ouverture_db("build/test-db/creation-compte");
+        le_creer_compte_livreur("Bob Binette", "04 99 99 99 99");
+        fermeture_db("build/test-db/creation-compte");
+
+        FILE *livreurs = fopen("build/test-db/creation-compte/livreurs.csv", "r");
+        getline(&buffer, &buffer_size, livreurs);
+        getline(&buffer, &buffer_size, livreurs);
+
+        TEST(strcmp(buffer, "1,Bob Binette,04 99 99 99 99,,0,0\n") == 0);
+
+        fclose(livreurs);
+
+        // Création d'un compte Client.
+        ouverture_db("build/test-db/creation-compte");
+        le_creer_compte_client("Paul Pitron", "13001", "06 66 66 66 66");
+        fermeture_db("build/test-db/creation-compte");
+
+        FILE *clients = fopen("build/test-db/creation-compte/clients.csv", "r");
+        getline(&buffer, &buffer_size, clients);
+        getline(&buffer, &buffer_size, clients);
+
+        TEST(strcmp(buffer, "1,Paul Pitron,13001,06 66 66 66 66,0\n") == 0);
+
+        free(buffer);
+        fclose(clients);
     }
 
     return 0;

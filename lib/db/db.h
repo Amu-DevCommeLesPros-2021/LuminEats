@@ -25,7 +25,7 @@ typedef struct restaurant
     char code_postal[TAILLE_CHAMP_CODEPOSTAL];
     char telephone[TAILLE_CHAMP_TELEPHONE];
     char type[TAILLE_CHAMP_TYPE];
-    char items_s[TAILLE_ITEMS * 2 + TAILLE_ITEMS];
+    char items_s[TAILLE_ITEMS * 3];
     cle_t items[TAILLE_ITEMS];
     size_t solde;
 } restaurant;
