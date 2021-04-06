@@ -43,6 +43,8 @@ void destroy(
 {
     free(v->data);
     v->data = NULL;
+    v->size = 0;
+    v->capacity = 0;
 }
 
 size_t size(
