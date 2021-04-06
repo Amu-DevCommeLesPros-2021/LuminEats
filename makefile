@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := check
 
-.PHONY: clean
+.PHONY: clean prep-test-db
 
 # Efface tout les fichiers temporaires et les produits finaux.
 clean:
@@ -9,7 +9,11 @@ clean:
 # Crée le répertoire qui acceuille les fichiers temporaires et les produits finaux.
 build:
 	mkdir -p build
-	mkdir -p build/test-db/ecriture
+
+# Removes old testing folders and copies the standrd set of tables to it.
+prep-test-db: | build
+	rm -rf build/test-db
+	cp -a test/db/. build/test-db
 
 build/libvector.a: lib/vector/vector_api.c lib/vector/vector_api.h lib/vector/vector_types.h lib/vector/vector.h | build
 	gcc -Wall -Wextra -Werror --debug -I lib -c lib/vector/vector_api.c -o build/vector_api.o
@@ -33,15 +37,14 @@ build/liblumineats.a: lib/lumineats/lumineats.c lib/lumineats/lumineats.h lib/al
 
 build/test: build/libalgorithm.a build/libdb.a build/liblogger.a build/liblumineats.a build/libvector.a test/main.c | build
 	gcc -Wall -Wextra -Werror --debug test/main.c -I lib -L build -l lumineats -l algorithm -l db -l logger -l vector -o build/test
-	cp -a test/db/. build/test-db
 
 build/lumineats: build/libalgorithm.a build/libdb.a build/liblogger.a build/liblumineats.a build/libvector.a bin/ecrans.c bin/ecrans.h bin/main.c | build
 	gcc -Wall -Wextra -Werror --debug bin/ecrans.c bin/main.c -I lib -L build -l lumineats -l algorithm -l db -l logger -l vector -o build/lumineats
 
 # S'assure de l'existence tout les programmes finaux (application, test, etc.)
 # Par exemple : all: build/test build/appli
-all: build/lumineats build/test
+all: build/lumineats build/test prep-test-db
 
 # Lance le programme de test.
-check: build/test
+check: build/test prep-test-db
 	./build/test
