@@ -1,12 +1,13 @@
 #include "test_harness/test_harness.h"
 
 #include "db/db.h"
+#include "logger/logger.h"
 #include "vector/vector.h"
 
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 84;
+int const tests_total = 85;
 int const test_column_width = 60;
 
 int main()
@@ -188,6 +189,26 @@ int main()
         destroy(&items);
         destroy(&livreurs);
         destroy(&clients);
+    }
+
+    // Tests pour le système de journal.
+    {
+        char const* chemin_journal = "test-log.txt";
+
+        lopen(chemin_journal);
+        llog("Ceci est un %s, %d", "test", 123);
+
+        // Confirm the file contains the message.
+        FILE *log = fopen(chemin_journal, "r");
+        char *buffer = NULL;
+        size_t buffer_size;
+        getline(&buffer, &buffer_size, log);
+
+        TEST(strstr(buffer, "Ceci est un test, 123") != NULL);
+
+        free(buffer);
+        fclose(log);
+        remove(chemin_journal);
     }
 
     return 0;
