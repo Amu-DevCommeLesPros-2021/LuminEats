@@ -192,6 +192,7 @@ int main()
 
         lopen(chemin_journal);
         llog("Ceci est un %s, %d", "test", 123);
+        lclose();
 
         // Confirm the file contains the message.
         FILE *log = fopen(chemin_journal, "r");

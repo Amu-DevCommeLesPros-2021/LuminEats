@@ -34,3 +34,8 @@ void llog(char const* format, ...)
     fprintf(file, "\n");
     fflush(file);
 }
+
+void lclose()
+{
+    fclose(file);
+}
