@@ -2,17 +2,22 @@
 
 #include "db/db.h"
 #include "logger/logger.h"
+#include "lumineats/lumineats.h"
 #include "vector/vector.h"
+
+#include <sys/stat.h>
 
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 85;
+int const tests_total = 86;
 int const test_column_width = 60;
 
 int main()
 {
-    float const growth_factor = 2.0;
+    mkdir("build/test-db", 0755);
+    mkdir("build/test-db/ecriture", 0755);
+    mkdir("build/test-db/creation-compte", 0755);
 
     // Tests de lecture et d'écriture de la table 'restaurants'.
     {
@@ -199,6 +204,25 @@ int main()
         free(buffer);
         fclose(log);
         remove(chemin_journal);
+    }
+
+    // Tests de creation de compte
+    {
+        mkdir("build/test-db/creation-compte", 0755);
+        ouverture_db("build/test-db/creation-compte");
+        le_creer_compte_restaurateur("Snack-Bar Chez Raymond", "13001", "04 00 00 00 00", "fast food");
+        fermeture_db("build/test-db/creation-compte");
+
+        FILE *restaurants = fopen("build/test-db/creation-compte/restaurants.csv", "r");
+        char *buffer = NULL;
+        size_t buffer_size;
+        getline(&buffer, &buffer_size, restaurants);
+        getline(&buffer, &buffer_size, restaurants);
+
+        TEST(strcmp(buffer, "1,Snack-Bar Chez Raymond,13001,04 00 00 00 00,fast food,,0\n") == 0);
+
+        free(buffer);
+        fclose(restaurants);
     }
 
     return 0;

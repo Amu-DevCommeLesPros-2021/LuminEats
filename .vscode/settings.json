@@ -28,6 +28,11 @@
         "ratio": "c",
         "tuple": "c",
         "istream": "c",
-        "complex": "c"
+        "complex": "c",
+        "__node_handle": "c",
+        "optional": "c",
+        "system_error": "c",
+        "__functional_03": "c",
+        "memory_resource": "c"
     }
 }
