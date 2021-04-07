@@ -90,6 +90,23 @@ iterator find_if(
     return last;
 }
 
+iterator find_if_2(
+    iterator first,
+    iterator last,
+    bool (*binary_predicate)(void const*, void const*),
+    void const* b)
+{
+    for(;compare(first, last) != 0; increment(&first, 1))
+    {
+        if(binary_predicate(first.element, b))
+        {
+            return first;
+        }
+    }
+
+    return last;
+}
+
 iterator copy(
     iterator first,
     iterator last,

@@ -53,6 +53,16 @@ iterator find_if(
     iterator last,
     bool (*predicate)(void const* data));
 
+// Renvoie le premier itérateur entre 'first' et 'last' non-inclus pour lequel 
+// la fonction 'binary_predicate' renvoie 'vrai' lorsqu'appellée avec un élément et 'b'.
+// Si il n'y a pas d'élément pour lequel la fonction 'binary_predicate' renvoie 'vrai',
+// renvoie 'last'.
+iterator find_if_2(
+    iterator first,
+    iterator last,
+    bool (*binary_predicate)(void const* a, void const* b),
+    void const* b);
+
 // Copie la valeur des éléments entre 'first' et 'last' non-inclus dans 
 // l'élément de 'destination'.
 // L'itérateur 'destination' est incrémenté de 1 à chaque fois.
