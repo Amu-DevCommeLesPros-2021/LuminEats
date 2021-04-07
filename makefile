@@ -26,7 +26,7 @@ build/liblogger.a: lib/logger/logger.c lib/logger/logger.h | build
 	gcc -Wall -Wextra -Werror --debug -I lib -c lib/logger/logger.c -o build/logger.o
 	ar crs build/liblogger.a build/logger.o
 
-build/liblumineats.a: lib/lumineats/lumineats.c lib/lumineats/lumineats.h lib/algorithm/algorithm.h lib/logger/logger.h lib/vector/vector_api.h lib/vector/vector_types.h | build
+build/liblumineats.a: lib/lumineats/lumineats.c lib/lumineats/lumineats.h lib/lumineats/predicates.h lib/algorithm/algorithm.h lib/logger/logger.h lib/vector/vector_api.h lib/vector/vector_types.h | build
 	gcc -Wall -Wextra -Werror --debug -I lib -c lib/lumineats/lumineats.c -o build/lumineats.o
 	ar crs build/liblumineats.a build/lumineats.o
 
