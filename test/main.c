@@ -11,7 +11,7 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 106;
+int const tests_total = 112;
 int const test_column_width = 60;
 
 int main()
@@ -260,7 +260,8 @@ int main()
     {
         // Création d'un compte Restaurateur.
         ouverture_db("build/test-db/creation-compte");
-        le_creer_compte_restaurateur("Snack-Bar Chez Raymond", "13001", "04 00 00 00 00", "fast food");
+        restaurant *r = le_creer_compte_restaurateur("Snack-Bar Chez Raymond", "13001", "04 00 00 00 00", "fast food");
+        TEST(strcmp(r->nom, "Snack-Bar Chez Raymond") == 0);
         fermeture_db("build/test-db/creation-compte");
 
         FILE *restaurants = fopen("build/test-db/creation-compte/restaurants.csv", "r");
@@ -275,7 +276,8 @@ int main()
 
         // Création d'un compte Livreur
         ouverture_db("build/test-db/creation-compte");
-        le_creer_compte_livreur("Bob Binette", "04 99 99 99 99");
+        livreur *l = le_creer_compte_livreur("Bob Binette", "04 99 99 99 99");
+        TEST(strcmp(l->nom, "Bob Binette") == 0);
         fermeture_db("build/test-db/creation-compte");
 
         FILE *livreurs = fopen("build/test-db/creation-compte/livreurs.csv", "r");
@@ -288,7 +290,8 @@ int main()
 
         // Création d'un compte Client.
         ouverture_db("build/test-db/creation-compte");
-        le_creer_compte_client("Paul Pitron", "13001", "06 66 66 66 66");
+        client *c = le_creer_compte_client("Paul Pitron", "13001", "06 66 66 66 66");
+        TEST(strcmp(c->nom, "Paul Pitron") == 0);
         fermeture_db("build/test-db/creation-compte");
 
         FILE *clients = fopen("build/test-db/creation-compte/clients.csv", "r");
@@ -299,6 +302,18 @@ int main()
 
         free(buffer);
         fclose(clients);
+
+        // Tests négatifs. Les noms ou téléphones existent déjà dans le BdD
+        ouverture_db("build/test-db/creation-compte");
+        r = le_creer_compte_restaurateur("Snack-Bar Chez Raymond", "13001", "04 11 11 11 11", "fast food");
+        TEST(r == NULL);
+
+        l = le_creer_compte_livreur("Bobby Binette", "04 99 99 99 99");
+        TEST(l == NULL);
+
+        c = le_creer_compte_client("Paul Pitron", "13001", "06 66 66 66 66");
+        TEST(c == NULL);
+        fermeture_db("build/test-db/creation-compte");
     }
 
     return 0;

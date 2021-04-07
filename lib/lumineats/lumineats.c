@@ -36,12 +36,17 @@ bool le_compte_existe(
     return le_cherche_restaurant(string) || le_cherche_livreur(string) || le_cherche_client(string);
 }
 
-void le_creer_compte_restaurateur(
+restaurant* le_creer_compte_restaurateur(
     char const* nom,
     char const* code_postal,
     char const* telephone,
     char const* type)
 {
+    if(le_compte_existe(nom) || le_compte_existe(telephone))
+    {
+        return NULL;
+    }
+
     size_t const index = size(table_restaurants) ? ((restaurant*)back(&table_restaurants))->index + 1 : 1;
 
     restaurant r = {
@@ -56,12 +61,19 @@ void le_creer_compte_restaurateur(
     memset(r.items, 0, sizeof(int) * TAILLE_ITEMS);
 
     push_back(&table_restaurants, &r);
+
+    return back(&table_restaurants);
 }
 
-void le_creer_compte_livreur(
+livreur* le_creer_compte_livreur(
     char const* nom,
     char const* telephone)
 {
+    if(le_compte_existe(nom) || le_compte_existe(telephone))
+    {
+        return NULL;
+    }
+
     size_t const index = size(table_livreurs) ? ((livreur*)back(&table_livreurs))->index + 1 : 1;
 
     livreur l = {
@@ -72,13 +84,20 @@ void le_creer_compte_livreur(
     strcpy(l.telephone, telephone);
 
     push_back(&table_livreurs, &l);
+
+    return back(&table_livreurs);
 }
 
-void le_creer_compte_client(
+client* le_creer_compte_client(
     char const* nom,
     char const* code_postal,
     char const* telephone)
 {
+    if(le_compte_existe(nom) || le_compte_existe(telephone))
+    {
+        return NULL;
+    }
+
     size_t const index = size(table_clients) ? ((client*)back(&table_clients))->index + 1 : 1;
 
     client c = {
@@ -90,4 +109,6 @@ void le_creer_compte_client(
     strcpy(c.telephone, telephone);
 
     push_back(&table_clients, &c);
+
+    return back(&table_clients);
 }
