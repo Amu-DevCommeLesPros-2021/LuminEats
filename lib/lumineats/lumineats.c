@@ -1,9 +1,40 @@
 #include "lumineats/lumineats.h"
 
+#include "lumineats/predicates.h"
+
+#include "algorithm/algorithm.h"
 #include "db/db.h"
 #include "vector/vector.h"
 
+#include <stdbool.h>
 #include <string.h>
+
+restaurant* le_cherche_restaurant(
+    char const* string)
+{
+    iterator i = find_if_2(begin(&table_restaurants), end(&table_restaurants), restaurant_a_nom_ou_telephone, string);
+    return compare(i, end(&table_restaurants)) != 0 ? i.element : NULL;
+}
+
+livreur* le_cherche_livreur(
+    char const* string)
+{
+    iterator i = find_if_2(begin(&table_livreurs), end(&table_livreurs), livreur_a_nom_ou_telephone, string);
+    return compare(i, end(&table_livreurs)) != 0 ? i.element : NULL;
+}
+
+client* le_cherche_client(
+    char const* string)
+{
+    iterator i = find_if_2(begin(&table_clients), end(&table_clients), client_a_nom_ou_telephone, string);
+    return compare(i, end(&table_clients)) != 0 ? i.element : NULL;
+}
+
+bool le_compte_existe(
+    char const* string)
+{
+    return le_cherche_restaurant(string) || le_cherche_livreur(string) || le_cherche_client(string);
+}
 
 void le_creer_compte_restaurateur(
     char const* nom,

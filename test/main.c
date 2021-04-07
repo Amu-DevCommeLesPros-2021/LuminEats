@@ -11,7 +11,7 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 88;
+int const tests_total = 106;
 int const test_column_width = 60;
 
 int main()
@@ -206,6 +206,54 @@ int main()
         free(buffer);
         fclose(log);
         remove(chemin_journal);
+    }
+
+    // Tests d'existence de comptes.
+    {
+        ouverture_db("build/test-db");
+
+        // Parmi les comptes Restaurateurs.
+        TEST(le_compte_existe("Chez Michel") == true);
+        TEST(le_compte_existe("04 22 33 44 55") == true);
+        
+        // Parmi les comptes Livreurs.
+        TEST(le_compte_existe("Donald Duck") == true);
+        TEST(le_compte_existe("06 00 00 00 00") == true);
+
+        // Parmi les comptes Clients.
+        TEST(le_compte_existe("Quentin Tarantino") == true);
+        TEST(le_compte_existe("04 10 20 30 40") == true);
+
+        // Tests négatifs.
+        TEST(le_compte_existe("") == false);
+        TEST(le_compte_existe("La Rotonde") == false);
+        TEST(le_compte_existe("00 00 00 00 00") == false);
+
+        fermeture_db("build/test-db");
+    }
+
+    // Tests d recherche de comptes.
+    {
+        ouverture_db("build/test-db");
+
+        // Parmi les comptes Restaurateurs.
+        TEST(strcmp(le_cherche_restaurant("Chez Michel")->nom, "Chez Michel") == 0);
+        TEST(strcmp(le_cherche_restaurant("04 22 33 44 55")->telephone, "04 22 33 44 55") == 0);
+        
+        // Parmi les comptes Livreurs.
+        TEST(strcmp(le_cherche_livreur("Donald Duck")->nom, "Donald Duck") == 0);
+        TEST(strcmp(le_cherche_livreur("06 00 00 00 00")->telephone, "06 00 00 00 00") == 0);
+
+        // Parmi les comptes Clients.
+        TEST(strcmp(le_cherche_client("Quentin Tarantino")->nom, "Quentin Tarantino") == 0);
+        TEST(strcmp(le_cherche_client("04 10 20 30 40")->telephone, "04 10 20 30 40") == 0);
+
+        // Tests négatifs.
+        TEST(le_cherche_restaurant("") == NULL);
+        TEST(le_cherche_restaurant("La Rotonde") == NULL);
+        TEST(le_cherche_restaurant("00 00 00 00 00") == NULL);
+
+        fermeture_db("build/test-db");
     }
 
     // Tests de creation de comptes.

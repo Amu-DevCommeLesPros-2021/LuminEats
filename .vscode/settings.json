@@ -33,6 +33,7 @@
         "optional": "c",
         "system_error": "c",
         "__functional_03": "c",
-        "memory_resource": "c"
+        "memory_resource": "c",
+        "__string": "c"
     }
 }
