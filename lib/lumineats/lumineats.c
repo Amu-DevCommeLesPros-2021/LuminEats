@@ -112,3 +112,25 @@ client* le_creer_compte_client(
 
     return back(&table_clients);
 }
+
+void le_supprimer_compte(
+    char const* string)
+{
+    iterator i = find_if_2(begin(&table_restaurants), end(&table_restaurants), restaurant_a_nom_ou_telephone, string);
+    if(compare(i, end(&table_restaurants)) != 0)
+    {
+        erase(&table_restaurants, i);
+    }
+
+    i = find_if_2(begin(&table_livreurs), end(&table_livreurs), livreur_a_nom_ou_telephone, string);
+    if(compare(i, end(&table_livreurs)) != 0)
+    {
+        erase(&table_livreurs, i);
+    }
+
+    i = find_if_2(begin(&table_clients), end(&table_clients), client_a_nom_ou_telephone, string);
+    if(compare(i, end(&table_clients)) != 0)
+    {
+        erase(&table_clients, i);
+    }
+}

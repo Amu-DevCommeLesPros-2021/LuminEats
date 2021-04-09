@@ -11,7 +11,7 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 112;
+int const tests_total = 124;
 int const test_column_width = 60;
 
 int main()
@@ -19,6 +19,7 @@ int main()
     system("rm -rf build/test-db && mkdir -p build/test-db && cp -a test/db/. build/test-db");
     mkdir("build/test-db/ecriture", 0755);
     mkdir("build/test-db/creation-compte", 0755);
+    mkdir("build/test-db/suppression-compte", 0755);
 
     // Tests de lecture et d'écriture de la table 'restaurants'.
     {
@@ -260,10 +261,15 @@ int main()
     {
         // Création d'un compte Restaurateur.
         ouverture_db("build/test-db/creation-compte");
-        restaurant *r = le_creer_compte_restaurateur("Snack-Bar Chez Raymond", "13001", "04 00 00 00 00", "fast food");
-        TEST(strcmp(r->nom, "Snack-Bar Chez Raymond") == 0);
+        char nom_restaurant[] = "Snack-Bar Chez Raymond";
+        restaurant *r = le_creer_compte_restaurateur(nom_restaurant, "13001", "04 00 00 00 00", "fast food");
+
+        TEST(le_compte_existe(nom_restaurant) == true);
+        TEST(strcmp(r->nom, nom_restaurant) == 0);
+
         fermeture_db("build/test-db/creation-compte");
 
+        // Vérification intrusive du fichier 'restaurants.csv'.
         FILE *restaurants = fopen("build/test-db/creation-compte/restaurants.csv", "r");
         char *buffer = NULL;
         size_t buffer_size;
@@ -274,12 +280,17 @@ int main()
 
         fclose(restaurants);
 
-        // Création d'un compte Livreur
+        // Création d'un compte Livreur.
         ouverture_db("build/test-db/creation-compte");
-        livreur *l = le_creer_compte_livreur("Bob Binette", "04 99 99 99 99");
-        TEST(strcmp(l->nom, "Bob Binette") == 0);
+        char nom_livreur[] = "Bob Binette";
+        livreur *l = le_creer_compte_livreur(nom_livreur, "04 99 99 99 99");
+        
+        TEST(le_compte_existe(nom_livreur) == true);
+        TEST(strcmp(l->nom, nom_livreur) == 0);
+        
         fermeture_db("build/test-db/creation-compte");
 
+        // Vérification intrusive du fichier 'livreurs.csv'.
         FILE *livreurs = fopen("build/test-db/creation-compte/livreurs.csv", "r");
         getline(&buffer, &buffer_size, livreurs);
         getline(&buffer, &buffer_size, livreurs);
@@ -290,10 +301,15 @@ int main()
 
         // Création d'un compte Client.
         ouverture_db("build/test-db/creation-compte");
-        client *c = le_creer_compte_client("Paul Pitron", "13001", "06 66 66 66 66");
-        TEST(strcmp(c->nom, "Paul Pitron") == 0);
+        char nom_client[] = "Paul Pitron";
+        client *c = le_creer_compte_client(nom_client, "13001", "06 66 66 66 66");
+
+        TEST(le_compte_existe(nom_client) == true);
+        TEST(strcmp(c->nom, nom_client) == 0);
+
         fermeture_db("build/test-db/creation-compte");
 
+        // Vérification intrusive du fichier 'clients.csv'.
         FILE *clients = fopen("build/test-db/creation-compte/clients.csv", "r");
         getline(&buffer, &buffer_size, clients);
         getline(&buffer, &buffer_size, clients);
@@ -303,7 +319,7 @@ int main()
         free(buffer);
         fclose(clients);
 
-        // Tests négatifs. Les noms ou téléphones existent déjà dans le BdD
+        // Tests négatifs. Les noms ou téléphones existent déjà dans la BdD.
         ouverture_db("build/test-db/creation-compte");
         r = le_creer_compte_restaurateur("Snack-Bar Chez Raymond", "13001", "04 11 11 11 11", "fast food");
         TEST(r == NULL);
@@ -314,6 +330,84 @@ int main()
         c = le_creer_compte_client("Paul Pitron", "13001", "06 66 66 66 66");
         TEST(c == NULL);
         fermeture_db("build/test-db/creation-compte");
+    }
+
+    // Tests de suppression de compte.
+    {
+        // Suppression d'un compte Restaurateur.
+        ouverture_db("build/test-db/suppression-compte");
+        char nom_restaurant[] = "Snack-Bar Chez Raymond";
+        le_creer_compte_restaurateur(nom_restaurant, "13001", "04 00 00 00 00", "fast food");
+        le_supprimer_compte(nom_restaurant);
+
+        TEST(le_compte_existe(nom_restaurant) == false);
+
+        fermeture_db("build/test-db/suppression-compte");
+
+        // Vérification intrusive du fichier 'restaurants.csv'.
+        FILE *restaurants = fopen("build/test-db/suppression-compte/restaurants.csv", "r");
+        char *buffer = NULL;
+        size_t buffer_size;
+        getline(&buffer, &buffer_size, restaurants);
+        getline(&buffer, &buffer_size, restaurants);
+
+        TEST(strlen(buffer) == 0);
+
+        fclose(restaurants);
+
+        // Suppression d'un compte Livreur.
+        ouverture_db("build/test-db/suppression-compte");
+        char nom_livreur[] = "Bob Binette";
+        le_creer_compte_livreur(nom_livreur, "04 99 99 99 99");
+        le_supprimer_compte(nom_livreur);
+
+        TEST(le_compte_existe(nom_livreur) == false);
+        
+        fermeture_db("build/test-db/suppression-compte");
+
+        // Vérification intrusive du fichier 'livreurs.csv'.
+        FILE *livreurs = fopen("build/test-db/suppression-compte/livreurs.csv", "r");
+        getline(&buffer, &buffer_size, livreurs);
+        getline(&buffer, &buffer_size, livreurs);
+
+        TEST(strlen(buffer) == 0);
+
+        fclose(livreurs);
+
+        // Suppression d'un compte Client.
+        ouverture_db("build/test-db/suppression-compte");
+        char nom_client[] = "Paul Pitron";
+        le_creer_compte_client(nom_client, "13001", "06 66 66 66 66");
+        le_supprimer_compte(nom_client);
+
+        TEST(le_compte_existe(nom_client) == false);
+
+        fermeture_db("build/test-db/suppression-compte");
+
+        // Vérification intrusive du fichier 'clients.csv'.
+        FILE *clients = fopen("build/test-db/suppression-compte/clients.csv", "r");
+        getline(&buffer, &buffer_size, clients);
+        getline(&buffer, &buffer_size, clients);
+
+        TEST(strlen(buffer) == 0);
+
+        free(buffer);
+        fclose(clients);
+
+
+        // Tests négatifs. Supprimer un compte qui n'existe pas ne doit pas affecter les comptes existants.
+        ouverture_db("build/test-db/suppression-compte");
+        le_creer_compte_restaurateur(nom_restaurant, "13001", "04 11 11 11 11", "fast food");
+        le_creer_compte_livreur(nom_livreur, "04 99 99 99 99");
+        le_creer_compte_client(nom_client, "13001", "06 66 66 66 66");
+
+        le_supprimer_compte("Inexistant");
+
+        TEST(le_compte_existe(nom_restaurant) == true);
+        TEST(le_compte_existe(nom_livreur) == true);
+        TEST(le_compte_existe(nom_client) == true);
+
+        fermeture_db("build/test-db/suppression-compte");
     }
 
     return 0;

@@ -19,7 +19,7 @@ livreur* le_cherche_livreur(
 client* le_cherche_client(
     char const* string);
 
-// Renvoie 'vrai' si un restaurant, livreur ou client a le nom ou le telephone donné.
+// Renvoie 'vrai' si un restaurant, livreur ou client a le nom ou le téléphone donné.
 bool le_compte_existe(
     char const* string);
 
@@ -46,3 +46,7 @@ client* le_creer_compte_client(
     char const* nom,
     char const* code_postal,
     char const* telephone);
+
+// Supprime le compte correspondant au nom ou téléphone donné s'il existe.
+void le_supprimer_compte(
+    char const* string);
