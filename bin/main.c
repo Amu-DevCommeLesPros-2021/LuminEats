@@ -4,7 +4,11 @@
 #include "logger/logger.h"
 #include "vector/vector.h"
 
-#include <sys/syslimits.h>
+#if defined(__linux__)
+    #include <linux/limits.h>
+#else
+    #include <sys/syslimits.h>
+#endif
 
 #include <stdio.h>
 #include <string.h>

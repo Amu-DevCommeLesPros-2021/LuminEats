@@ -4,6 +4,9 @@
 #include "lumineats/lumineats.h"
 
 #include <stdio.h>
+#if defined(__linux__)
+    #include <stdio_ext.h>
+#endif
 #include <string.h>
 
 #define TAILLE_SAISIE 128
@@ -42,7 +45,11 @@ char const* prompt_string(
     while(input == '\n');
     buffer[0] = input;
     fgets(&buffer[1], count - 1, stdin);
+#if defined(__linux__)    
+    __fpurge(stdin);
+#else
     fpurge(stdin);
+#endif
 
     char* const c = strrchr(buffer, '\n');
     if(c)
