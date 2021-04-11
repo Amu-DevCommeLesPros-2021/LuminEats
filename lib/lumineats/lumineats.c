@@ -128,17 +128,23 @@ void le_supprimer_compte(
     if(compare(i, end(&table_restaurants)) != 0)
     {
         erase(&table_restaurants, i);
+
+        llog("Compte 'restaurateur' [%s] supprimé.", string);
     }
 
     i = find_if_2(begin(&table_livreurs), end(&table_livreurs), livreur_a_nom_ou_telephone, string);
     if(compare(i, end(&table_livreurs)) != 0)
     {
         erase(&table_livreurs, i);
+
+        llog("Compte 'livreur' [%s] supprimé.", string);
     }
 
     i = find_if_2(begin(&table_clients), end(&table_clients), client_a_nom_ou_telephone, string);
     if(compare(i, end(&table_clients)) != 0)
     {
         erase(&table_clients, i);
+
+        llog("Compte 'client' [%s] supprimé.", string);
     }
 }

@@ -11,6 +11,8 @@
 
 #define TAILLE_SAISIE 128
 
+char utilisateur[TAILLE_CHAMP_NOM];
+
 int strcpy_s(
     char *dest,
     int const count,
@@ -119,19 +121,24 @@ void connexion_compte(
             }
             else
             {
-                if(le_cherche_restaurant(saisie) != NULL)
+                void *c;
+                if((c = le_cherche_restaurant(saisie)) != NULL)
                 {
                     ecran e = restaurateur_principal;
+                    strcpy(utilisateur, ((restaurant*)c)->nom);
                     push_back(pile, &e);
                 }
-                else if(le_cherche_livreur(saisie) != NULL)
+                else if((c = le_cherche_livreur(saisie)) != NULL)
                 {
                     ecran e = livreur_principal;
+                    strcpy(utilisateur, ((livreur*)c)->nom);
                     push_back(pile, &e);
                 }
                 else
                 {
+                    c = le_cherche_client(saisie);
                     ecran e = client_principal;
+                    strcpy(utilisateur, ((client*)c)->nom);
                     push_back(pile, &e);
                 }
             }
@@ -418,14 +425,15 @@ void restaurateur_principal(
     vector* pile)
 {
     printf("\n\
-* Menu Restaurateur *\n\
+* Menu Restaurateur * %s *\n\
 \n\
 Vous voulez :\n\
 1. Modifier votre menu (ajouter/modifier/supprimer)\n\
 2. Confirmer votre solde\n\
 3. Supprimer votre compte\n\
-\n");
-    char const choice = prompt_choice("Votre choix ('q' pour quitter, 'p' pour menu précédent) : ");
+\n", utilisateur);
+
+    char const choice = prompt_choice("Votre choix ('q' pour quitter, , 'd' pour deconnexion) : ");
     switch(choice)
     {
         case '1':
@@ -433,9 +441,14 @@ Vous voulez :\n\
         case '2':
             break;
         case '3':
-            break;
-        case 'p':
-            pop_back(pile);
+            le_supprimer_compte(utilisateur);
+        case 'd':
+            utilisateur[0] = '\n';
+
+            // Revient au menu initial.
+            clear(pile);
+            ecran e = initial;
+            push_back(pile, &e);
             break;
         case 'q':
             clear(pile);
@@ -447,14 +460,15 @@ void livreur_principal(
     vector* pile)
 {
     printf("\n\
-* Menu Livreur *\n\
+* Menu Livreur * %s *\n\
 \n\
 Vous voulez :\n\
 1. Modifier votre profil\n\
 2. Confirmer votre solde\n\
 3. Supprimer votre compte\n\
-\n");
-    char const choice = prompt_choice("Votre choix ('q' pour quitter, 'p' pour menu précédent) : ");
+\n", utilisateur);
+
+    char const choice = prompt_choice("Votre choix ('q' pour quitter, 'd' pour deconnexion) : ");
     switch(choice)
     {
         case '1':
@@ -462,9 +476,14 @@ Vous voulez :\n\
         case '2':
             break;
         case '3':
-            break;
-        case 'p':
-            pop_back(pile);
+            le_supprimer_compte(utilisateur);
+        case 'd':
+            utilisateur[0] = '\n';
+
+            // Revient au menu initial.
+            clear(pile);
+            ecran e = initial;
+            push_back(pile, &e);
             break;
         case 'q':
             clear(pile);
@@ -476,14 +495,15 @@ void client_principal(
     vector* pile)
 {
     printf("\n\
-* Menu Client *\n\
+* Menu Client * %s *\n\
 \n\
 Vous voulez :\n\
 1. Modifier votre profil\n\
 2. Confirmer votre solde\n\
 3. Supprimer votre compte\n\
-\n");
-    char const choice = prompt_choice("Votre choix ('q' pour quitter, 'p' pour menu précédent) : ");
+\n", utilisateur);
+
+    char const choice = prompt_choice("Votre choix ('q' pour quitter, 'd' pour deconnexion) : ");
     switch(choice)
     {
         case '1':
@@ -491,9 +511,14 @@ Vous voulez :\n\
         case '2':
             break;
         case '3':
-            break;
-        case 'p':
-            pop_back(pile);
+            le_supprimer_compte(utilisateur);
+        case 'd':
+            utilisateur[0] = '\n';
+
+            // Revient au menu initial.
+            clear(pile);
+            ecran e = initial;
+            push_back(pile, &e);
             break;
         case 'q':
             clear(pile);
