@@ -344,3 +344,61 @@ Vous voulez :\n\
             break;
     }
 }
+
+void livreur_principal(
+    vector* pile)
+{
+    printf("\n\
+* Menu Livreur *\n\
+\n\
+Vous voulez :\n\
+1. Modifier votre profil\n\
+2. Confirmer votre solde\n\
+3. Supprimer votre compte\n\
+\n");
+    char const choice = prompt_choice("Votre choix ('q' pour quitter, 'p' pour menu précédent) : ");
+    switch(choice)
+    {
+        case '1':
+            break;
+        case '2':
+            break;
+        case '3':
+            break;
+        case 'p':
+            pop_back(pile);
+            break;
+        case 'q':
+            clear(pile);
+            break;
+    }
+}
+
+void client_principal(
+    vector* pile)
+{
+    printf("\n\
+* Menu Client *\n\
+\n\
+Vous voulez :\n\
+1. Modifier votre profil\n\
+2. Confirmer votre solde\n\
+3. Supprimer votre compte\n\
+\n");
+    char const choice = prompt_choice("Votre choix ('q' pour quitter, 'p' pour menu précédent) : ");
+    switch(choice)
+    {
+        case '1':
+            break;
+        case '2':
+            break;
+        case '3':
+            break;
+        case 'p':
+            pop_back(pile);
+            break;
+        case 'q':
+            clear(pile);
+            break;
+    }
+}
