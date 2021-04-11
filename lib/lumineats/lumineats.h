@@ -2,7 +2,13 @@
 
 #include "db/db.h"
 
+#include <stdio.h>
 #include <stdbool.h>
+
+// Fonction de débogage.
+// Affiche les contenu des tables sur 'f'.
+void le_dump_tables(
+    FILE* f);
 
 // Renvoie le restaurant avec le nom ou telephone correspondant.
 // Renvoie 'NULL' si non-trouvé.

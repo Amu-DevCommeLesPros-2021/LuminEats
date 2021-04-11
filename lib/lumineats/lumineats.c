@@ -11,6 +11,15 @@
 #include <stdbool.h>
 #include <string.h>
 
+void le_dump_tables(
+    FILE* f)
+{
+    ecriture_table_restaurants(f, &table_restaurants);
+    ecriture_table_items(f, &table_items);
+    ecriture_table_livreurs(f, &table_livreurs);
+    ecriture_table_clients(f, &table_clients);
+}
+
 restaurant* le_cherche_restaurant(
     char const* string)
 {

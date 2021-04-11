@@ -96,6 +96,9 @@ void initial(
         case 'q':
             clear(pile);
             break;
+        case 'z':
+            le_dump_tables(stdout);
+            break;
     }
 }
 
