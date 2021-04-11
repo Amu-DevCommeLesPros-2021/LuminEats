@@ -43,7 +43,7 @@
             "request": "launch",
             "preLaunchTask": "make all",
             "program": "${workspaceFolder}/build/lumineats",
-            "args": [],
+            "args": ["-b", "./build"],
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": true,
