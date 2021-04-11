@@ -1,69 +1,39 @@
 #pragma once
 
-#include "db/db.h"
-
 #include <stdbool.h>
-#include <string.h>
 
 bool restaurant_est_nomme(
     void const* r,
-    void const* nom)
-{
-    return strcmp(((restaurant*)r)->nom, nom) == 0;
-}
+    void const* nom);
 
 bool restaurant_a_telephone(
     void const* r,
-    void const* telephone)
-{
-    return strcmp(((restaurant*)r)->telephone, telephone) == 0;
-}
+    void const* telephone);
 
 bool restaurant_a_nom_ou_telephone(
     void const* r,
-    void const* chaine)
-{
-    return restaurant_est_nomme(r, chaine) || restaurant_a_telephone(r, chaine);
-}
+    void const* chaine);
 
 bool livreur_est_nomme(
-    void const* r,
-    void const* nom)
-{
-    return strcmp(((livreur*)r)->nom, nom) == 0;
-}
+    void const* l,
+    void const* nom);
 
 bool livreur_a_telephone(
-    void const* r,
-    void const* telephone)
-{
-    return strcmp(((livreur*)r)->telephone, telephone) == 0;
-}
+    void const* l,
+    void const* telephone);
 
 bool livreur_a_nom_ou_telephone(
-    void const* r,
-    void const* chaine)
-{
-    return livreur_est_nomme(r, chaine) || livreur_a_telephone(r, chaine);
-}
+    void const* l,
+    void const* chaine);
 
 bool client_est_nomme(
-    void const* r,
-    void const* nom)
-{
-    return strcmp(((client*)r)->nom, nom) == 0;
-}
+    void const* c,
+    void const* nom);
 
 bool client_a_telephone(
-    void const* r,
-    void const* telephone)
-{
-    return strcmp(((client*)r)->telephone, telephone) == 0;
-}
+    void const* c,
+    void const* telephone);
 
 bool client_a_nom_ou_telephone(
-    void const* r,
-    void const* chaine)
-{
-    return client_est_nomme(r, chaine) || client_a_telephone(r, chaine);
-}
+    void const* c,
+    void const* chaine);
