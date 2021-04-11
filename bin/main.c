@@ -3,25 +3,37 @@
 #include "db/db.h"
 #include "vector/vector.h"
 
+#include <sys/syslimits.h>
+
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 
 int main(int argc, char* argv[])
 {
-    char *db_folder = NULL;
+    char db_folder[PATH_MAX] = "./";
+    bool reset = false;
 
     int c;
-    while((c = getopt (argc, argv, "b:")) != -1)
+    while((c = getopt(argc, argv, "rb:")) != -1)
     {
         switch(c)
         {
             case 'b':
-                db_folder = optarg;
+                strcpy(db_folder, optarg);
+                break;
+            case 'r':
+                reset = true;
                 break;
             default:
                 abort();
                 break;
         }
+    }
+
+    if(reset)
+    {
+        efface_db(db_folder);
     }
 
     ouverture_db(db_folder);

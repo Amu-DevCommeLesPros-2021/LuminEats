@@ -97,3 +97,7 @@ void ouverture_db(
 // 'dossier' est le dossier où seront écrits les fichiers '.csv'.
 void fermeture_db(
     char const* dossier);
+
+// Remet la BdD à zéro.
+void efface_db(
+    char const* dossier);

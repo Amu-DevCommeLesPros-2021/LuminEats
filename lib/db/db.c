@@ -286,3 +286,21 @@ void fermeture_db(
     fclose(test_db_clients);
     destroy(&table_clients);
 }
+
+void efface_db(
+    char const* dossier)
+{
+    char chemin[PATH_MAX];
+
+    sprintf(chemin, "%s/%s", dossier, "restaurants.csv");
+    remove(chemin);
+
+    sprintf(chemin, "%s/%s", dossier, "livreurs.csv");
+    remove(chemin);
+
+    sprintf(chemin, "%s/%s", dossier, "items.csv");
+    remove(chemin);
+
+    sprintf(chemin, "%s/%s", dossier, "clients.csv");
+    remove(chemin);
+}
