@@ -1,26 +1,38 @@
 #include "ecrans.h"
 
+#include "db/tables.h"
+#include "lumineats/lumineats.h"
+
 #include <stdio.h>
+#include <string.h>
 
-char prompt_choice(
-    char const* line)
+#define TAILLE_SAISIE 128
+
+int strcpy_s(
+    char *dest,
+    int const count,
+    const char* src)
 {
-    char input;
-    do
+    if(count <= 1 || !dest)
     {
-        printf("%s", line);
-        input = getchar();
+        if(!dest || !count)
+        {
+            return 0;
+        }
+        *dest = '\0';
+        return 0;
     }
-    while(input == '\n');
-    getchar();
-
-    return input;
+    
+    for(char* d = dest + count - 1; (dest != d || (*dest = '\0')) && (*dest = *src); ++dest, ++src);
+    
+    return 0;
 }
 
-void prompt_string(
+char const* prompt_string(
     char const* line,
-    char* buffer)
+    int const count)
 {
+    static char buffer[TAILLE_SAISIE];
     char input;
     do
     {
@@ -29,7 +41,22 @@ void prompt_string(
     }
     while(input == '\n');
     buffer[0] = input;
-    gets(&buffer[1]);
+    fgets(&buffer[1], count - 1, stdin);
+    fpurge(stdin);
+
+    char* const c = strrchr(buffer, '\n');
+    if(c)
+    {
+        *c = '\0';
+    }
+
+    return buffer;
+}
+
+char prompt_choice(
+    char const* line)
+{
+    return prompt_string(line, 1)[0];
 }
 
 void initial(
@@ -69,8 +96,7 @@ void connexion_compte(
     printf("\n\
 * Connexion à votre compte*\n");
 
-    char saisie[128];
-    prompt_string("Saisissez nom ou téléphone ('q' pour quitter, 'p' pour menu précédent) : ", saisie);
+    char const* saisie = prompt_string("Saisissez nom ou téléphone ('q' pour quitter, 'p' pour menu précédent) : ", TAILLE_CHAMP_NOM);
     switch(saisie[0])
     {
         case 'p':
@@ -80,9 +106,28 @@ void connexion_compte(
             clear(pile);
             break;
         default:
-            // Cherche le nom ou le numéro de téléphone dans la DB.
-            // Si existant, présente l'écran correspondant au type de compte (p. ex. restaurateur_principal).
-            // Si inexistant, réessaie n fois.
+            if(!le_compte_existe(saisie))
+            {
+                printf("Ce compte n'existe pas.\n");
+            }
+            else
+            {
+                if(le_cherche_restaurant(saisie) != NULL)
+                {
+                    ecran e = restaurateur_principal;
+                    push_back(pile, &e);
+                }
+                else if(le_cherche_livreur(saisie) != NULL)
+                {
+                    ecran e = livreur_principal;
+                    push_back(pile, &e);
+                }
+                else
+                {
+                    ecran e = client_principal;
+                    push_back(pile, &e);
+                }
+            }
             break;
     }
 }
@@ -98,7 +143,7 @@ Vous êtes :\n\
 2. Livreur·se\n\
 3. Client·e\n");
 
-    char const choice = prompt_choice("Votre choix ('q' pour quitter) : ");
+    char const choice = prompt_choice("Votre choix ('q' pour quitter, 'p' pour menu précédent) : ");
     switch(choice)
     {
         case '1':
@@ -134,10 +179,34 @@ void creation_compte_restaurateur(
     printf("\n\
 * Création d'un compte Restaurateur *\n");
 
-    char nom[128];
-    prompt_string("Saisissez le nom de votre restaurant ('q' pour quitter, 'p' pour menu précédent) : ", nom);
+    char const* saisie = prompt_string("Saisissez le nom de votre restaurant ('q' pour quitter, 'p' pour menu précédent) : ", TAILLE_CHAMP_NOM);
+    char nom[TAILLE_CHAMP_NOM];
+    switch(saisie[0])
+    {
+        case 'p':
+            pop_back(pile);
+            return;
+            break;
+        case 'q':
+            clear(pile);
+            return;
+            break;
+        default:
+            if(le_compte_existe(saisie))
+            {
+                printf("Un compte de ce nom existe déjà.\n");
+                return;
+            }
+            else
+            {
+                strcpy_s(nom, TAILLE_CHAMP_NOM, saisie);
+            }
+            break;
+    }
 
-    switch(nom[0])
+    saisie = prompt_string("Saisissez votre numéro de téléphone ('q' pour quitter, 'p' pour menu précédent) : ", TAILLE_CHAMP_TELEPHONE);
+    char telephone[TAILLE_CHAMP_TELEPHONE];
+    switch(saisie[0])
     {
         case 'p':
             pop_back(pile); return;
@@ -146,15 +215,21 @@ void creation_compte_restaurateur(
             clear(pile); return;
             break;
         default:
-            // Cherche le nom dans la DB.
-            // Si existant, signifié et réessaie n fois.
+            if(le_compte_existe(saisie))
+            {
+                printf("Un compte avec ce numero existe déjà.\n");
+                return;
+            }
+            else
+            {
+                strcpy_s(telephone, TAILLE_CHAMP_TELEPHONE, saisie);
+            }
             break;
     }
 
-    char code_postal[128];
-    prompt_string("Saisissez votre code postal ('q' pour quitter, 'p' pour menu précédent) : ", code_postal);
-
-    switch(code_postal[0])
+    saisie = prompt_string("Saisissez votre code postal ('q' pour quitter, 'p' pour menu précédent) : ", TAILLE_CHAMP_CODEPOSTAL);
+    char code_postal[TAILLE_CHAMP_CODEPOSTAL];
+    switch(saisie[0])
     {
         case 'p':
             pop_back(pile); return;
@@ -163,14 +238,13 @@ void creation_compte_restaurateur(
             clear(pile); return;
             break;
         default:
-            // Validation ?
+            strcpy_s(code_postal, TAILLE_CHAMP_CODEPOSTAL, saisie);
             break;
     }
 
-    char telephone[128];
-    prompt_string("Saisissez votre numéro de téléphone ('q' pour quitter, 'p' pour menu précédent) : ", telephone);
-
-    switch(telephone[0])
+    saisie = prompt_string("Saisissez le type de cuisine ('q' pour quitter, 'p' pour menu précédent) : ", TAILLE_CHAMP_TYPE);
+    char type[TAILLE_CHAMP_TYPE];
+    switch(saisie[0])
     {
         case 'p':
             pop_back(pile); return;
@@ -179,27 +253,12 @@ void creation_compte_restaurateur(
             clear(pile); return;
             break;
         default:
-            // Validation ?
+            strcpy_s(type, TAILLE_CHAMP_TYPE, saisie);
             break;
     }
 
-    char type[128];
-    prompt_string("Saisissez le type de cuisine ('q' pour quitter, 'p' pour menu précédent) : ", type);
-
-    switch(type[0])
-    {
-        case 'p':
-            pop_back(pile); return;
-            break;
-        case 'q':
-            clear(pile); return;
-            break;
-        default:
-            // Validation ?
-            break;
-    }
-
-    // Ajoute le restaurant à la DB.
+    // Ajoute le restaurant à la BdD.
+    le_creer_compte_restaurateur(nom, code_postal, telephone, type);
 
     // Revient au menu initial.
     clear(pile);
@@ -213,39 +272,56 @@ void creation_compte_livreur(
     printf("\n\
 * Création d'un compte Livreur *\n");
 
-    char nom[128];
-    prompt_string("Saisissez votre nom ('q' pour quitter, 'p' pour menu précédent) : ", nom);
-
-    switch(nom[0])
+   char const* saisie = prompt_string("Saisissez votre nom ('q' pour quitter, 'p' pour menu précédent) : ", TAILLE_CHAMP_NOM);
+    char nom[TAILLE_CHAMP_NOM];
+    switch(saisie[0])
     {
         case 'p':
             pop_back(pile);
+            return;
             break;
         case 'q':
             clear(pile);
+            return;
             break;
         default:
-            // Cherche le nom dans la DB.
-            // Si existant, signifié et réessaie n fois.
+            if(le_compte_existe(saisie))
+            {
+                printf("Un compte de ce nom existe déjà.\n");
+                return;
+            }
+            else
+            {
+               strcpy_s(nom, TAILLE_CHAMP_NOM, saisie);
+            }
             break;
     }
 
-    char telephone[128];
-    prompt_string("Saisissez votre telephone ('q' pour quitter, 'p' pour menu précédent) : ", telephone);
-
-    switch(telephone[0])
+    saisie = prompt_string("Saisissez votre numéro de téléphone ('q' pour quitter, 'p' pour menu précédent) : ", TAILLE_CHAMP_TELEPHONE);
+    char telephone[TAILLE_CHAMP_TELEPHONE];
+    switch(saisie[0])
     {
         case 'p':
-            pop_back(pile);
+            pop_back(pile); return;
             break;
         case 'q':
-            clear(pile);
+            clear(pile); return;
             break;
         default:
-            // Cherche le nom dans la DB.
-            // Si existant, signifié et réessaie n fois.
+            if(le_compte_existe(saisie))
+            {
+                printf("Un compte avec ce numero existe déjà.\n");
+                return;
+            }
+            else
+            {
+                strcpy_s(telephone, TAILLE_CHAMP_TELEPHONE, saisie);
+            }
             break;
     }
+
+    // Ajoute le livreur à la BdD.
+    le_creer_compte_livreur(nom, telephone);
 
     // Revient au menu initial.
     clear(pile);
@@ -259,56 +335,71 @@ void creation_compte_client(
     printf("\n\
 * Création d'un compte Client *\n");
 
-    char nom[128];
-    prompt_string("Saisissez votre nom ('q' pour quitter, 'p' pour menu précédent) : ", nom);
-
-    switch(nom[0])
+    char const* saisie = prompt_string("Saisissez votre nom ('q' pour quitter, 'p' pour menu précédent) : ", TAILLE_CHAMP_NOM);
+    char nom[TAILLE_CHAMP_NOM];
+    switch(saisie[0])
     {
         case 'p':
             pop_back(pile);
+            return;
             break;
         case 'q':
             clear(pile);
+            return;
             break;
         default:
-            // Cherche le nom dans la DB.
-            // Si existant, signifié et réessaie n fois.
+            if(le_compte_existe(saisie))
+            {
+                printf("Un compte de ce nom existe déjà.\n");
+                return;
+            }
+            else
+            {
+                strcpy_s(nom, TAILLE_CHAMP_NOM, saisie);
+            }
             break;
     }
 
-    char code_postal[128];
-    prompt_string("Saisissez votre code postal ('q' pour quitter, 'p' pour menu précédent) : ", code_postal);
-
-    switch(code_postal[0])
+    saisie = prompt_string("Saisissez votre numéro de téléphone ('q' pour quitter, 'p' pour menu précédent) : ", TAILLE_CHAMP_TELEPHONE);
+    char telephone[TAILLE_CHAMP_TELEPHONE];
+    switch(saisie[0])
     {
         case 'p':
-            pop_back(pile);
+            pop_back(pile); return;
             break;
         case 'q':
-            clear(pile);
+            clear(pile); return;
             break;
         default:
-            // Cherche le nom dans la DB.
-            // Si existant, signifié et réessaie n fois.
+            if(le_compte_existe(saisie))
+            {
+                printf("Un compte avec ce numero existe déjà.\n");
+                return;
+            }
+            else
+            {
+                strcpy_s(telephone, TAILLE_CHAMP_TELEPHONE, saisie);
+            }
             break;
     }
 
-    char telephone[128];
-    prompt_string("Saisissez votre telephone ('q' pour quitter, 'p' pour menu précédent) : ", telephone);
-
-    switch(telephone[0])
+    saisie = prompt_string("Saisissez votre code postal ('q' pour quitter, 'p' pour menu précédent) : ", TAILLE_CHAMP_CODEPOSTAL);
+    char code_postal[TAILLE_CHAMP_CODEPOSTAL];
+    switch(saisie[0])
     {
         case 'p':
-            pop_back(pile);
+            pop_back(pile); return;
             break;
         case 'q':
-            clear(pile);
+            clear(pile); return;
             break;
         default:
-            // Cherche le nom dans la DB.
-            // Si existant, signifié et réessaie n fois.
+            strcpy_s(code_postal, TAILLE_CHAMP_CODEPOSTAL, saisie);
             break;
     }
+
+    // Ajoute le client à la BdD.
+    le_creer_compte_client(nom, code_postal, telephone);
 
     // Revient au menu initial.
     clear(pile);
