@@ -88,15 +88,15 @@ void ecriture_table_clients(
     FILE* fichier,
     vector const* db);
 
-// Tables (globales) de la DB.
+// Tables (globales) de la BdD.
 extern vector table_restaurants, table_items, table_livreurs, table_clients;
 
-// Lit toutes les tables de la DB.
+// Lit toutes les tables de la BdD.
 // 'dossier' est le dossier où se trouvent les fichiers '.csv'.
 void ouverture_db(
     char const* dossier);
 
-// Écrit toutes les tables de la DB.
+// Écrit toutes les tables de la BdD.
 // 'dossier' est le dossier où seront écrits les fichiers '.csv'.
 void fermeture_db(
     char const* dossier);
