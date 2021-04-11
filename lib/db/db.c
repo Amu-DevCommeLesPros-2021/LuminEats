@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 
-vector table_restaurants = {}, table_items = {}, table_livreurs = {}, table_clients = {};
+vector table_restaurants = {0}, table_items = {0}, table_livreurs = {0}, table_clients = {0};
 
 vector lecture_table_restaurants(
     FILE* fichier)
