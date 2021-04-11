@@ -1,6 +1,7 @@
 #include "test_harness/test_harness.h"
 
 #include "db/db.h"
+#include "db/tables.h"
 #include "logger/logger.h"
 #include "lumineats/lumineats.h"
 #include "vector/vector.h"

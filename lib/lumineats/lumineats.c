@@ -4,6 +4,7 @@
 
 #include "algorithm/algorithm.h"
 #include "db/db.h"
+#include "db/tables.h"
 #include "vector/vector.h"
 
 #include <stdbool.h>
