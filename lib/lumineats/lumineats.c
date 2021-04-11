@@ -5,6 +5,7 @@
 #include "algorithm/algorithm.h"
 #include "db/db.h"
 #include "db/tables.h"
+#include "logger/logger.h"
 #include "vector/vector.h"
 
 #include <stdbool.h>
@@ -63,6 +64,8 @@ restaurant* le_creer_compte_restaurateur(
 
     push_back(&table_restaurants, &r);
 
+    llog("Compte 'restaurateur' [%s,%s] créé.", nom, telephone);
+
     return back(&table_restaurants);
 }
 
@@ -85,6 +88,8 @@ livreur* le_creer_compte_livreur(
     strcpy(l.telephone, telephone);
 
     push_back(&table_livreurs, &l);
+
+    llog("Compte 'livreur' [%s,%s] créé.", nom, telephone);
 
     return back(&table_livreurs);
 }
@@ -110,6 +115,8 @@ client* le_creer_compte_client(
     strcpy(c.telephone, telephone);
 
     push_back(&table_clients, &c);
+
+    llog("Compte 'client' [%s,%s] créé.", nom, telephone);
 
     return back(&table_clients);
 }
