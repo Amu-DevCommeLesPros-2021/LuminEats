@@ -215,10 +215,10 @@ void ouverture_db(
     char chemin[PATH_MAX];
     
     // To help testing and allow to re-open the DB without closing (and thus writing) it first, destroy the current tables.
-    clear(&table_restaurants);
-    clear(&table_items);
-    clear(&table_livreurs);
-    clear(&table_clients);
+    destroy(&table_restaurants);
+    destroy(&table_items);
+    destroy(&table_livreurs);
+    destroy(&table_clients);
 
     // Read and copy restaurants.
     sprintf(chemin, "%s/%s", dossier, "restaurants.csv");
@@ -227,6 +227,10 @@ void ouverture_db(
     {
         table_restaurants = lecture_table_restaurants(test_db_restaurants);
         fclose(test_db_restaurants);
+    }
+    else
+    {
+        table_restaurants = make_vector(sizeof(restaurant), 0, 2.0);
     }
 
     // Read and copy items.
@@ -237,6 +241,10 @@ void ouverture_db(
         table_items = lecture_table_items(test_db_items);
         fclose(test_db_items);
     }
+    else
+    {
+        table_items = make_vector(sizeof(item), 0, 2.0);
+    }
 
     // Read and copy deliverers.
     sprintf(chemin, "%s/%s", dossier, "livreurs.csv");
@@ -246,6 +254,10 @@ void ouverture_db(
         table_livreurs = lecture_table_livreurs(test_db_livreurs);
         fclose(test_db_livreurs);
     }
+    else
+    {
+        table_livreurs = make_vector(sizeof(livreur), 0, 2.0);
+    }
 
     // Read and copy customers.
     sprintf(chemin, "%s/%s", dossier, "clients.csv");
@@ -254,6 +266,10 @@ void ouverture_db(
     {
         table_clients = lecture_table_clients(test_db_clients);
         fclose(test_db_clients);
+    }
+    else
+    {
+        table_clients = make_vector(sizeof(client), 0, 2.0);
     }
 }
 
