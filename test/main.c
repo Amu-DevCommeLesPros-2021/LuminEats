@@ -15,7 +15,7 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 130;
+int const tests_total = 132;
 int const test_column_width = 60;
 
 int main()
@@ -422,7 +422,13 @@ int main()
         char nom_client[] = "Paul Pitron";
         client *c = le_creer_compte_client(nom_client, "13001", "06 66 66 66 66");
 
-        // On peut modifier le profil d;un client avec de nouveaux code postal et téléphone.
+        // On peut modifier le profil d'un client avec un nouveau code postal .
+        TEST(le_modifier_profil_client(c->index, "13002", "06 66 66 66 66"));
+
+        // On peut modifier le profil d'un client avec un nouveau téléphone.
+        TEST(le_modifier_profil_client(c->index, "13002", "05 55 55 55 55"));
+
+        // On peut modifier le profil d'un client avec de nouveaux code postal et téléphone.
         TEST(le_modifier_profil_client(c->index, "13002", "07 77 77 77 77"));
         
         c = le_cherche_client(nom_client);

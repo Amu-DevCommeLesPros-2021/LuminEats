@@ -142,13 +142,13 @@ bool le_modifier_profil_client(
     char const* code_postal,
     char const* telephone)
 {
-    if(le_compte_existe(telephone))
+    client* const c = le_cherche_client_i(index);
+    if(!c)
     {
         return false;
     }
 
-    client* const c = le_cherche_client_i(index);
-    if(!c)
+    if(le_compte_existe(telephone) && strcmp(c->telephone, telephone) != 0)
     {
         return false;
     }
