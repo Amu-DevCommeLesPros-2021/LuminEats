@@ -15,15 +15,12 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 124;
+int const tests_total = 130;
 int const test_column_width = 60;
 
 int main()
 {
     system("rm -rf build/test-db && mkdir -p build/test-db && cp -a test/db/. build/test-db");
-    mkdir("build/test-db/ecriture", 0755);
-    mkdir("build/test-db/creation-compte", 0755);
-    mkdir("build/test-db/suppression-compte", 0755);
 
     // Tests de lecture et d'écriture de la table 'restaurants'.
     {
@@ -185,6 +182,8 @@ int main()
         TEST(size(table_clients) == 3);
         TEST(strcmp(((client*)value(begin(&table_clients)))->nom, "Francoise Perrin") == 0);
 
+        mkdir("build/test-db/ecriture", 0755);
+    
         fermeture_db("build/test-db/ecriture");
         TEST_FILE("build/test-db/restaurants.csv", "build/test-db/ecriture/restaurants.csv");
         TEST_FILE("build/test-db/items.csv", "build/test-db/ecriture/items.csv");
@@ -262,6 +261,7 @@ int main()
     }
 
     // Tests de creation de comptes.
+    mkdir("build/test-db/creation-compte", 0755);
     {
         // Création d'un compte Restaurateur.
         ouverture_db("build/test-db/creation-compte");
@@ -337,6 +337,7 @@ int main()
     }
 
     // Tests de suppression de compte.
+    mkdir("build/test-db/suppression-compte", 0755);
     {
         // Suppression d'un compte Restaurateur.
         ouverture_db("build/test-db/suppression-compte");
@@ -412,6 +413,31 @@ int main()
         TEST(le_compte_existe(nom_client) == true);
 
         fermeture_db("build/test-db/suppression-compte");
+    }
+
+    // Tests de modification de profils.
+    mkdir("build/test-db/modification-profil", 0755);
+    {
+        ouverture_db("build/test-db/modification-profil");
+        char nom_client[] = "Paul Pitron";
+        client *c = le_creer_compte_client(nom_client, "13001", "06 66 66 66 66");
+
+        // On peut modifier le profil d;un client avec de nouveaux code postal et téléphone.
+        TEST(le_modifier_profil_client(c->index, "13002", "07 77 77 77 77"));
+        
+        c = le_cherche_client(nom_client);
+        TEST(strcmp(c->code_postal, "13002") == 0);
+        TEST(strcmp(c->telephone, "07 77 77 77 77") == 0);
+        TEST(le_compte_existe("07 77 77 77 77"));
+
+        // On ne peut pas créer un nouveau compte avec le téléphone existant.
+        TEST(le_creer_compte_client("Raoul Pitron", "13001", "07 77 77 77 77") == NULL);
+
+        // On  ne peut pas non plus modifier un compte pour lui donner un téléphone existant.
+        c = le_creer_compte_client("Raoul Pitron", "13001", "08 88 88 88 88");
+        TEST(le_modifier_profil_client(c->index, "13002", "07 77 77 77 77") == false);
+
+        fermeture_db("build/test-db/modification-profil");
     }
 
     return 0;

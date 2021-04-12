@@ -53,6 +53,14 @@ client* le_creer_compte_client(
     char const* code_postal,
     char const* telephone);
 
+// Modifie les informations du client avec l'index donné.
+// 'telephone' doit etre unique.
+// Renvoie 'vrai' si l'opération réussi.
+bool le_modifier_profil_client(
+    size_t const index,
+    char const* code_postal,
+    char const* telephone);
+
 // Supprime le compte correspondant au nom ou téléphone donné s'il existe.
 void le_supprimer_compte(
     char const* string);

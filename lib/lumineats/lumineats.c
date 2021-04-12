@@ -41,6 +41,13 @@ client* le_cherche_client(
     return compare(i, end(&table_clients)) != 0 ? i.element : NULL;
 }
 
+client* le_cherche_client_i(
+    size_t const index)
+{
+    iterator i = find_if_2(begin(&table_clients), end(&table_clients), client_a_index, &index);
+    return compare(i, end(&table_clients)) != 0 ? i.element : NULL;
+}
+
 bool le_compte_existe(
     char const* string)
 {
@@ -128,6 +135,28 @@ client* le_creer_compte_client(
     llog("Compte 'client' [%s,%s] créé.", nom, telephone);
 
     return back(&table_clients);
+}
+
+bool le_modifier_profil_client(
+    size_t const index,
+    char const* code_postal,
+    char const* telephone)
+{
+    if(le_compte_existe(telephone))
+    {
+        return false;
+    }
+
+    client* const c = le_cherche_client_i(index);
+    if(!c)
+    {
+        return false;
+    }
+
+    strcpy(c->code_postal, code_postal);
+    strcpy(c->telephone, telephone);
+
+    return true;
 }
 
 void le_supprimer_compte(

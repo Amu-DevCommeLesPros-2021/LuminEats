@@ -26,6 +26,10 @@ bool livreur_a_nom_ou_telephone(
     void const* l,
     void const* chaine);
 
+bool client_a_index(
+    void const* c,
+    void const* index);
+
 bool client_est_nomme(
     void const* c,
     void const* nom);
