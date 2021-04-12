@@ -3,9 +3,17 @@
 #include "vector/vector_api.h"
 #include "vector/vector_types.h"
 
-#include <limits.h>
+#if defined(__linux__)
+    #include <linux/limits.h>
+#else
+    #include <sys/syslimits.h>
+#endif
+#if defined(__linux__)
+    #define  _POSIX_C_SOURCE 200809L
+#endif
 #include <stdio.h>
 #include <string.h>
+
 
 vector table_restaurants = {0}, table_items = {0}, table_livreurs = {0}, table_clients = {0};
 

@@ -9,6 +9,9 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#if defined(__linux__)
+    #define  _POSIX_C_SOURCE 200809L
+#endif
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
