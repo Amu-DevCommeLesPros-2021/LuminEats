@@ -444,7 +444,8 @@ Vous voulez :\n\
         case '2':
             break;
         case '3':
-            le_supprimer_compte(utilisateur);
+            le_supprimer_compte(utilisateur); 
+            __attribute__((fallthrough));
         case 'd':
             utilisateur[0] = '\n';
 
@@ -480,6 +481,7 @@ Vous voulez :\n\
             break;
         case '3':
             le_supprimer_compte(utilisateur);
+            __attribute__((fallthrough));
         case 'd':
             utilisateur[0] = '\n';
 
@@ -515,6 +517,7 @@ Vous voulez :\n\
             break;
         case '3':
             le_supprimer_compte(utilisateur);
+            __attribute__((fallthrough));
         case 'd':
             utilisateur[0] = '\n';
 
