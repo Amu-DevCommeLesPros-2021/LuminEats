@@ -68,12 +68,12 @@ Certains items peuvent se retrouver sur des menus de différents restaurants.
 
 Au fils des commandes des clients, un montant est crédité dans le compte.
 
-- [ ] Créer un compte
-    - [ ] Nom (du restaurant)
-    - [ ] Code postal
-    - [ ] Téléphone
-    - [ ] Type de cuisine
-- [ ] Supprimer un compte
+- [x] Créer un compte
+    - [x] Nom (du restaurant)
+    - [x] Code postal
+    - [x] Téléphone
+    - [x] Type de cuisine
+- [x] Supprimer un compte
     - [ ] Supprime les références à ce restaurant dans les items
 - [ ] Modifier le menu
     - [ ] Ajouter un nouvel item au menu
@@ -94,12 +94,12 @@ Si un livreur travaille pour un restaurateur exclusivement, il est attendu qu'il
 
 Au fils des commandes des clients, un montant est crédité dans le compte.
 
-- [ ] Créer un compte
-    - [ ] Nom
+- [x] Créer un compte
+    - [x] Nom
     - [ ] Code postaux de déplacement
-    - [ ] Téléphone
+    - [x] Téléphone
     - [ ] Exclusivité restaurateur
-- [ ] Supprimer un compte
+- [x] Supprimer un compte
 - [ ] Modifier son profil
     - [ ] Code postaux de déplacement
     - [ ] Téléphone
@@ -117,11 +117,11 @@ Ce solde sera débité au moment de passer une commande.
 En tant que client, je ne peux me faire livrer d'un resturant seulement s'il existe un livreur qui peut se déplacer dans le code postal du restaurant en question et mon propre code postal.
 Par exemple, si j'habite dans le 13009, je peux me faire livrer d'un restaurant dans le 13001 uniquement s'il existe un livreur qui peut se déplacer à la fois dans le 13009 et le 13001.
 
-- [ ] Créer un compte
-    - [ ] Nom
-    - [ ] Code postal
-    - [ ] Téléphone
-- [ ] Supprimer un compte
+- [x] Créer un compte
+    - [x] Nom
+    - [x] Code postal
+    - [x] Téléphone
+- [x] Supprimer un compte
 - [ ] Modifier son profil
     - [ ] Code postal
     - [ ] Téléphone
