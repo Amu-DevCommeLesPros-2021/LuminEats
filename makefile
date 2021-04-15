@@ -47,8 +47,6 @@ build/test: build/libalgorithm.a build/libdb.a build/liblogger.a build/liblumine
 	$(CC) $(CFLAGS) test/main.c -I lib -L build -l lumineats -l algorithm -l db -l logger -l vector -o build/test
 
 build/lumineats: build/libalgorithm.a build/libdb.a build/liblogger.a build/liblumineats.a build/libvector.a bin/ecrans.c bin/ecrans.h bin/main.c | build
-	echo $(UNAME)
-	echo $(CFLAGS)
 	$(CC) $(CFLAGS) bin/ecrans.c bin/main.c -I bin -I lib -L build -l lumineats -l algorithm -l db -l logger -l vector -o build/lumineats
 
 # S'assure de l'existence tout les programmes finaux (application, test, etc.)
