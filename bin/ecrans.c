@@ -3,6 +3,7 @@
 #include "db/tables.h"
 #include "lumineats/lumineats.h"
 
+#include <stdarg.h>
 #include <stdio.h>
 #if defined(__linux__)
     #include <stdio_ext.h>
@@ -11,7 +12,7 @@
 
 #define TAILLE_SAISIE 128
 
-char utilisateur[TAILLE_CHAMP_NOM];
+char nom_utilisateur[TAILLE_CHAMP_NOM] = {'\0'};
 
 int strcpy_s(
     char *dest,
@@ -34,20 +35,25 @@ int strcpy_s(
 }
 
 char const* prompt_string(
-    char const* line,
-    int const count)
+    int const count,
+    char const* format,
+    ...)
 {
     static char buffer[TAILLE_SAISIE];
     char input;
     do
     {
-        printf("%s", line);
+        va_list args;
+        va_start(args, format);
+        vprintf(format, args);
+        va_end(args);
+
         input = getchar();
     }
     while(input == '\n');
     buffer[0] = input;
     fgets(&buffer[1], count - 1, stdin);
-#if defined(__linux__)    
+#if defined(__linux__)
     __fpurge(stdin);
 #else
     fpurge(stdin);
@@ -63,9 +69,15 @@ char const* prompt_string(
 }
 
 char prompt_choice(
-    char const* line)
+    char const* format,
+    ...)
 {
-    return prompt_string(line, 1)[0];
+    va_list args;
+    va_start(args, format);
+    char const c = prompt_string(1, format, args)[0];
+    va_end(args);
+    
+    return c;
 }
 
 void initial(
@@ -108,7 +120,7 @@ void connexion_compte(
     printf("\n\
 * Connexion à votre compte*\n");
 
-    char const* saisie = prompt_string("Saisissez nom ou téléphone ('q' pour quitter, 'p' pour menu précédent) : ", TAILLE_CHAMP_NOM);
+    char const* saisie = prompt_string(TAILLE_CHAMP_NOM, "Saisissez nom ou téléphone ('q' pour quitter, 'p' pour menu précédent) : ");
     switch(saisie[0])
     {
         case 'p':
@@ -127,21 +139,25 @@ void connexion_compte(
                 void *c;
                 if((c = le_cherche_restaurant(saisie)) != NULL)
                 {
+                    strcpy(nom_utilisateur, ((restaurant*)c)->nom);
+
                     ecran e = restaurateur_principal;
-                    strcpy(utilisateur, ((restaurant*)c)->nom);
                     push_back(pile, &e);
                 }
                 else if((c = le_cherche_livreur(saisie)) != NULL)
                 {
+                    strcpy(nom_utilisateur, ((livreur*)c)->nom);
+
                     ecran e = livreur_principal;
-                    strcpy(utilisateur, ((livreur*)c)->nom);
                     push_back(pile, &e);
                 }
                 else
                 {
                     c = le_cherche_client(saisie);
+
+                    strcpy(nom_utilisateur, ((client*)c)->nom);
+
                     ecran e = client_principal;
-                    strcpy(utilisateur, ((client*)c)->nom);
                     push_back(pile, &e);
                 }
             }
@@ -196,7 +212,7 @@ void creation_compte_restaurateur(
     printf("\n\
 * Création d'un compte Restaurateur *\n");
 
-    char const* saisie = prompt_string("Saisissez le nom de votre restaurant ('q' pour quitter, 'p' pour menu précédent) : ", TAILLE_CHAMP_NOM);
+    char const* saisie = prompt_string(TAILLE_CHAMP_NOM, "Saisissez le nom de votre restaurant ('q' pour quitter, 'p' pour menu précédent) : ");
     char nom[TAILLE_CHAMP_NOM];
     switch(saisie[0])
     {
@@ -221,7 +237,7 @@ void creation_compte_restaurateur(
             break;
     }
 
-    saisie = prompt_string("Saisissez votre numéro de téléphone ('q' pour quitter, 'p' pour menu précédent) : ", TAILLE_CHAMP_TELEPHONE);
+    saisie = prompt_string(TAILLE_CHAMP_TELEPHONE, "Saisissez votre numéro de téléphone ('q' pour quitter, 'p' pour menu précédent) : ");
     char telephone[TAILLE_CHAMP_TELEPHONE];
     switch(saisie[0])
     {
@@ -244,7 +260,7 @@ void creation_compte_restaurateur(
             break;
     }
 
-    saisie = prompt_string("Saisissez votre code postal ('q' pour quitter, 'p' pour menu précédent) : ", TAILLE_CHAMP_CODEPOSTAL);
+    saisie = prompt_string(TAILLE_CHAMP_CODEPOSTAL, "Saisissez votre code postal ('q' pour quitter, 'p' pour menu précédent) : ");
     char code_postal[TAILLE_CHAMP_CODEPOSTAL];
     switch(saisie[0])
     {
@@ -259,7 +275,7 @@ void creation_compte_restaurateur(
             break;
     }
 
-    saisie = prompt_string("Saisissez le type de cuisine ('q' pour quitter, 'p' pour menu précédent) : ", TAILLE_CHAMP_TYPE);
+    saisie = prompt_string(TAILLE_CHAMP_TYPE, "Saisissez le type de cuisine ('q' pour quitter, 'p' pour menu précédent) : ");
     char type[TAILLE_CHAMP_TYPE];
     switch(saisie[0])
     {
@@ -289,7 +305,7 @@ void creation_compte_livreur(
     printf("\n\
 * Création d'un compte Livreur *\n");
 
-   char const* saisie = prompt_string("Saisissez votre nom ('q' pour quitter, 'p' pour menu précédent) : ", TAILLE_CHAMP_NOM);
+   char const* saisie = prompt_string(TAILLE_CHAMP_NOM, "Saisissez votre nom ('q' pour quitter, 'p' pour menu précédent) : ");
     char nom[TAILLE_CHAMP_NOM];
     switch(saisie[0])
     {
@@ -314,7 +330,7 @@ void creation_compte_livreur(
             break;
     }
 
-    saisie = prompt_string("Saisissez votre numéro de téléphone ('q' pour quitter, 'p' pour menu précédent) : ", TAILLE_CHAMP_TELEPHONE);
+    saisie = prompt_string(TAILLE_CHAMP_TELEPHONE, "Saisissez votre numéro de téléphone ('q' pour quitter, 'p' pour menu précédent) : ");
     char telephone[TAILLE_CHAMP_TELEPHONE];
     switch(saisie[0])
     {
@@ -352,7 +368,7 @@ void creation_compte_client(
     printf("\n\
 * Création d'un compte Client *\n");
 
-    char const* saisie = prompt_string("Saisissez votre nom ('q' pour quitter, 'p' pour menu précédent) : ", TAILLE_CHAMP_NOM);
+    char const* saisie = prompt_string(TAILLE_CHAMP_NOM, "Saisissez votre nom ('q' pour quitter, 'p' pour menu précédent) : ");
     char nom[TAILLE_CHAMP_NOM];
     switch(saisie[0])
     {
@@ -377,7 +393,7 @@ void creation_compte_client(
             break;
     }
 
-    saisie = prompt_string("Saisissez votre numéro de téléphone ('q' pour quitter, 'p' pour menu précédent) : ", TAILLE_CHAMP_TELEPHONE);
+    saisie = prompt_string(TAILLE_CHAMP_TELEPHONE, "Saisissez votre numéro de téléphone ('q' pour quitter, 'p' pour menu précédent) : ");
     char telephone[TAILLE_CHAMP_TELEPHONE];
     switch(saisie[0])
     {
@@ -400,7 +416,7 @@ void creation_compte_client(
             break;
     }
 
-    saisie = prompt_string("Saisissez votre code postal ('q' pour quitter, 'p' pour menu précédent) : ", TAILLE_CHAMP_CODEPOSTAL);
+    saisie = prompt_string(TAILLE_CHAMP_CODEPOSTAL, "Saisissez votre code postal ('q' pour quitter, 'p' pour menu précédent) : ");
     char code_postal[TAILLE_CHAMP_CODEPOSTAL];
     switch(saisie[0])
     {
@@ -434,7 +450,7 @@ Vous voulez :\n\
 1. Modifier votre menu (ajouter/modifier/supprimer)\n\
 2. Confirmer votre solde\n\
 3. Supprimer votre compte\n\
-\n", utilisateur);
+\n", nom_utilisateur);
 
     char const choice = prompt_choice("Votre choix ('q' pour quitter, , 'd' pour deconnexion) : ");
     switch(choice)
@@ -444,10 +460,10 @@ Vous voulez :\n\
         case '2':
             break;
         case '3':
-            le_supprimer_compte(utilisateur); 
+            le_supprimer_compte(nom_utilisateur);
             __attribute__((fallthrough));
         case 'd':
-            utilisateur[0] = '\n';
+            nom_utilisateur[0] = '\n';
 
             // Revient au menu initial.
             clear(pile);
@@ -470,7 +486,7 @@ Vous voulez :\n\
 1. Modifier votre profil\n\
 2. Confirmer votre solde\n\
 3. Supprimer votre compte\n\
-\n", utilisateur);
+\n", nom_utilisateur);
 
     char const choice = prompt_choice("Votre choix ('q' pour quitter, 'd' pour deconnexion) : ");
     switch(choice)
@@ -480,10 +496,10 @@ Vous voulez :\n\
         case '2':
             break;
         case '3':
-            le_supprimer_compte(utilisateur);
+            le_supprimer_compte(nom_utilisateur);
             __attribute__((fallthrough));
         case 'd':
-            utilisateur[0] = '\n';
+            nom_utilisateur[0] = '\n';
 
             // Revient au menu initial.
             clear(pile);
@@ -506,28 +522,51 @@ Vous voulez :\n\
 1. Modifier votre profil\n\
 2. Confirmer votre solde\n\
 3. Supprimer votre compte\n\
-\n", utilisateur);
+\n", nom_utilisateur);
 
     char const choice = prompt_choice("Votre choix ('q' pour quitter, 'd' pour deconnexion) : ");
     switch(choice)
     {
         case '1':
+            {
+                ecran e = client_modifier_profil;
+                push_back(pile, &e);
+            }
             break;
         case '2':
             break;
         case '3':
-            le_supprimer_compte(utilisateur);
+            le_supprimer_compte(nom_utilisateur);
             __attribute__((fallthrough));
         case 'd':
-            utilisateur[0] = '\n';
+            nom_utilisateur[0] = '\n';
 
             // Revient au menu initial.
-            clear(pile);
-            ecran e = initial;
-            push_back(pile, &e);
+            {
+                clear(pile);
+                ecran e = initial;
+                push_back(pile, &e);
+            }
             break;
         case 'q':
             clear(pile);
             break;
     }
+}
+
+void client_modifier_profil(
+    vector* pile)
+{
+printf("\n\
+* Menu Client * %s *\n\
+\n", nom_utilisateur);
+
+    client const* const c = le_cherche_client(nom_utilisateur);
+
+    char const* const saisie = prompt_string(TAILLE_CHAMP_CODEPOSTAL, "Saisissez votre nouveau code postal ('enter' pour conserver) [%s] : ", c->code_postal);
+
+
+    le_modifier_profil_client(c->index, saisie, c->telephone);
+
+    pop_back(pile);
 }

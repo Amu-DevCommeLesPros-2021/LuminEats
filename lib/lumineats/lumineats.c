@@ -142,7 +142,7 @@ bool le_modifier_profil_client(
     char const* code_postal,
     char const* telephone)
 {
-    client* const c = le_cherche_client_i(index);
+    client* c = le_cherche_client_i(index);
     if(!c)
     {
         return false;

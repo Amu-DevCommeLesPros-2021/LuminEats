@@ -62,3 +62,6 @@ void livreur_principal(
 // Écrans Client.
 void client_principal(
     vector* pile);
+
+void client_modifier_profil(
+    vector* pile);
