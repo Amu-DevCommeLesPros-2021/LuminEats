@@ -77,6 +77,11 @@ bool le_modifier_profil_client(
     char const* code_postal,
     char const* telephone);
 
+// Ajoute un crédit au solde existant.
+void le_crediter_solde_client(
+    cle_t const index,
+    size_t montant);
+
 // Supprime le compte correspondant au nom ou téléphone donné s'il existe.
 void le_supprimer_compte(
     char const* string);

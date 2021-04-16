@@ -504,6 +504,10 @@ Vous voulez :\n\
         case '1':
             break;
         case '2':
+            {
+                ecran e = restaurateur_voir_solde;
+                push_back(pile, &e);
+            }
             break;
         case '3':
             le_supprimer_compte(nom_utilisateur);
@@ -520,6 +524,20 @@ Vous voulez :\n\
             clear(pile);
             break;
     }
+}
+
+void restaurateur_voir_solde(
+    vector* pile)
+{
+printf("\n\
+* Menu Restaurateur * %s *\n\
+\n", nom_utilisateur);
+
+    restaurant const* const r = le_cherche_restaurant(nom_utilisateur);
+
+    printf("Votre solde courant : €%zu\n\n", r->solde);
+
+    pop_back(pile);
 }
 
 void livreur_principal(
@@ -544,6 +562,10 @@ Vous voulez :\n\
             }
             break;
         case '2':
+            {
+                ecran e = livreur_voir_solde;
+                push_back(pile, &e);
+            }
             break;
         case '3':
             le_supprimer_compte(nom_utilisateur);
@@ -626,6 +648,20 @@ void livreur_modifier_profil(
     pop_back(pile);
 }
 
+void livreur_voir_solde(
+    vector* pile)
+{
+printf("\n\
+* Menu Livreur * %s *\n\
+\n", nom_utilisateur);
+
+    livreur const* const l = le_cherche_livreur(nom_utilisateur);
+
+    printf("Votre solde courant : €%zu\n\n", l->solde);
+
+    pop_back(pile);
+}
+
 void client_principal(
     vector* pile)
 {
@@ -635,7 +671,8 @@ void client_principal(
 Vous voulez :\n\
 1. Modifier votre profil\n\
 2. Confirmer votre solde\n\
-3. Supprimer votre compte\n\
+3. Ajoutez du crédit à votre solde\n\
+4. Supprimer votre compte\n\
 \n", nom_utilisateur);
 
     char const choice = prompt_choice("Votre choix ('q' pour quitter, 'd' pour deconnexion) : ");
@@ -648,8 +685,18 @@ Vous voulez :\n\
             }
             break;
         case '2':
+            {
+                ecran e = client_voir_solde;
+                push_back(pile, &e);
+            }
             break;
         case '3':
+            {
+                ecran e = client_crediter_solde;
+                push_back(pile, &e);
+            }
+            break;
+        case '4':
             le_supprimer_compte(nom_utilisateur);
             __attribute__((fallthrough));
         case 'd':
@@ -697,6 +744,35 @@ printf("\n\
     strcpy(telephone, saisie);
 
     le_modifier_profil_client(c->index, code_postal, telephone);
+
+    pop_back(pile);
+}
+
+void client_crediter_solde(
+    vector* pile)
+{
+printf("\n\
+* Menu Client * %s *\n\
+\n", nom_utilisateur);
+
+    client const* const c = le_cherche_client(nom_utilisateur);
+
+    char const* saisie = prompt_string(sizeof(size_t), "Saisissez le montant à ajouter ('0' pour ne rien ajouter) : ");
+    le_crediter_solde_client(c->index, atoll(saisie));
+
+    pop_back(pile);
+}
+
+void client_voir_solde(
+    vector* pile)
+{
+printf("\n\
+* Menu Client * %s *\n\
+\n", nom_utilisateur);
+
+    client const* const c = le_cherche_client(nom_utilisateur);
+
+    printf("Votre solde courant : €%zu\n\n", c->solde);
 
     pop_back(pile);
 }

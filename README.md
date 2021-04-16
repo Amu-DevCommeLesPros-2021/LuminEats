@@ -82,8 +82,8 @@ Au fils des commandes des clients, un montant est crédité dans le compte.
         - [ ] Prix
     - [ ] Ajouter un item au menu parmi la liste des items existants
     - [ ] Supprimer un item
-- [ ] Solde
-    - [ ] Voir le solde courant
+- [x] Solde
+    - [x] Voir le solde courant
 
 ## Fonctionalités pour un livreur
 
@@ -100,12 +100,12 @@ Au fils des commandes des clients, un montant est crédité dans le compte.
     - [x] Téléphone
     - [ ] Exclusivité restaurateur
 - [x] Supprimer un compte
-- [ ] Modifier son profil
+- [x] Modifier son profil
     - [x] Code postaux de déplacement
     - [x] Téléphone
     - [x] Exclusivité restaurateur
-- [ ] Solde
-    - [ ] Voir le solde courant
+- [x] Solde
+    - [x] Voir le solde courant
 
 ## Fonctionalités pour un client
 
@@ -125,9 +125,9 @@ Par exemple, si j'habite dans le 13009, je peux me faire livrer d'un restaurant 
 - [x] Modifier son profil
     - [x] Code postal
     - [x] Téléphone
-- [ ] Solde
-    - [ ] Confirmer le solde courant
-    - [ ] Créditer un montant
+- [x] Solde
+    - [x] Confirmer le solde courant
+    - [x] Créditer un montant
 - [ ] Voir la liste des restaurants
     - [ ] Restreindre la liste...
         - [ ] À qui peut me livrer

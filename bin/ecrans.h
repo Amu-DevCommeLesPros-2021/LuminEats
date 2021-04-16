@@ -61,10 +61,18 @@ void livreur_principal(
 void livreur_modifier_profil(
     vector* pile);
 
+void livreur_voir_solde(
+    vector* pile);
 
 // Écrans Client.
 void client_principal(
     vector* pile);
 
 void client_modifier_profil(
+    vector* pile);
+
+void client_crediter_solde(
+    vector* pile);
+
+void client_voir_solde(
     vector* pile);

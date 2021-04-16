@@ -222,6 +222,17 @@ bool le_modifier_profil_client(
     return true;
 }
 
+void le_crediter_solde_client(
+    cle_t const index,
+    size_t montant)
+{
+    client* c = le_cherche_client_i(index);
+    if(c)
+    {
+        c->solde += montant;
+    }
+}
+
 void le_supprimer_compte(
     char const* string)
 {
