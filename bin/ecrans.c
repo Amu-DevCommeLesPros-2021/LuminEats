@@ -544,6 +544,10 @@ Vous voulez :\n\
             }
             break;
         case '2':
+            {
+                ecran e = livreur_voir_solde;
+                push_back(pile, &e);
+            }
             break;
         case '3':
             le_supprimer_compte(nom_utilisateur);
@@ -622,6 +626,20 @@ void livreur_modifier_profil(
     }
 
     le_modifier_profil_livreur(l->index, deplacements, telephone, index_restaurant);
+
+    pop_back(pile);
+}
+
+void livreur_voir_solde(
+    vector* pile)
+{
+printf("\n\
+* Menu Livreur * %s *\n\
+\n", nom_utilisateur);
+
+    livreur const* const l = le_cherche_livreur(nom_utilisateur);
+
+    printf("Votre solde courant : €%zu\n\n", l->solde);
 
     pop_back(pile);
 }
