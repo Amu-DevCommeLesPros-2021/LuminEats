@@ -15,6 +15,11 @@ void le_dump_tables(
 restaurant* le_cherche_restaurant(
     char const* string);
 
+// Renvoie le restaurant avec l'index correspondant.
+// Renvoie 'NULL' si non-trouvé.
+restaurant* le_cherche_restaurant_i(
+    cle_t const index);
+
 // Renvoie le livreur avec le nom ou telephone correspondant.
 // Renvoie 'NULL' si non-trouvé.
 livreur* le_cherche_livreur(
@@ -24,6 +29,7 @@ livreur* le_cherche_livreur(
 // Renvoie 'NULL' si non-trouvé.
 client* le_cherche_client(
     char const* string);
+
 
 // Renvoie 'vrai' si un restaurant, livreur ou client a le nom ou le téléphone donné.
 bool le_compte_existe(
@@ -45,11 +51,29 @@ livreur* le_creer_compte_livreur(
     char const* nom,
     char const* telephone);
 
+// Modifie les informations d'un livreur avec l'index donné.
+// 'telephone' doit etre unique.
+// 'index_restaurant' doit être zéro ou valide.
+// Renvoie 'vrai' si l'opération réussi.
+bool le_modifier_profil_livreur(
+    cle_t const index,
+    char const* deplacements,
+    char const* telephone,
+    cle_t const index_restaurant);
+
 // Crée un nouveau client et renvoie un pointeur au client nouvellement créé.
 // Les arguments 'nom' et 'telephone' ne doivent pas déjà dans la BdD.
 // Si 'nom' ou 'telephone' existent déjà dans la BdD, ne crée rien et renvoie 'NULL'.
 client* le_creer_compte_client(
     char const* nom,
+    char const* code_postal,
+    char const* telephone);
+
+// Modifie les informations du client avec l'index donné.
+// 'telephone' doit etre unique.
+// Renvoie 'vrai' si l'opération réussi.
+bool le_modifier_profil_client(
+    cle_t const index,
     char const* code_postal,
     char const* telephone);
 

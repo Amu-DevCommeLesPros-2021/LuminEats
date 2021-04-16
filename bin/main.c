@@ -9,7 +9,6 @@
 #else
     #include <sys/syslimits.h>
 #endif
-
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -36,9 +35,10 @@ int main(int argc, char* argv[])
         }
     }
 
-    char log_file[PATH_MAX];
-    sprintf(log_file, "%s/%s", working_folder, "log.txt");
+    char *log_file;
+    asprintf(&log_file, "%s/%s", working_folder, "log.txt");
     lopen(log_file);
+    free(log_file);
 
     if(reset)
     {

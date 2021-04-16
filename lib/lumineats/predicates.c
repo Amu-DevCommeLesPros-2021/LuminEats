@@ -5,6 +5,13 @@
 #include <stdbool.h>
 #include <string.h>
 
+bool restaurant_a_index(
+    void const* c,
+    void const* index)
+{
+    return ((restaurant*)c)->index == *(size_t*)index;
+}
+
 bool restaurant_est_nomme(
     void const* r,
     void const* nom)
@@ -26,6 +33,13 @@ bool restaurant_a_nom_ou_telephone(
     return restaurant_est_nomme(r, chaine) || restaurant_a_telephone(r, chaine);
 }
 
+bool livreur_a_index(
+    void const* c,
+    void const* index)
+{
+    return ((livreur*)c)->index == *(size_t*)index;
+}
+
 bool livreur_est_nomme(
     void const* l,
     void const* nom)
@@ -45,6 +59,13 @@ bool livreur_a_nom_ou_telephone(
     void const* chaine)
 {
     return livreur_est_nomme(l, chaine) || livreur_a_telephone(l, chaine);
+}
+
+bool client_a_index(
+    void const* c,
+    void const* index)
+{
+    return ((client*)c)->index == *(size_t*)index;
 }
 
 bool client_est_nomme(
