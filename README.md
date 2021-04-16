@@ -1,4 +1,4 @@
-![](https://github.com/Amu-DevCommeLesPros-2021/DevCommeLesPros-2021-Projet/workflows/Run%20tests/badge.svg)
+![](https://github.com/thierryseegers/LuminEats/workflows/Run%20tests/badge.svg)
 
 <!-- TOC ignore:true -->
 # DevCommeLesPros-2021-Projet
