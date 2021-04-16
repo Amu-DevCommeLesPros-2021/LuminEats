@@ -84,6 +84,7 @@ Au fils des commandes des clients, un montant est crédité dans le compte.
     - [ ] Supprimer un item
 - [x] Solde
     - [x] Voir le solde courant
+    - [ ] Le solde est crédité au fil des livraisons
 
 ## Fonctionalités pour un livreur
 
@@ -96,9 +97,9 @@ Au fils des commandes des clients, un montant est crédité dans le compte.
 
 - [x] Créer un compte
     - [x] Nom
-    - [ ] Code postaux de déplacement
+    - [x] Code postaux de déplacement
     - [x] Téléphone
-    - [ ] Exclusivité restaurateur
+    - [x] Exclusivité restaurateur
 - [x] Supprimer un compte
 - [x] Modifier son profil
     - [x] Code postaux de déplacement
@@ -106,6 +107,7 @@ Au fils des commandes des clients, un montant est crédité dans le compte.
     - [x] Exclusivité restaurateur
 - [x] Solde
     - [x] Voir le solde courant
+    - [ ] Le solde est crédité au fil des livraisons
 
 ## Fonctionalités pour un client
 
