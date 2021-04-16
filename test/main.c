@@ -15,7 +15,7 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 148;
+int const tests_total = 151;
 int const test_column_width = 60;
 
 int main()
@@ -487,6 +487,26 @@ int main()
         TEST(le_modifier_profil_client(99, "13002", "09 99 99 99 99") == false);
 
         fermeture_db("build/test-db/modification-profil");
+    }
+
+    // Tests d'ajout de crédits pour un client.
+    mkdir("build/test-db/modification-solde", 0755);
+    {
+        ouverture_db("build/test-db/modification-solde");
+
+        char nom_client[] = "Paul Pitron";
+        client *c = le_creer_compte_client(nom_client, "13001", "06 66 66 66 66");
+        TEST(c->solde == 0);
+
+        le_crediter_solde_client(c->index, 1);
+        c = le_cherche_client(nom_client);
+        TEST(c->solde == 1);
+
+        le_crediter_solde_client(c->index, 10);
+        c = le_cherche_client(nom_client);
+        TEST(c->solde == 1 + 10);
+
+        fermeture_db("build/test-db/modification-solde");
     }
 
     return 0;
