@@ -33,6 +33,23 @@ bool restaurant_a_nom_ou_telephone(
     return restaurant_est_nomme(r, chaine) || restaurant_a_telephone(r, chaine);
 }
 
+bool restaurant_a_type(
+    void const* r,
+    void const* type)
+{
+    return strcmp(((restaurant*)r)->type, type) == 0;
+}
+
+bool restaurant_peut_livrer(
+    void const* r,
+    void const* code_postal)
+{
+    (void)r;
+    (void)code_postal;
+    
+    return true;
+}
+
 bool livreur_a_index(
     void const* c,
     void const* index)

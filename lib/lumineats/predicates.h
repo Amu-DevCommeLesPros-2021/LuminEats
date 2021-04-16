@@ -18,6 +18,14 @@ bool restaurant_a_nom_ou_telephone(
     void const* r,
     void const* chaine);
 
+bool restaurant_a_type(
+    void const* r,
+    void const* type);
+
+bool restaurant_peut_livrer(
+    void const* r,
+    void const* code_postal);
+
 bool livreur_a_index(
     void const* c,
     void const* index);

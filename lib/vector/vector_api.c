@@ -2,6 +2,7 @@
 
 #include "vector_types.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -103,6 +104,29 @@ void erase(
 
     memmove(v->data + chunk_offset, v->data + chunk_offset + v->element_size, chunk_size);
     --v->size;
+}
+
+void erase_if(
+    vector* v,
+    bool (*binary_predicate)(void const* a, void const* b),
+    void const* b)
+{
+    for(void *d = v->data; d != v->data + v->size * v->element_size;)
+    {
+        if(!binary_predicate(d, b))
+        {
+            size_t const chunk_offset = d - v->data;     // En octets.
+            size_t const chunk_size = end(v).element - d - v->element_size;    // En octets.
+
+            memmove(v->data + chunk_offset, v->data + chunk_offset + v->element_size, chunk_size);
+            --v->size;
+        }
+        else
+        {
+            d += v->element_size;
+        }
+    }
+
 }
 
 void assign(
