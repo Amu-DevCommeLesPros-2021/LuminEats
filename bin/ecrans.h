@@ -58,6 +58,9 @@ void menu_supprimer_item(
 void livreur_principal(
     vector* pile);
 
+void livreur_modifier_profil(
+    vector* pile);
+
 
 // Écrans Client.
 void client_principal(

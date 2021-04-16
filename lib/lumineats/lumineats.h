@@ -15,6 +15,11 @@ void le_dump_tables(
 restaurant* le_cherche_restaurant(
     char const* string);
 
+// Renvoie le restaurant avec l'index correspondant.
+// Renvoie 'NULL' si non-trouvé.
+restaurant* le_cherche_restaurant_i(
+    cle_t const index);
+
 // Renvoie le livreur avec le nom ou telephone correspondant.
 // Renvoie 'NULL' si non-trouvé.
 livreur* le_cherche_livreur(
@@ -24,6 +29,7 @@ livreur* le_cherche_livreur(
 // Renvoie 'NULL' si non-trouvé.
 client* le_cherche_client(
     char const* string);
+
 
 // Renvoie 'vrai' si un restaurant, livreur ou client a le nom ou le téléphone donné.
 bool le_compte_existe(

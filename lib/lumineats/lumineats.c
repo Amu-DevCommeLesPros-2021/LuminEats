@@ -41,7 +41,7 @@ client* le_cherche_client(
     return compare(i, end(&table_clients)) != 0 ? i.element : NULL;
 }
 
-livreur* le_cherche_restaurant_i(
+restaurant* le_cherche_restaurant_i(
     cle_t const index)
 {
     iterator i = find_if_2(begin(&table_restaurants), end(&table_restaurants), restaurant_a_index, &index);
@@ -166,6 +166,7 @@ bool le_modifier_profil_livreur(
     }
 
     strcpy(l->telephone, telephone);
+    strcpy(l->deplacements_s, deplacements);
     analyse_deplacements(l->deplacements, deplacements);
     l->restaurant = index_restaurant;
 

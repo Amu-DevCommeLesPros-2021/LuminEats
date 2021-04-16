@@ -538,6 +538,10 @@ Vous voulez :\n\
     switch(choice)
     {
         case '1':
+            {
+                ecran e = livreur_modifier_profil;
+                push_back(pile, &e);
+            }
             break;
         case '2':
             break;
@@ -556,6 +560,70 @@ Vous voulez :\n\
             clear(pile);
             break;
     }
+}
+
+void livreur_modifier_profil(
+    vector* pile)
+{
+    printf("\n\
+* Menu Lvrieur * %s *\n\
+\n", nom_utilisateur);
+
+    livreur const* const l = le_cherche_livreur(nom_utilisateur);
+
+    char const* saisie = prompt_optional_string(TAILLE_DEPLACEMENTS * TAILLE_CHAMP_CODEPOSTAL, "Saisissez vos nouveaux code postaux de déplacement ('enter' pour conserver) [%s] : ", l->deplacements_s);
+    char deplacements[TAILLE_DEPLACEMENTS * TAILLE_CHAMP_CODEPOSTAL];
+    strcpy(deplacements, saisie);
+
+    for(bool saisie_valide = false; !saisie_valide;)
+    {
+        saisie = prompt_optional_string(TAILLE_CHAMP_TELEPHONE, "Saisissez votre nouveau téléphone ('enter' pour conserver) [%s] : ", l->telephone);
+        if(le_compte_existe(saisie) && strcmp(l->telephone, saisie) != 0)
+        {
+            printf("Erreur : ce téléphone existe déjà.\n");
+        }
+        else
+        {
+            saisie_valide = true;
+        }
+    }
+    char telephone[TAILLE_CHAMP_TELEPHONE];
+    strcpy(telephone, saisie);
+
+
+    cle_t index_restaurant = l->restaurant;
+    char nom_restaurant[TAILLE_CHAMP_NOM] = {'\0'};
+    if(index_restaurant != 0)
+    {
+        restaurant *r = le_cherche_restaurant_i(index_restaurant);
+        strcpy(nom_restaurant, r->nom);
+    }
+    for(bool saisie_valide = false; !saisie_valide;)
+    {
+        saisie = prompt_optional_string(TAILLE_CHAMP_NOM, "Saisissez votre restaurant ('enter' pour conserver, '0' pour effacer) [%s] : ", nom_restaurant);
+        if(strlen(saisie) == 0 || strcmp(saisie, "0") == 0)
+        {
+            index_restaurant = 0;
+            saisie_valide = true;
+        }
+        else
+        {
+            restaurant *r = le_cherche_restaurant(saisie);
+            if(!r)
+            {
+                printf("Erreur : ce restaurant n'existe pas.\n");
+            }
+            else
+            {
+                index_restaurant = r->index;
+                saisie_valide = true;
+            }
+        }
+    }
+
+    le_modifier_profil_livreur(l->index, deplacements, telephone, index_restaurant);
+
+    pop_back(pile);
 }
 
 void client_principal(
@@ -613,7 +681,18 @@ printf("\n\
     char code_postal[TAILLE_CHAMP_CODEPOSTAL];
     strcpy(code_postal, saisie);
 
-    saisie = prompt_optional_string(TAILLE_CHAMP_TELEPHONE, "Saisissez votre nouveau téléphone ('enter' pour conserver) [%s] : ", c->telephone);
+    for(bool saisie_valide = false; !saisie_valide;)
+    {
+        saisie = prompt_optional_string(TAILLE_CHAMP_TELEPHONE, "Saisissez votre nouveau téléphone ('enter' pour conserver) [%s] : ", c->telephone);
+        if(le_compte_existe(saisie) && strcmp(c->telephone, saisie) != 0)
+        {
+            printf("Erreur : ce téléphone existe déjà.\n");
+        }
+        else
+        {
+            saisie_valide = true;
+        }
+    }
     char telephone[TAILLE_CHAMP_TELEPHONE];
     strcpy(telephone, saisie);
 
