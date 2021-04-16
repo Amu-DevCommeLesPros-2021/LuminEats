@@ -120,9 +120,16 @@ void analyse_deplacements(
 
 livreur* le_creer_compte_livreur(
     char const* nom,
-    char const* telephone)
+    char const* telephone,
+    char const* deplacements,
+    cle_t const index_restaurant)
 {
     if(le_compte_existe(nom) || le_compte_existe(telephone))
+    {
+        return NULL;
+    }
+
+    if(index_restaurant != 0 && le_cherche_restaurant_i(index_restaurant) == NULL)
     {
         return NULL;
     }
@@ -135,10 +142,13 @@ livreur* le_creer_compte_livreur(
     };
     strcpy(l.nom, nom);
     strcpy(l.telephone, telephone);
+    strcpy(l.deplacements_s, deplacements);
+    analyse_deplacements(l.deplacements, deplacements);
+    l.restaurant = index_restaurant;
 
     push_back(&table_livreurs, &l);
 
-    llog("Compte 'livreur' [%s,%s] créé.", nom, telephone);
+    llog("Compte 'livreur' [%s,%s,%s,%zu] créé.", nom, telephone, deplacements, index_restaurant);
 
     return back(&table_livreurs);
 }

@@ -399,8 +399,37 @@ void creation_compte_livreur(
             break;
     }
 
+    saisie = prompt_optional_string(TAILLE_DEPLACEMENTS * TAILLE_CHAMP_CODEPOSTAL, "Saisissez vos code postaux de déplacement ('enter' pour garder vide) : ", "");
+    char deplacements[TAILLE_DEPLACEMENTS * TAILLE_CHAMP_CODEPOSTAL];
+    strcpy(deplacements, saisie);
+
+    size_t index_restaurant;
+    for(bool saisie_valide = false; !saisie_valide;)
+    {
+        saisie = prompt_optional_string(TAILLE_CHAMP_NOM, "Saisissez votre restaurant ('enter' pour garder vide) : ");
+        if(strlen(saisie) == 0 || strcmp(saisie, "0") == 0)
+        {
+            index_restaurant = 0;
+            saisie_valide = true;
+        }
+        else
+        {
+            restaurant *r = le_cherche_restaurant(saisie);
+            if(!r)
+            {
+                printf("Erreur : ce restaurant n'existe pas.\n");
+            }
+            else
+            {
+                index_restaurant = r->index;
+                saisie_valide = true;
+            }
+        }
+    }
+
+
     // Ajoute le livreur à la BdD.
-    le_creer_compte_livreur(nom, telephone);
+    le_creer_compte_livreur(nom, telephone, deplacements, index_restaurant);
 
     // Revient au menu initial.
     clear(pile);
