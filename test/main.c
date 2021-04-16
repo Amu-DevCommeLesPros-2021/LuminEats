@@ -354,9 +354,7 @@ int main()
         char *buffer = NULL;
         size_t buffer_size;
         getline(&buffer, &buffer_size, restaurants);
-        getline(&buffer, &buffer_size, restaurants);
-
-        TEST(strlen(buffer) == 0);
+        TEST(getline(&buffer, &buffer_size, restaurants) == -1);
 
         fclose(restaurants);
 
@@ -373,9 +371,7 @@ int main()
         // Vérification intrusive du fichier 'livreurs.csv'.
         FILE *livreurs = fopen("build/test-db/suppression-compte/livreurs.csv", "r");
         getline(&buffer, &buffer_size, livreurs);
-        getline(&buffer, &buffer_size, livreurs);
-
-        TEST(strlen(buffer) == 0);
+        TEST(getline(&buffer, &buffer_size, livreurs) == -1);
 
         fclose(livreurs);
 
@@ -392,9 +388,7 @@ int main()
         // Vérification intrusive du fichier 'clients.csv'.
         FILE *clients = fopen("build/test-db/suppression-compte/clients.csv", "r");
         getline(&buffer, &buffer_size, clients);
-        getline(&buffer, &buffer_size, clients);
-
-        TEST(strlen(buffer) == 0);
+        TEST(getline(&buffer, &buffer_size, clients) == -1);
 
         free(buffer);
         fclose(clients);
