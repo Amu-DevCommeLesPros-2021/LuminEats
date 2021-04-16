@@ -29,7 +29,7 @@ vector lecture_table_restaurants(
     getline(&buffer, &buffer_size, fichier); // Skip the header line.
     while(getline(&buffer, &buffer_size, fichier) != -1)
     {
-        restaurant r;
+        restaurant r = {0};
         sscanf(buffer, "%zu,%[^,],%[^,],%[^,],%[^,],%[^,],%zu\n", &r.index, r.nom, r.code_postal, r.telephone, r.type, r.items_s, &r.solde);
         
         // Parse string of semicolon separated items.
@@ -84,7 +84,7 @@ vector lecture_table_items(
     getline(&buffer, &buffer_size, fichier); // Skip the header line.
     while(getline(&buffer, &buffer_size, fichier) != -1)
     {
-        item i;
+        item i = {0};
         sscanf(buffer, "%zu,%[^,],%[^,],%zu\n", &i.index, i.nom, i.ingredients_s, &i.prix);
         
         // Parse string of semicolon separated ingredients.
@@ -139,7 +139,7 @@ vector lecture_table_livreurs(
     getline(&buffer, &buffer_size, fichier); // Skip the header line.
     while(getline(&buffer, &buffer_size, fichier) != -1)
     {
-        livreur l;
+        livreur l = {0};
         sscanf(buffer, "%zu,%[^,],%[^,],%[^,],%zu,%zu\n", &l.index, l.nom, l.telephone, l.deplacements_s, &l.restaurant, &l.solde);
         
         // Parse string of semicolon separated postal codes.
@@ -194,7 +194,7 @@ vector lecture_table_clients(
     getline(&buffer, &buffer_size, fichier); // Skip the header line.
     while(getline(&buffer, &buffer_size, fichier) != -1)
     {
-        client c;
+        client c = {0};
         sscanf(buffer, "%zu,%[^,],%[^,],%[^,],%zu\n", &c.index, c.nom, c.code_postal, c.telephone, &c.solde);
         push_back(&clients, &c);
     }
