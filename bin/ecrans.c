@@ -504,6 +504,10 @@ Vous voulez :\n\
         case '1':
             break;
         case '2':
+            {
+                ecran e = restaurateur_voir_solde;
+                push_back(pile, &e);
+            }
             break;
         case '3':
             le_supprimer_compte(nom_utilisateur);
@@ -520,6 +524,20 @@ Vous voulez :\n\
             clear(pile);
             break;
     }
+}
+
+void restaurateur_voir_solde(
+    vector* pile)
+{
+printf("\n\
+* Menu Restaurateur * %s *\n\
+\n", nom_utilisateur);
+
+    restaurant const* const r = le_cherche_restaurant(nom_utilisateur);
+
+    printf("Votre solde courant : €%zu\n\n", r->solde);
+
+    pop_back(pile);
 }
 
 void livreur_principal(
