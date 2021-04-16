@@ -101,9 +101,9 @@ Au fils des commandes des clients, un montant est crédité dans le compte.
     - [ ] Exclusivité restaurateur
 - [x] Supprimer un compte
 - [ ] Modifier son profil
-    - [ ] Code postaux de déplacement
-    - [ ] Téléphone
-    - [ ] Exclusivité restaurateur
+    - [x] Code postaux de déplacement
+    - [x] Téléphone
+    - [x] Exclusivité restaurateur
 - [ ] Solde
     - [ ] Voir le solde courant
 
