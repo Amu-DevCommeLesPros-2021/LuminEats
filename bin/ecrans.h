@@ -68,3 +68,9 @@ void client_principal(
 
 void client_modifier_profil(
     vector* pile);
+
+void client_crediter_solde(
+    vector* pile);
+
+void client_voir_solde(
+    vector* pile);
