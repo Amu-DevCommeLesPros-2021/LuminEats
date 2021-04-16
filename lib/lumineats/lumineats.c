@@ -170,6 +170,8 @@ bool le_modifier_profil_livreur(
     analyse_deplacements(l->deplacements, deplacements);
     l->restaurant = index_restaurant;
 
+    llog("Compte 'livreur' [%s] modifié : [%s,%s,%zu].", l->nom, deplacements, telephone, index_restaurant);
+
     return true;
 }
 
@@ -219,6 +221,8 @@ bool le_modifier_profil_client(
     strcpy(c->code_postal, code_postal);
     strcpy(c->telephone, telephone);
 
+    llog("Compte 'client' [%s] modifié : [%s,%s,%zu].", c->nom, code_postal, telephone);
+
     return true;
 }
 
@@ -231,6 +235,8 @@ void le_crediter_solde_client(
     {
         c->solde += montant;
     }
+
+    llog("Compte 'client' [%s] nouveau solde : [%zu].", c->nom, c->solde);
 }
 
 void le_supprimer_compte(
