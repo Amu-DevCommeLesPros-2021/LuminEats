@@ -3,6 +3,7 @@
 #include "db/tables.h"
 #include "lumineats/lumineats.h"
 
+#include <assert.h>
 #include <stdarg.h>
 #include <stdio.h>
 #if defined(__linux__)
@@ -12,6 +13,7 @@
 
 #define TAILLE_SAISIE 128
 
+// Currently logged in user.
 char nom_utilisateur[TAILLE_CHAMP_NOM] = {'\0'};
 
 int strcpy_s(
@@ -34,32 +36,29 @@ int strcpy_s(
     return 0;
 }
 
-char const* prompt_string(
+// Prompting function used internally by other prompting functions.
+// It manages the capture of a (potentially empty) line and gets rid of the newline caracter.
+char const* internal_prompt_string(
     int const count,
     char const* format,
-    ...)
+    va_list args)
 {
     static char buffer[TAILLE_SAISIE];
-    char input;
-    do
-    {
-        va_list args;
-        va_start(args, format);
-        vprintf(format, args);
-        va_end(args);
+    assert(count < TAILLE_SAISIE);
 
-        input = getchar();
-    }
-    while(input == '\n');
-    buffer[0] = input;
-    fgets(&buffer[1], count - 1, stdin);
-#if defined(__linux__)
-    __fpurge(stdin);
-#else
-    fpurge(stdin);
-#endif
+    vprintf(format, args);
+    fflush(stdout);
 
-    char* const c = strrchr(buffer, '\n');
+    fgets(buffer, count + 1, stdin);
+
+    #if defined(__linux__)
+        __fpurge(stdin);
+    #else
+        fpurge(stdin);
+    #endif
+
+    // Replace the ending '\n' by '\0'.
+    char *c = strrchr(buffer, '\n');
     if(c)
     {
         *c = '\0';
@@ -68,6 +67,53 @@ char const* prompt_string(
     return buffer;
 }
 
+// Prints the prompt and re-prompts if the user just pressed 'enter'.
+char const* prompt_string(
+    int const count,
+    char const* format,
+    ...)
+{
+    char const* saisie = NULL;
+    do
+    {
+        va_list args;
+        va_start(args, format);
+        saisie = internal_prompt_string(count, format, args);
+        va_end(args);
+    }
+    while(strlen(saisie) == 0);
+
+    return saisie;
+}
+
+// Prints the proompt and if the user just pressed enter, returns the first argument in the va_list.
+// (Fragile? Yes, it is. I agree.)
+char const* prompt_optional_string(
+    int const count,
+    char const* format,
+    ...)
+{
+    static char buffer[TAILLE_SAISIE];
+    va_list args;
+    
+    {
+        va_start(args, format);
+        strcpy(buffer, internal_prompt_string(count, format, args));
+        va_end(args);
+    }
+
+    // If the user simply "newlined" the prompt away, we'll return the first argument.
+    if(strlen(buffer) == 0)
+    {
+        va_start(args, format);
+        strcpy(buffer, va_arg(args, char*));
+        va_end(args);
+    }
+
+    return buffer;
+}
+
+// Uses prompt_string but returns only the first character.
 char prompt_choice(
     char const* format,
     ...)
@@ -76,7 +122,7 @@ char prompt_choice(
     va_start(args, format);
     char const c = prompt_string(1, format, args)[0];
     va_end(args);
-    
+
     return c;
 }
 
@@ -563,10 +609,15 @@ printf("\n\
 
     client const* const c = le_cherche_client(nom_utilisateur);
 
-    char const* const saisie = prompt_string(TAILLE_CHAMP_CODEPOSTAL, "Saisissez votre nouveau code postal ('enter' pour conserver) [%s] : ", c->code_postal);
+    char const* saisie = prompt_optional_string(TAILLE_CHAMP_CODEPOSTAL, "Saisissez votre nouveau code postal ('enter' pour conserver) [%s] : ", c->code_postal);
+    char code_postal[TAILLE_CHAMP_CODEPOSTAL];
+    strcpy(code_postal, saisie);
 
+    saisie = prompt_optional_string(TAILLE_CHAMP_TELEPHONE, "Saisissez votre nouveau téléphone ('enter' pour conserver) [%s] : ", c->telephone);
+    char telephone[TAILLE_CHAMP_TELEPHONE];
+    strcpy(telephone, saisie);
 
-    le_modifier_profil_client(c->index, saisie, c->telephone);
+    le_modifier_profil_client(c->index, code_postal, telephone);
 
     pop_back(pile);
 }
