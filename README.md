@@ -122,9 +122,9 @@ Par exemple, si j'habite dans le 13009, je peux me faire livrer d'un restaurant 
     - [x] Code postal
     - [x] Téléphone
 - [x] Supprimer un compte
-- [ ] Modifier son profil
-    - [ ] Code postal
-    - [ ] Téléphone
+- [x] Modifier son profil
+    - [x] Code postal
+    - [x] Téléphone
 - [ ] Solde
     - [ ] Confirmer le solde courant
     - [ ] Créditer un montant

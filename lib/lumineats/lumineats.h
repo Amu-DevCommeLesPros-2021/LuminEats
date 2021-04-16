@@ -45,6 +45,16 @@ livreur* le_creer_compte_livreur(
     char const* nom,
     char const* telephone);
 
+// Modifie les informations d'un livreur avec l'index donné.
+// 'telephone' doit etre unique.
+// 'index_restaurant' doit être zéro ou valide.
+// Renvoie 'vrai' si l'opération réussi.
+bool le_modifier_profil_livreur(
+    cle_t const index,
+    char const* deplacements,
+    char const* telephone,
+    cle_t const index_restaurant);
+
 // Crée un nouveau client et renvoie un pointeur au client nouvellement créé.
 // Les arguments 'nom' et 'telephone' ne doivent pas déjà dans la BdD.
 // Si 'nom' ou 'telephone' existent déjà dans la BdD, ne crée rien et renvoie 'NULL'.
@@ -57,7 +67,7 @@ client* le_creer_compte_client(
 // 'telephone' doit etre unique.
 // Renvoie 'vrai' si l'opération réussi.
 bool le_modifier_profil_client(
-    size_t const index,
+    cle_t const index,
     char const* code_postal,
     char const* telephone);
 

@@ -41,8 +41,22 @@ client* le_cherche_client(
     return compare(i, end(&table_clients)) != 0 ? i.element : NULL;
 }
 
+livreur* le_cherche_restaurant_i(
+    cle_t const index)
+{
+    iterator i = find_if_2(begin(&table_restaurants), end(&table_restaurants), restaurant_a_index, &index);
+    return compare(i, end(&table_restaurants)) != 0 ? i.element : NULL;
+}
+
+livreur* le_cherche_livreur_i(
+    cle_t const index)
+{
+    iterator i = find_if_2(begin(&table_livreurs), end(&table_livreurs), livreur_a_index, &index);
+    return compare(i, end(&table_livreurs)) != 0 ? i.element : NULL;
+}
+
 client* le_cherche_client_i(
-    size_t const index)
+    cle_t const index)
 {
     iterator i = find_if_2(begin(&table_clients), end(&table_clients), client_a_index, &index);
     return compare(i, end(&table_clients)) != 0 ? i.element : NULL;
@@ -85,6 +99,25 @@ restaurant* le_creer_compte_restaurateur(
     return back(&table_restaurants);
 }
 
+void analyse_deplacements(
+    char deplacements[TAILLE_DEPLACEMENTS][TAILLE_CHAMP_CODEPOSTAL],
+    char const* deplacements_s
+    )
+{
+    memset(deplacements, '\0', TAILLE_DEPLACEMENTS * TAILLE_CHAMP_CODEPOSTAL);
+
+    // Make a writable copy.
+    char d[TAILLE_DEPLACEMENTS * TAILLE_CHAMP_CODEPOSTAL];
+    strcpy(d, deplacements_s);
+
+    char *deplacement = strtok(d, ";");
+    for(int i = 0; i != TAILLE_DEPLACEMENTS && deplacement; ++i)
+    {
+        strcpy(deplacements[i], deplacement);
+        deplacement = strtok(NULL, ";");
+    }
+}
+
 livreur* le_creer_compte_livreur(
     char const* nom,
     char const* telephone)
@@ -108,6 +141,35 @@ livreur* le_creer_compte_livreur(
     llog("Compte 'livreur' [%s,%s] créé.", nom, telephone);
 
     return back(&table_livreurs);
+}
+
+bool le_modifier_profil_livreur(
+    cle_t const index,
+    char const* deplacements,
+    char const* telephone,
+    cle_t const index_restaurant)
+{
+    livreur* l = le_cherche_livreur_i(index);
+    if(!l)
+    {
+        return false;
+    }
+
+    if(le_compte_existe(telephone) && strcmp(l->telephone, telephone) != 0)
+    {
+        return false;
+    }
+
+    if(index_restaurant != 0 && le_cherche_restaurant_i(index_restaurant) == NULL)
+    {
+        return false;
+    }
+
+    strcpy(l->telephone, telephone);
+    analyse_deplacements(l->deplacements, deplacements);
+    l->restaurant = index_restaurant;
+
+    return true;
 }
 
 client* le_creer_compte_client(
@@ -138,7 +200,7 @@ client* le_creer_compte_client(
 }
 
 bool le_modifier_profil_client(
-    size_t const index,
+    cle_t const index,
     char const* code_postal,
     char const* telephone)
 {

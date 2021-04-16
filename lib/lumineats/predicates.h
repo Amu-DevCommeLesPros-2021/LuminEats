@@ -2,6 +2,10 @@
 
 #include <stdbool.h>
 
+bool restaurant_a_index(
+    void const* c,
+    void const* index);
+
 bool restaurant_est_nomme(
     void const* r,
     void const* nom);
@@ -13,6 +17,10 @@ bool restaurant_a_telephone(
 bool restaurant_a_nom_ou_telephone(
     void const* r,
     void const* chaine);
+
+bool livreur_a_index(
+    void const* c,
+    void const* index);
 
 bool livreur_est_nomme(
     void const* l,
