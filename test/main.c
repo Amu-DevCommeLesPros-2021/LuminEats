@@ -287,11 +287,11 @@ int main()
         // Création d'un compte Livreur.
         ouverture_db("build/test-db/creation-compte");
         char nom_livreur[] = "Bob Binette";
-        livreur *l = le_creer_compte_livreur(nom_livreur, "04 99 99 99 99");
-        
+        livreur *l = le_creer_compte_livreur(nom_livreur, "04 99 99 99 99", "13001", 0);
+
         TEST(le_compte_existe(nom_livreur) == true);
         TEST(strcmp(l->nom, nom_livreur) == 0);
-        
+
         fermeture_db("build/test-db/creation-compte");
 
         // Vérification intrusive du fichier 'livreurs.csv'.
@@ -299,7 +299,7 @@ int main()
         getline(&buffer, &buffer_size, livreurs);
         getline(&buffer, &buffer_size, livreurs);
 
-        TEST(strcmp(buffer, "1,Bob Binette,04 99 99 99 99,,0,0\n") == 0);
+        TEST(strcmp(buffer, "1,Bob Binette,04 99 99 99 99,13001,0,0\n") == 0);
 
         fclose(livreurs);
 
@@ -328,7 +328,7 @@ int main()
         r = le_creer_compte_restaurateur("Snack-Bar Chez Raymond", "13001", "04 11 11 11 11", "fast food");
         TEST(r == NULL);
 
-        l = le_creer_compte_livreur("Bobby Binette", "04 99 99 99 99");
+        l = le_creer_compte_livreur("Bobby Binette", "04 99 99 99 99", "", 0);
         TEST(l == NULL);
 
         c = le_creer_compte_client("Paul Pitron", "13001", "06 66 66 66 66");
@@ -354,16 +354,14 @@ int main()
         char *buffer = NULL;
         size_t buffer_size;
         getline(&buffer, &buffer_size, restaurants);
-        getline(&buffer, &buffer_size, restaurants);
-
-        TEST(strlen(buffer) == 0);
+        TEST(getline(&buffer, &buffer_size, restaurants) == -1);
 
         fclose(restaurants);
 
         // Suppression d'un compte Livreur.
         ouverture_db("build/test-db/suppression-compte");
         char nom_livreur[] = "Bob Binette";
-        le_creer_compte_livreur(nom_livreur, "04 99 99 99 99");
+        le_creer_compte_livreur(nom_livreur, "04 99 99 99 99", "", 0);
         le_supprimer_compte(nom_livreur);
 
         TEST(le_compte_existe(nom_livreur) == false);
@@ -373,9 +371,7 @@ int main()
         // Vérification intrusive du fichier 'livreurs.csv'.
         FILE *livreurs = fopen("build/test-db/suppression-compte/livreurs.csv", "r");
         getline(&buffer, &buffer_size, livreurs);
-        getline(&buffer, &buffer_size, livreurs);
-
-        TEST(strlen(buffer) == 0);
+        TEST(getline(&buffer, &buffer_size, livreurs) == -1);
 
         fclose(livreurs);
 
@@ -392,9 +388,7 @@ int main()
         // Vérification intrusive du fichier 'clients.csv'.
         FILE *clients = fopen("build/test-db/suppression-compte/clients.csv", "r");
         getline(&buffer, &buffer_size, clients);
-        getline(&buffer, &buffer_size, clients);
-
-        TEST(strlen(buffer) == 0);
+        TEST(getline(&buffer, &buffer_size, clients) == -1);
 
         free(buffer);
         fclose(clients);
@@ -403,7 +397,7 @@ int main()
         // Tests négatifs. Supprimer un compte qui n'existe pas ne doit pas affecter les comptes existants.
         ouverture_db("build/test-db/suppression-compte");
         le_creer_compte_restaurateur(nom_restaurant, "13001", "04 11 11 11 11", "fast food");
-        le_creer_compte_livreur(nom_livreur, "04 99 99 99 99");
+        le_creer_compte_livreur(nom_livreur, "04 99 99 99 99", "", 0);
         le_creer_compte_client(nom_client, "13001", "06 66 66 66 66");
 
         le_supprimer_compte("Inexistant");
@@ -422,7 +416,7 @@ int main()
 
         // Modification d'un compte livreur.
         char nom_livreur[] = "Louis Lamotte";
-        livreur *l = le_creer_compte_livreur(nom_livreur, "06 11 11 11 11");
+        livreur *l = le_creer_compte_livreur(nom_livreur, "06 11 11 11 11", "" , 0);
 
         // On peut modifier le profil d'un livreur avec un nouveau téléphone.
         TEST(le_modifier_profil_livreur(l->index, "", "06 22 22 22 22", 0) == true);
@@ -449,7 +443,7 @@ int main()
         TEST(l->restaurant == r->index);
 
         // On ne peut pas modifier un compte livreur pour lui donner un téléphone existant.
-        l = le_creer_compte_livreur("Lucas Lamotte", "06 33 33 33 33");
+        l = le_creer_compte_livreur("Lucas Lamotte", "06 33 33 33 33", "", 0);
         TEST(le_modifier_profil_livreur(l->index, "13002", "06 22 22 22 22", 0) == false);
 
         // On ne peut pas modifier un compte ivreur pour lui donner un index de restaurant inexistant.

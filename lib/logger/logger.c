@@ -38,4 +38,5 @@ void llog(char const* format, ...)
 void lclose()
 {
     fclose(file);
+    file = NULL;
 }

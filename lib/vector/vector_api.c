@@ -99,7 +99,7 @@ void erase(
     iterator const i)
 {
     size_t const chunk_offset = i.element - v->data;     // En octets.
-    size_t const chunk_size = end(v).element - i.element;    // En octets.
+    size_t const chunk_size = end(v).element - i.element - v->element_size;    // En octets.
 
     memmove(v->data + chunk_offset, v->data + chunk_offset + v->element_size, chunk_size);
     --v->size;

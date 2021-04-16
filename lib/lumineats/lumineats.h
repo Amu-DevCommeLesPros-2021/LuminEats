@@ -49,7 +49,9 @@ restaurant* le_creer_compte_restaurateur(
 // Si 'nom' ou 'telephone' existent déjà dans la BdD, ne crée rien et renvoie 'NULL'.
 livreur* le_creer_compte_livreur(
     char const* nom,
-    char const* telephone);
+    char const* telephone,
+    char const* deplacements,
+    cle_t const index_restaurant);
 
 // Modifie les informations d'un livreur avec l'index donné.
 // 'telephone' doit etre unique.
