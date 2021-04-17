@@ -71,7 +71,9 @@ void push_back(
 void* pop_back(
     vector* v)
 {
-    erase(v, end(v));
+    iterator i = end(v);
+    decrement(&i, 1);
+    erase(v, i);
     return v->data + v->size * v->element_size;
 }
 
