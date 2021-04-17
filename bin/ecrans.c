@@ -701,7 +701,8 @@ Vous voulez :\n\
 1. Modifier votre profil\n\
 2. Confirmer votre solde\n\
 3. Ajoutez du crédit à votre solde\n\
-4. Supprimer votre compte\n\
+4. Voir la liste des restaurants\n\
+5. Supprimer votre compte\n\
 \n", nom_utilisateur);
 
     char const choice = prompt_choice("Votre choix ('q' pour quitter, 'd' pour deconnexion) : ");
@@ -726,6 +727,12 @@ Vous voulez :\n\
             }
             break;
         case '4':
+            {
+                ecran e = client_lister_restaurants;
+                push_back(pile, &e);
+            }
+            break;
+        case '5':
             le_supprimer_compte(nom_utilisateur);
             __attribute__((fallthrough));
         case 'd':
@@ -804,4 +811,61 @@ printf("\n\
     printf("Votre solde courant : €%zu\n\n", c->solde);
 
     pop_back(pile);
+}
+
+
+void client_lister_restaurants(
+    vector* pile)
+{
+    printf("\n\
+* Menu Client * %s *\n", nom_utilisateur);
+
+
+    char type[TAILLE_CHAMP_TYPE] = {'\0'};
+    char code_postal[TAILLE_CHAMP_CODEPOSTAL] = {'\0'};
+    for(bool retour = false; !retour;)
+    {
+        printf("\nListe des restaurants filtrée par [%c] type (%s) [%c] qui peut me livrer : \n\n", (type[0] ? 'x' : ' '), (type[0] ? type : ""), (code_postal[0] ? 'x' : ' '));
+
+        vector restaurants = le_liste_restaurants();
+        if(strlen(type))
+        {
+            le_filtrer_restaurants_type(&restaurants, type);
+        }
+
+        if(strlen(code_postal))
+        {
+
+            le_filtrer_restaurants_livraison(&restaurants, code_postal);
+        }
+
+        for(iterator i = begin(&restaurants), e = end(&restaurants); compare(i, e) != 0; increment(&i, 1))
+        {
+            printf("- %s\n", ((restaurant*)value(i))->nom);
+        }
+
+        printf("\nFiltrer par :\n1. type de cuisine\n2. qui peut me livrer\n3. enlever les filtres\n");
+        char const c = prompt_choice("Votre choix ('q' pour quitter, 'p' pour précedent) : ");
+        switch(c)
+        {
+            case '1':
+                strcpy(type, prompt_string(TAILLE_CHAMP_TYPE, "Type de cuisine : "));
+                break;
+            case '2':
+                strcpy(code_postal, le_cherche_client(nom_utilisateur)->code_postal);
+                break;
+            case '3':
+                strcpy(type, "");
+                strcpy(code_postal, "");
+                break;
+            case 'p':
+                pop_back(pile);
+                retour = true;
+                break;
+            case 'q':
+                clear(pile);
+                retour = true;
+                break;
+        }
+    }
 }
