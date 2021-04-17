@@ -57,9 +57,9 @@ void erase(
     vector* v,
     iterator const i);
 
-// Enlève tous les éléments pour lesquels la fonction 'binary_predicate' renvoie 
+// Conserve tous les éléments pour lesquels la fonction 'binary_predicate' renvoie 
 // 'vrai' lorsqu'appellée avec un élément et 'b'.
-void erase_if(
+void keep_if(
     vector* v,
     bool (*binary_predicate)(void const* a, void const* b),
     void const* b);

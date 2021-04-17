@@ -107,7 +107,7 @@ void erase(
     --v->size;
 }
 
-void erase_if(
+void keep_if(
     vector* v,
     bool (*binary_predicate)(void const* a, void const* b),
     void const* b)

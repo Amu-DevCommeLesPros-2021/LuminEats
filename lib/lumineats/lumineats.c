@@ -40,14 +40,14 @@ void le_filtrer_restaurants_type(
     vector *restaurants,
     char const* type)
 {
-    erase_if(restaurants, restaurant_a_type, type);
+    keep_if(restaurants, restaurant_a_type, type);
 }
 
 void le_filtrer_restaurants_livraison(
     vector *restaurants,
     char const* code_postal)
 {
-    erase_if(restaurants, restaurant_peut_livrer, code_postal);
+    keep_if(restaurants, restaurant_peut_livrer, code_postal);
 }
 
 livreur* le_cherche_livreur(
