@@ -2,6 +2,7 @@
 
 #include "vector_types.h"
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -220,6 +221,8 @@ iterator at(
     vector const* v,
     size_t const index)
 {
+    assert(index < v->size);
+
     return (iterator){
             .element = v->data + v->element_size * index,
             .element_size = v->element_size,

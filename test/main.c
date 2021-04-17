@@ -15,7 +15,7 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 155;
+int const tests_total = 173;
 int const test_column_width = 60;
 
 int main()
@@ -507,11 +507,12 @@ int main()
     {
         ouverture_db("build/test-db");
 
+        // Tests de filtre par type. 
         vector restaurants = le_liste_restaurants();
 
         le_filtrer_restaurants_type(&restaurants, "provencal");
         TEST(size(restaurants) == 1);
-        TEST(strcmp(((restaurant*)value(begin(&restaurants)))->nom, "Chez Michel") == 0);
+        TEST(strcmp(((restaurant*)value(at(&restaurants, 0)))->nom, "Chez Michel") == 0);
 
         // Re-filtrer avec le même type ne devrait rien changer.
         le_filtrer_restaurants_type(&restaurants, "provencal");
@@ -522,6 +523,88 @@ int main()
         TEST(size(restaurants) == 0);
 
         destroy(&restaurants);
+
+
+        // Tests par possibilité de livraison.
+
+        // Test de qui peut livrer dans le 13001.
+        restaurants = le_liste_restaurants();
+
+        le_filtrer_restaurants_livraison(&restaurants, "13001");
+        TEST(size(restaurants) == 2);
+        TEST(strcmp(((restaurant*)value(at(&restaurants, 0)))->nom, "Chez Michel") == 0);
+        TEST(strcmp(((restaurant*)value(at(&restaurants, 1)))->nom, "Le Veg") == 0);
+
+        destroy(&restaurants);
+
+        // Test de qui peut livrer dans le 13002.
+        restaurants = le_liste_restaurants();
+
+        le_filtrer_restaurants_livraison(&restaurants, "13002");
+        TEST(size(restaurants) == 1);
+        TEST(strcmp(((restaurant*)value(at(&restaurants, 0)))->nom, "Chez Michel") == 0);
+
+        destroy(&restaurants);
+
+        // Test de qui peut livrer dans le 13005.
+        restaurants = le_liste_restaurants();
+
+        le_filtrer_restaurants_livraison(&restaurants, "13005");
+        TEST(size(restaurants) == 2);
+        TEST(strcmp(((restaurant*)value(at(&restaurants, 0)))->nom, "Chez Michel") == 0);
+        TEST(strcmp(((restaurant*)value(at(&restaurants, 1)))->nom, "Le Veg") == 0);
+
+        destroy(&restaurants);
+
+        // Test de qui peut livrer dans le 13009.
+        restaurants = le_liste_restaurants();
+
+        le_filtrer_restaurants_livraison(&restaurants, "13009");
+        TEST(size(restaurants) == 3);
+        TEST(strcmp(((restaurant*)value(at(&restaurants, 0)))->nom, "Chez Michel") == 0);
+        TEST(strcmp(((restaurant*)value(at(&restaurants, 1)))->nom, "Le Veg") == 0);
+        TEST(strcmp(((restaurant*)value(at(&restaurants, 2)))->nom, "Joe's International House of Pancakes") == 0);
+
+        destroy(&restaurants);
+
+        // Test de qui peut livrer dans le 13010.
+        restaurants = le_liste_restaurants();
+
+        le_filtrer_restaurants_livraison(&restaurants, "13010");
+        TEST(size(restaurants) == 1);
+        TEST(strcmp(((restaurant*)value(at(&restaurants, 0)))->nom, "Joe's International House of Pancakes") == 0);
+
+        destroy(&restaurants);
+
+
+        // Test négatifs.
+        restaurants = le_liste_restaurants();
+
+        le_filtrer_restaurants_livraison(&restaurants, "13012");
+        TEST(size(restaurants) == 0);
+
+        destroy(&restaurants);
+
+
+        // Test de deux filtres.
+        restaurants = le_liste_restaurants();
+
+        le_filtrer_restaurants_livraison(&restaurants, "13009");
+        le_filtrer_restaurants_type(&restaurants, "americain");
+        TEST(size(restaurants) == 1);
+        TEST(strcmp(((restaurant*)value(at(&restaurants, 0)))->nom, "Joe's International House of Pancakes") == 0);
+
+        destroy(&restaurants);
+
+
+        restaurants = le_liste_restaurants();
+
+        le_filtrer_restaurants_livraison(&restaurants, "13001");
+        le_filtrer_restaurants_type(&restaurants, "americain");
+        TEST(size(restaurants) == 0);
+
+        destroy(&restaurants);
+
 
         fermeture_db("build/test-db/ecriture");
     }
