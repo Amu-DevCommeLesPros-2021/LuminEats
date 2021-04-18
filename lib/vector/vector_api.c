@@ -2,6 +2,8 @@
 
 #include "vector_types.h"
 
+#include <assert.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -69,7 +71,9 @@ void push_back(
 void* pop_back(
     vector* v)
 {
-    erase(v, end(v));
+    iterator i = end(v);
+    decrement(&i, 1);
+    erase(v, i);
     return v->data + v->size * v->element_size;
 }
 
@@ -103,6 +107,29 @@ void erase(
 
     memmove(v->data + chunk_offset, v->data + chunk_offset + v->element_size, chunk_size);
     --v->size;
+}
+
+void keep_if(
+    vector* v,
+    bool (*binary_predicate)(void const* a, void const* b),
+    void const* b)
+{
+    for(void *d = v->data; d != v->data + v->size * v->element_size;)
+    {
+        if(!binary_predicate(d, b))
+        {
+            size_t const chunk_offset = d - v->data;     // En octets.
+            size_t const chunk_size = end(v).element - d - v->element_size;    // En octets.
+
+            memmove(v->data + chunk_offset, v->data + chunk_offset + v->element_size, chunk_size);
+            --v->size;
+        }
+        else
+        {
+            d += v->element_size;
+        }
+    }
+
 }
 
 void assign(
@@ -196,6 +223,8 @@ iterator at(
     vector const* v,
     size_t const index)
 {
+    assert(index < v->size);
+
     return (iterator){
             .element = v->data + v->element_size * index,
             .element_size = v->element_size,

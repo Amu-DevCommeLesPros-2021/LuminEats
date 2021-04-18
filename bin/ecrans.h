@@ -76,3 +76,6 @@ void client_crediter_solde(
 
 void client_voir_solde(
     vector* pile);
+
+void client_lister_restaurants(
+    vector* pile);

@@ -2,6 +2,7 @@
 
 #include "vector_types.h"
 
+#include <stdbool.h>
 #include <stdlib.h>
 
 // Crée un vecteur dont la taille des éléments contenus est de 'element_size'.
@@ -52,9 +53,16 @@ void insert(
     void const* data);  // La valeur à affecter au nouvel élément.
 
 // Enlève l'élément à l'itérateur donné.
-void erase(vector* v,
-iterator const i);
+void erase(
+    vector* v,
+    iterator const i);
 
+// Conserve tous les éléments pour lesquels la fonction 'binary_predicate' renvoie 
+// 'vrai' lorsqu'appellée avec un élément et 'b'.
+void keep_if(
+    vector* v,
+    bool (*binary_predicate)(void const* a, void const* b),
+    void const* b);
 
 // Remplace le contenu de 'v' par les éléments contenus entre 'first' et 'last'. 
 // 'last' n'est pas inclus. Les itérateurs 'first' et 'last' font référence à un 

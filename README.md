@@ -130,11 +130,11 @@ Par exemple, si j'habite dans le 13009, je peux me faire livrer d'un restaurant 
 - [x] Solde
     - [x] Confirmer le solde courant
     - [x] Créditer un montant
-- [ ] Voir la liste des restaurants
-    - [ ] Restreindre la liste...
-        - [ ] À qui peut me livrer
-        - [ ] À un type de cuisine
-        - [ ] À une combinaison de ces paramètres
+- [x] Voir la liste des restaurants
+    - [x] Restreindre la liste...
+        - [x] À qui peut me livrer
+        - [x] À un type de cuisine
+        - [x] À une combinaison de ces paramètres
 - [ ] Commande 
     - [ ] Voir la liste des items
         - [ ] Restreindre la liste...
