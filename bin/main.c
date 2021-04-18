@@ -56,6 +56,7 @@ int main(int argc, char* argv[])
 
     while(size(ecrans))
     {
+        system("clear");
         ecran e = *(ecran*)back(&ecrans);
         e(&ecrans);
     }

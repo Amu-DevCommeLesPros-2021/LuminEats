@@ -178,7 +178,8 @@ void connexion_compte(
         default:
             if(!le_compte_existe(saisie))
             {
-                printf("Ce compte n'existe pas.\n");
+                printf("\nErreur : ce compte n'existe pas. ('enter' pour ré-essayer)");
+                getchar();
             }
             else
             {
@@ -565,6 +566,7 @@ printf("\n\
     restaurant const* const r = le_cherche_restaurant(nom_utilisateur);
 
     printf("Votre solde courant : €%zu\n\n", r->solde);
+    getchar();
 
     pop_back(pile);
 }
@@ -687,6 +689,7 @@ printf("\n\
     livreur const* const l = le_cherche_livreur(nom_utilisateur);
 
     printf("Votre solde courant : €%zu\n\n", l->solde);
+    getchar();
 
     pop_back(pile);
 }
@@ -808,7 +811,8 @@ printf("\n\
 
     client const* const c = le_cherche_client(nom_utilisateur);
 
-    printf("Votre solde courant : €%zu\n\n", c->solde);
+    printf("Votre solde courant : €%zu\n\n('enter' pour menu précédent)", c->solde);
+    getchar();
 
     pop_back(pile);
 }
@@ -817,14 +821,13 @@ printf("\n\
 void client_lister_restaurants(
     vector* pile)
 {
-    printf("\n\
-* Menu Client * %s *\n", nom_utilisateur);
-
-
     char type[TAILLE_CHAMP_TYPE] = {'\0'};
     char code_postal[TAILLE_CHAMP_CODEPOSTAL] = {'\0'};
     for(bool retour = false; !retour;)
     {
+        system("clear");
+        printf("\n* Menu Client * %s *\n", nom_utilisateur);
+
         printf("\nListe des restaurants filtrée par [%c] type (%s) [%c] qui peut me livrer : \n\n", (type[0] ? 'x' : ' '), (type[0] ? type : ""), (code_postal[0] ? 'x' : ' '));
 
         vector restaurants = le_liste_restaurants();
