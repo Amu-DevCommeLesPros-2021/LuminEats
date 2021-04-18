@@ -74,7 +74,6 @@ Au fils des commandes des clients, un montant est crédité dans le compte.
     - [x] Téléphone
     - [x] Type de cuisine
 - [x] Supprimer un compte
-    - [ ] Supprime les références à ce restaurant dans les items
 - [ ] Modifier le menu
     - [ ] Ajouter un nouvel item au menu
         - [ ] Nom
@@ -84,7 +83,6 @@ Au fils des commandes des clients, un montant est crédité dans le compte.
     - [ ] Supprimer un item
 - [x] Solde
     - [x] Voir le solde courant
-    - [ ] Le solde est crédité au fil des livraisons
 
 ## Fonctionalités pour un livreur
 
@@ -107,7 +105,6 @@ Au fils des commandes des clients, un montant est crédité dans le compte.
     - [x] Exclusivité restaurateur
 - [x] Solde
     - [x] Voir le solde courant
-    - [ ] Le solde est crédité au fil des livraisons
 
 ## Fonctionalités pour un client
 
