@@ -133,8 +133,7 @@ void initial(
 * Menu Principal *\n\
 \n\
 1. Vous connecter à votre compte\n\
-2. Créer un nouveau compte\n\
-\n");
+2. Créer un nouveau compte\n\n");
 
     char const choice = prompt_choice("Votre choix ('q' pour quitter) : ");
     switch(choice)
@@ -163,8 +162,7 @@ void initial(
 void connexion_compte(
     vector* pile)
 {
-    printf("\n\
-* Connexion à votre compte*\n");
+    printf("\n* Connexion à votre compte*\n\n");
 
     char const* saisie = prompt_string(TAILLE_CHAMP_NOM, "Saisissez nom ou téléphone ('q' pour quitter, 'p' pour menu précédent) : ");
     switch(saisie[0])
@@ -221,7 +219,7 @@ void creation_compte(
 Vous êtes :\n\
 1. Restaurateur·trice\n\
 2. Livreur·se\n\
-3. Client·e\n");
+3. Client·e\n\n");
 
     char const choice = prompt_choice("Votre choix ('q' pour quitter, 'p' pour menu précédent) : ");
     switch(choice)
@@ -257,7 +255,7 @@ void creation_compte_restaurateur(
     vector* pile)
 {
     printf("\n\
-* Création d'un compte Restaurateur *\n");
+* Création d'un compte Restaurateur *\n\n");
 
     char const* saisie = prompt_string(TAILLE_CHAMP_NOM, "Saisissez le nom de votre restaurant ('q' pour quitter, 'p' pour menu précédent) : ");
     char nom[TAILLE_CHAMP_NOM];
@@ -350,7 +348,7 @@ void creation_compte_livreur(
     vector* pile)
 {
     printf("\n\
-* Création d'un compte Livreur *\n");
+* Création d'un compte Livreur *\n\n");
 
    char const* saisie = prompt_string(TAILLE_CHAMP_NOM, "Saisissez votre nom ('q' pour quitter, 'p' pour menu précédent) : ");
     char nom[TAILLE_CHAMP_NOM];
@@ -442,7 +440,7 @@ void creation_compte_client(
     vector* pile)
 {
     printf("\n\
-* Création d'un compte Client *\n");
+* Création d'un compte Client *\n\n");
 
     char const* saisie = prompt_string(TAILLE_CHAMP_NOM, "Saisissez votre nom ('q' pour quitter, 'p' pour menu précédent) : ");
     char nom[TAILLE_CHAMP_NOM];
@@ -522,13 +520,12 @@ void restaurateur_principal(
     printf("\n\
 * Menu Restaurateur * %s *\n\
 \n\
-Vous voulez :\n\
-1. Modifier votre menu (ajouter/modifier/supprimer)\n\
+1. Modifier votre menu\n\
 2. Confirmer votre solde\n\
 3. Supprimer votre compte\n\
 \n", nom_utilisateur);
 
-    char const choice = prompt_choice("Votre choix ('q' pour quitter, , 'd' pour deconnexion) : ");
+    char const choice = prompt_choice("Votre choix ('q' pour quitter, 'd' pour deconnexion) : ");
     switch(choice)
     {
         case '1':
@@ -577,7 +574,6 @@ void livreur_principal(
     printf("\n\
 * Menu Livreur * %s *\n\
 \n\
-Vous voulez :\n\
 1. Modifier votre profil\n\
 2. Confirmer votre solde\n\
 3. Supprimer votre compte\n\
@@ -700,7 +696,6 @@ void client_principal(
     printf("\n\
 * Menu Client * %s *\n\
 \n\
-Vous voulez :\n\
 1. Modifier votre profil\n\
 2. Confirmer votre solde\n\
 3. Ajoutez du crédit à votre solde\n\
@@ -847,7 +842,7 @@ void client_lister_restaurants(
             printf("- %s\n", ((restaurant*)value(i))->nom);
         }
 
-        printf("\nFiltrer par :\n1. type de cuisine\n2. qui peut me livrer\n3. enlever les filtres\n");
+        printf("\nFiltrer par :\n1. type de cuisine\n2. qui peut me livrer\n3. enlever les filtres\n\n");
         char const c = prompt_choice("Votre choix ('q' pour quitter, 'p' pour précedent) : ");
         switch(c)
         {
