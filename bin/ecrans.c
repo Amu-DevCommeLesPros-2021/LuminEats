@@ -154,7 +154,9 @@ void initial(
             clear(pile);
             break;
         case 'z':
+            system("clear");
             le_dump_tables(stdout);
+            getchar();
             break;
     }
 }
@@ -615,7 +617,7 @@ void livreur_modifier_profil(
     vector* pile)
 {
     printf("\n\
-* Menu Lvrieur * %s *\n\
+* Menu Livreur * %s *\n\
 \n", nom_utilisateur);
 
     livreur const* const l = le_cherche_livreur(nom_utilisateur);
