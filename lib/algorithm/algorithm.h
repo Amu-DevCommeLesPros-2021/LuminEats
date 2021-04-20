@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "vector/vector_types.h"
+#include "vector/types.h"
 
 #include <stdbool.h>
 #include <stddef.h>

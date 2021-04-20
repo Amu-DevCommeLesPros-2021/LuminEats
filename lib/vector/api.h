@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vector_types.h"
+#include "vector/types.h"
 
 #include <stdbool.h>
 #include <stdlib.h>

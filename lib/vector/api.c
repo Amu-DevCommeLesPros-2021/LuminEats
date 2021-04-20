@@ -1,6 +1,6 @@
-#include "vector_api.h"
+#include "vector/api.h"
 
-#include "vector_types.h"
+#include "vector/types.h"
 
 #include <assert.h>
 #include <stdbool.h>

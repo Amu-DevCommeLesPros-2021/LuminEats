@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vector/vector_types.h"
+#include "vector/types.h"
 
 // Renvoie tous les restaurants.
 vector le_liste_restaurants();

@@ -1,7 +1,6 @@
 #include "algorithm.h"
 
-#include "vector/vector_types.h"
-#include "vector/vector_api.h"
+#include "vector/vector.h"
 
 #include <stdbool.h>
 #include <stddef.h>

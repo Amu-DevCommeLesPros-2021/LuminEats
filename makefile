@@ -21,15 +21,15 @@ clean:
 build:
 	mkdir -p build
 
-build/libvector.a: lib/vector/vector_api.c lib/vector/vector_api.h lib/vector/vector_types.h lib/vector/vector.h | build
-	$(CC) $(CFLAGS) -I lib -c lib/vector/vector_api.c -o build/vector_api.o
-	$(AR) $(ARFLAGS) build/libvector.a build/vector_api.o
+build/libvector.a: lib/vector/api.c lib/vector/api.h lib/vector/types.h lib/vector/vector.h | build
+	$(CC) $(CFLAGS) -I lib -c lib/vector/api.c -o build/api.o
+	$(AR) $(ARFLAGS) build/libvector.a build/api.o
 
-build/libalgorithm.a: lib/algorithm/algorithm.c lib/algorithm/algorithm.h lib/vector/vector_api.h lib/vector/vector_types.h | build
+build/libalgorithm.a: lib/algorithm/algorithm.c lib/algorithm/algorithm.h lib/vector/api.h lib/vector/types.h | build
 	$(CC) $(CFLAGS) -I lib -c lib/algorithm/algorithm.c -o build/algorithm.o
 	$(AR) $(ARFLAGS) build/libalgorithm.a build/algorithm.o
 
-build/libdb.a: lib/db/db.c lib/db/db.h lib/vector/vector_api.h lib/vector/vector_types.h | build
+build/libdb.a: lib/db/db.c lib/db/db.h lib/vector/api.h lib/vector/types.h | build
 	$(CC) $(CFLAGS) -I lib -c lib/db/db.c -o build/db.o
 	$(AR) $(ARFLAGS) build/libdb.a build/db.o
 
@@ -43,7 +43,7 @@ build/liblumineats.a: \
  lib/lumineats/lumineats.c lib/lumineats/lumineats.h \
  lib/lumineats/predicates.c lib/lumineats/predicates.h \
  lib/lumineats/search.c lib/lumineats/search.h \
- lib/algorithm/algorithm.h lib/logger/logger.h lib/vector/vector_api.h lib/vector/vector_types.h | build
+ lib/algorithm/algorithm.h lib/logger/logger.h lib/vector/api.h lib/vector/types.h | build
 	$(CC) $(CFLAGS) -I lib -c lib/lumineats/accounts.c -o build/accounts.o
 	$(CC) $(CFLAGS) -I lib -c lib/lumineats/filter.c -o build/filter.o
 	$(CC) $(CFLAGS) -I lib -c lib/lumineats/lumineats.c -o build/lumineats.o

@@ -6,7 +6,7 @@
 #include "algorithm/algorithm.h"
 #include "db/tables.h"
 #include "logger/logger.h"
-#include "vector/vector_types.h"
+#include "vector/vector.h"
 
 #include <string.h>
 

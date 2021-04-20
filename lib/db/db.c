@@ -1,7 +1,6 @@
 #include "db.h"
 
-#include "vector/vector_api.h"
-#include "vector/vector_types.h"
+#include "vector/vector.h"
 
 #if defined(__linux__)
     #include <linux/limits.h>
