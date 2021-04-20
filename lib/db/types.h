@@ -10,7 +10,7 @@
 
 #define TAILLE_DEPLACEMENTS 10
 #define TAILLE_INGREDIENTS 5
-#define TAILLE_ITEMS 10
+#define TAILLE_MENU 10
 
 typedef size_t cle_t;
 
@@ -21,8 +21,8 @@ typedef struct restaurant
     char code_postal[TAILLE_CHAMP_CODEPOSTAL];
     char telephone[TAILLE_CHAMP_TELEPHONE];
     char type[TAILLE_CHAMP_TYPE];
-    char items_s[TAILLE_ITEMS * 3];
-    cle_t items[TAILLE_ITEMS];
+    char menu_s[TAILLE_MENU * 3];
+    cle_t menu[TAILLE_MENU];    // Clé étrangère 'item'.
     size_t solde;
 } restaurant;
 
@@ -43,7 +43,7 @@ typedef struct livreur
     char telephone[TAILLE_CHAMP_TELEPHONE];
     char deplacements_s[TAILLE_DEPLACEMENTS * TAILLE_CHAMP_CODEPOSTAL];
     char deplacements[TAILLE_DEPLACEMENTS][TAILLE_CHAMP_CODEPOSTAL];
-    cle_t restaurant;
+    cle_t restaurant;   // Clé étrangère 'restaurant'.
     size_t solde;
 } livreur;
 

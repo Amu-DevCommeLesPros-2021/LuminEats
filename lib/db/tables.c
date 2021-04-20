@@ -20,14 +20,14 @@ vector lecture_table_restaurants(
     while(getline(&buffer, &buffer_size, fichier) != -1)
     {
         restaurant r = {0};
-        sscanf(buffer, "%zu,%[^,],%[^,],%[^,],%[^,],%[^,],%zu\n", &r.index, r.nom, r.code_postal, r.telephone, r.type, r.items_s, &r.solde);
+        sscanf(buffer, "%zu,%[^,],%[^,],%[^,],%[^,],%[^,],%zu\n", &r.index, r.nom, r.code_postal, r.telephone, r.type, r.menu_s, &r.solde);
         
         // Parse string of semicolon separated items.
-        memset(r.items, 0, sizeof(r.items));
+        memset(r.menu, 0, sizeof(r.menu));
         int i = 0;
-        for(char *item = strtok(r.items_s, ";"); item; item = strtok(NULL, ";"))
+        for(char *item = strtok(r.menu_s, ";"); item; item = strtok(NULL, ";"))
         {
-            r.items[i++] = atoi(item);
+            r.menu[i++] = atoi(item);
         }
 
         push_back(&restaurants, &r);
@@ -49,12 +49,12 @@ void ecriture_table_restaurants(
 
         fprintf(fichier, "%zu,%s,%s,%s,%s,", r->index, r->nom, r->code_postal, r->telephone, r->type);
 
-        for(int i = 0; i != TAILLE_ITEMS && r->items[i] != 0; ++i)
+        for(int i = 0; i != TAILLE_MENU && r->menu[i] != 0; ++i)
         {
-            fprintf(fichier, "%zu", r->items[i]);
-            if(i != TAILLE_ITEMS && r->items[i + 1] != 0)
+            fprintf(fichier, "%zu", r->menu[i]);
+            if(i != TAILLE_MENU && r->menu[i + 1] != 0)
             {
-                fprintf(fichier,";");
+                fprintf(fichier, ";");
             }
         }
 

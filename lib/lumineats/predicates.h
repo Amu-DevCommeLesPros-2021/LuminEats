@@ -18,6 +18,10 @@ bool restaurant_a_nom_ou_telephone(
     void const* r,
     void const* chaine);
 
+bool restaurant_menu_contient(
+    void const* r,
+    void const* index);
+
 bool restaurant_a_type(
     void const* r,
     void const* type);
@@ -57,3 +61,11 @@ bool client_a_telephone(
 bool client_a_nom_ou_telephone(
     void const* c,
     void const* chaine);
+
+bool item_a_index(
+    void const* i,
+    void const* index);
+
+bool item_est_nomme(
+    void const* i,
+    void const* nom);

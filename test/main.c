@@ -36,11 +36,11 @@ int main()
         TEST(strcmp(r->code_postal, "13001") == 0);
         TEST(strcmp(r->telephone, "04 13 13 13 13") == 0);
         TEST(strcmp(r->type, "provencal") == 0);
-        TEST(r->items[0] == 1);
-        TEST(r->items[1] == 4);
-        TEST(r->items[2] == 5);
-        TEST(r->items[3] == 0);
-        TEST(r->items[TAILLE_ITEMS - 1] == 0);
+        TEST(r->menu[0] == 1);
+        TEST(r->menu[1] == 4);
+        TEST(r->menu[2] == 5);
+        TEST(r->menu[3] == 0);
+        TEST(r->menu[TAILLE_MENU - 1] == 0);
         TEST(r->solde == 50);
 
         r = (restaurant*)value(at(&restaurants, 2));
@@ -49,10 +49,10 @@ int main()
         TEST(strcmp(r->code_postal, "13010") == 0);
         TEST(strcmp(r->telephone, "04 22 33 44 55") == 0);
         TEST(strcmp(r->type, "americain") == 0);
-        TEST(r->items[0] == 6);
-        TEST(r->items[1] == 7);
-        TEST(r->items[2] == 0);
-        TEST(r->items[TAILLE_ITEMS - 1] == 0);
+        TEST(r->menu[0] == 6);
+        TEST(r->menu[1] == 7);
+        TEST(r->menu[2] == 0);
+        TEST(r->menu[TAILLE_MENU - 1] == 0);
         TEST(r->solde == 44);
 
         FILE *test_db_restaurants_copie = fopen("build/test-db/restaurants-copie.csv", "w");

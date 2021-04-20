@@ -31,8 +31,8 @@ restaurant* le_creer_compte_restaurateur(
     strcpy(r.code_postal, code_postal);
     strcpy(r.telephone, telephone);
     strcpy(r.type, type);
-    memset(r.items_s, '\0', TAILLE_ITEMS * 3);
-    memset(r.items, 0, sizeof(int) * TAILLE_ITEMS);
+    memset(r.menu_s, '\0', TAILLE_MENU * 3);
+    memset(r.menu, 0, sizeof(int) * TAILLE_MENU);
 
     push_back(&table_restaurants, &r);
 
@@ -63,7 +63,7 @@ void analyse_deplacements(
 livreur* le_creer_compte_livreur(
     char const* nom,
     char const* telephone,
-    char const* deplacements,
+    char const* deplacements_s,
     cle_t const index_restaurant)
 {
     if(le_compte_existe(nom) || le_compte_existe(telephone))
@@ -84,20 +84,20 @@ livreur* le_creer_compte_livreur(
     };
     strcpy(l.nom, nom);
     strcpy(l.telephone, telephone);
-    strcpy(l.deplacements_s, deplacements);
-    analyse_deplacements(l.deplacements, deplacements);
+    strcpy(l.deplacements_s, deplacements_s);
+    analyse_deplacements(l.deplacements, deplacements_s);
     l.restaurant = index_restaurant;
 
     push_back(&table_livreurs, &l);
 
-    llog("Compte 'livreur' [%s,%s,%s,%zu] créé.", nom, telephone, deplacements, index_restaurant);
+    llog("Compte 'livreur' [%s,%s,%s,%zu] créé.", nom, telephone, deplacements_s, index_restaurant);
 
     return back(&table_livreurs);
 }
 
 bool le_modifier_profil_livreur(
     cle_t const index,
-    char const* deplacements,
+    char const* deplacements_s,
     char const* telephone,
     cle_t const index_restaurant)
 {
@@ -118,11 +118,11 @@ bool le_modifier_profil_livreur(
     }
 
     strcpy(l->telephone, telephone);
-    strcpy(l->deplacements_s, deplacements);
-    analyse_deplacements(l->deplacements, deplacements);
+    strcpy(l->deplacements_s, deplacements_s);
+    analyse_deplacements(l->deplacements, deplacements_s);
     l->restaurant = index_restaurant;
 
-    llog("Compte 'livreur' [%s] modifié : [%s,%s,%zu].", l->nom, deplacements, telephone, index_restaurant);
+    llog("Compte 'livreur' [%s] modifié : [%s,%s,%zu].", l->nom, deplacements_s, telephone, index_restaurant);
 
     return true;
 }

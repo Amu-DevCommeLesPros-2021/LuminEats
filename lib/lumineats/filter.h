@@ -1,5 +1,6 @@
 #pragma once
 
+#include "db/types.h"
 #include "vector/types.h"
 
 // Renvoie tous les restaurants.
@@ -14,3 +15,8 @@ void le_filtrer_restaurants_type(
 void le_filtrer_restaurants_livraison(
     vector *restaurants,
     char const* code_postal);
+
+// Filtre une liste de restaurants par ceux qui ont 'index_item' au menu.
+void le_filtrer_restaurants_item(
+    vector *restaurants,
+    cle_t const index_item);

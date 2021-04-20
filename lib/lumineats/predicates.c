@@ -34,6 +34,23 @@ bool restaurant_a_nom_ou_telephone(
     return restaurant_est_nomme(r, chaine) || restaurant_a_telephone(r, chaine);
 }
 
+bool restaurant_menu_contient(
+    void const* r,
+    void const* index)
+{
+    cle_t *m = ((restaurant*)r)->menu;
+
+    for(int j = 0; j != TAILLE_MENU && m[j] != 0; ++j)
+    {
+        if(m[j] == *(cle_t*)index)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 bool restaurant_a_type(
     void const* r,
     void const* type)
@@ -146,4 +163,18 @@ bool client_a_nom_ou_telephone(
     void const* chaine)
 {
     return client_est_nomme(c, chaine) || client_a_telephone(c, chaine);
+}
+
+bool item_a_index(
+    void const* i,
+    void const* index)
+{
+    return ((item*)i)->index == *(size_t*)index;
+}
+
+bool item_est_nomme(
+    void const* i,
+    void const* nom)
+{
+    return strcmp(((item*)i)->nom, nom) == 0;
 }
