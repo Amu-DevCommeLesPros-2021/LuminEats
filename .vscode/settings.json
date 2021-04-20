@@ -35,6 +35,8 @@
         "__functional_03": "c",
         "memory_resource": "c",
         "__string": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "search.h": "c",
+        "vector_types.h": "c"
     }
 }

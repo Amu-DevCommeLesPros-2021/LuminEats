@@ -88,6 +88,11 @@ void ecriture_table_clients(
     FILE* fichier,
     vector const* db);
 
+// Fonction de débogage.
+// Affiche les contenu des tables sur 'f'.
+void le_dump_tables(
+    FILE* f);
+
 // Lit toutes les tables de la BdD.
 // 'dossier' est le dossier où se trouvent les fichiers '.csv'.
 void ouverture_db(
