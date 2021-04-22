@@ -521,104 +521,89 @@ int main()
         ouverture_db("build/test-db");
 
         // Tests de filtre par type. 
-        vector restaurants = le_liste_restaurants();
-
+        vector const* rs = le_liste_restaurants();
+        vector restaurants = make_vector(sizeof(restaurant), 0, 2.0);
+        assign(&restaurants, begin(rs), end(rs));
         le_filtrer_restaurants_type(&restaurants, "provencal");
+        
         TEST(size(restaurants) == 1);
         TEST(strcmp(((restaurant*)value(at(&restaurants, 0)))->nom, "Chez Michel") == 0);
 
         // Re-filtrer avec le même type ne devrait rien changer.
         le_filtrer_restaurants_type(&restaurants, "provencal");
+        
         TEST(size(restaurants) == 1);
 
         // Re-filtrer avec un type différent devrait tout enlever. 
         le_filtrer_restaurants_type(&restaurants, "italien");
+        
         TEST(size(restaurants) == 0);
-
-        destroy(&restaurants);
-
 
         // Tests par possibilité de livraison.
 
         // Test de qui peut livrer dans le 13001.
-        restaurants = le_liste_restaurants();
-
+        assign(&restaurants, begin(rs), end(rs));
         le_filtrer_restaurants_livraison(&restaurants, "13001");
+
         TEST(size(restaurants) == 2);
         TEST(strcmp(((restaurant*)value(at(&restaurants, 0)))->nom, "Chez Michel") == 0);
         TEST(strcmp(((restaurant*)value(at(&restaurants, 1)))->nom, "Le Veg") == 0);
 
-        destroy(&restaurants);
-
         // Test de qui peut livrer dans le 13002.
-        restaurants = le_liste_restaurants();
-
+        assign(&restaurants, begin(rs), end(rs));
         le_filtrer_restaurants_livraison(&restaurants, "13002");
+        
         TEST(size(restaurants) == 1);
         TEST(strcmp(((restaurant*)value(at(&restaurants, 0)))->nom, "Chez Michel") == 0);
 
-        destroy(&restaurants);
-
         // Test de qui peut livrer dans le 13005.
-        restaurants = le_liste_restaurants();
-
+        assign(&restaurants, begin(rs), end(rs));
         le_filtrer_restaurants_livraison(&restaurants, "13005");
+        
         TEST(size(restaurants) == 2);
         TEST(strcmp(((restaurant*)value(at(&restaurants, 0)))->nom, "Chez Michel") == 0);
         TEST(strcmp(((restaurant*)value(at(&restaurants, 1)))->nom, "Le Veg") == 0);
 
-        destroy(&restaurants);
-
         // Test de qui peut livrer dans le 13009.
-        restaurants = le_liste_restaurants();
-
+        assign(&restaurants, begin(rs), end(rs));
         le_filtrer_restaurants_livraison(&restaurants, "13009");
+        
         TEST(size(restaurants) == 3);
         TEST(strcmp(((restaurant*)value(at(&restaurants, 0)))->nom, "Chez Michel") == 0);
         TEST(strcmp(((restaurant*)value(at(&restaurants, 1)))->nom, "Le Veg") == 0);
         TEST(strcmp(((restaurant*)value(at(&restaurants, 2)))->nom, "Joe's International House of Pancakes") == 0);
 
-        destroy(&restaurants);
-
         // Test de qui peut livrer dans le 13010.
-        restaurants = le_liste_restaurants();
-
+        assign(&restaurants, begin(rs), end(rs));
         le_filtrer_restaurants_livraison(&restaurants, "13010");
+        
         TEST(size(restaurants) == 1);
         TEST(strcmp(((restaurant*)value(at(&restaurants, 0)))->nom, "Joe's International House of Pancakes") == 0);
-
-        destroy(&restaurants);
 
 
         // Test négatifs.
-        restaurants = le_liste_restaurants();
-
+        assign(&restaurants, begin(rs), end(rs));
         le_filtrer_restaurants_livraison(&restaurants, "13012");
+        
         TEST(size(restaurants) == 0);
-
-        destroy(&restaurants);
 
 
         // Test de deux filtres.
-        restaurants = le_liste_restaurants();
-
+        assign(&restaurants, begin(rs), end(rs));
         le_filtrer_restaurants_livraison(&restaurants, "13009");
         le_filtrer_restaurants_type(&restaurants, "americain");
+        
         TEST(size(restaurants) == 1);
         TEST(strcmp(((restaurant*)value(at(&restaurants, 0)))->nom, "Joe's International House of Pancakes") == 0);
 
-        destroy(&restaurants);
 
-
-        restaurants = le_liste_restaurants();
-
+        assign(&restaurants, begin(rs), end(rs));
         le_filtrer_restaurants_livraison(&restaurants, "13001");
         le_filtrer_restaurants_type(&restaurants, "americain");
+        
         TEST(size(restaurants) == 0);
 
         destroy(&restaurants);
-
-
         fermeture_db("build/test-db/ecriture");
     }
 
@@ -627,8 +612,8 @@ int main()
     {
         ouverture_db("build/test-db/items");
 
-        vector items = le_liste_items();
-        TEST(size(items) == 0);
+        vector const* const items = le_liste_items();
+        TEST(size(*items) == 0);
 
         cle_t const ixi1 = le_creer_item("croissant", "beurre;farine;oeuf;levure", 1);
         TEST(ixi1 != 0);
@@ -641,8 +626,7 @@ int main()
         TEST(strcmp(i1->ingredients[4], "") == 0);
         TEST(i1->prix == 1);
 
-        items = le_liste_items();
-        TEST(size(items) == 1);
+        TEST(size(*items) == 1);
 
         // Il est possible de créer plus d'un item avec le même nom.
         cle_t const ixi2 = le_creer_item("croissant", "margarine;farine;oeuf;levure", 1);
@@ -651,8 +635,7 @@ int main()
         TEST(strcmp(i2->nom, "croissant") == 0);
         TEST(strcmp(i2->ingredients[0], "margarine") == 0);
 
-        items = le_liste_items();
-        TEST(size(items) == 2);
+        TEST(size(*items) == 2);
 
         // Ajoute des items au menu d'un restaurant.
         cle_t const ixr1 = le_creer_compte_restaurateur("Café de la gare", "13001", "04 01 01 01 01", "boulangerie");
@@ -690,14 +673,12 @@ int main()
         TEST(r1->menu[1] == 0);
         TEST(strcmp(r1->menu_s, "2") == 0);
 
-        items = le_liste_items();
-        TEST(size(items) == 2);
+        TEST(size(*items) == 2);
 
         // Si on enlève un item de tous les menus, l'item na''parait plus dans le BdD.
         le_enlever_item_menu(ixi1, ixr2);
 
-        items = le_liste_items();
-        TEST(size(items) == 1);
+        TEST(size(*items) == 1);
 
         fermeture_db("build/test-db/items");
     }

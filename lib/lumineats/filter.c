@@ -6,13 +6,9 @@
 #include "db/tables.h"
 #include "vector/vector.h"
 
-vector le_liste_restaurants()
+vector const* le_liste_restaurants()
 {
-    vector restaurants = make_vector(sizeof(restaurant), 0, 2.0);
-
-    assign(&restaurants, begin(&table_restaurants), end(&table_restaurants));
-
-    return restaurants;
+    return &table_restaurants;
 }
 
 void le_filtrer_restaurants_type(

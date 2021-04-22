@@ -4,7 +4,7 @@
 #include "vector/vector.h"
 
 // Renvoie tous les items.
-vector le_liste_items();
+vector const* le_liste_items();
 
 // Crée un nouvel item et renvoie l'index de l'item nouvellement créé.
 cle_t le_creer_item(

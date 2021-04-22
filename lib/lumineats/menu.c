@@ -12,13 +12,9 @@
 
 #include <string.h>
 
-vector le_liste_items()
+vector const* le_liste_items()
 {
-    vector items = make_vector(sizeof(item), 0, 2.0);
-
-    assign(&items, begin(&table_items), end(&table_items));
-
-    return items;
+    return &table_items;
 }
 
 
@@ -86,6 +82,8 @@ void le_ajouter_item_menu(
     {
         m += sprintf(m, "%s%zu", (i == 0) ? "" : ";", r->menu[i]);
     }
+
+    llog("Item [%zu] ajouté au menu de [%s].\n", index, r->nom);
 }
 
 void le_enlever_item_menu(
@@ -119,14 +117,17 @@ void le_enlever_item_menu(
 
 
     // Remove the item from the DB if it is no longer referenced by any restaurants.
-    vector restaurants = le_liste_restaurants();
+    vector const* rs = le_liste_restaurants();
+    vector restaurants = make_vector(sizeof(restaurant), 0, 2.0);
+    assign(&restaurants, begin(rs), end(rs));
+
     le_filtrer_restaurants_item(&restaurants, index);
 
     if(size(restaurants) == 0)
     {
         iterator i = find_if_2(begin(&table_items), end(&table_items), item_a_index, &index);
         erase(&table_items, i);
-    }
 
-    llog("Item [%zu] supprimé.\n", index);
+        llog("Item [%zu] supprimé définitivement.\n", index);
+    }
 }

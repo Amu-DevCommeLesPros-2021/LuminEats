@@ -827,7 +827,10 @@ void client_lister_restaurants(
 
         printf("\nListe des restaurants filtrée par [%c] type (%s) [%c] qui peut me livrer : \n\n", (type[0] ? 'x' : ' '), (type[0] ? type : ""), (code_postal[0] ? 'x' : ' '));
 
-        vector restaurants = le_liste_restaurants();
+        vector const* rs = le_liste_restaurants();
+        vector restaurants;
+        assign(&restaurants, begin(rs), end(rs));
+
         if(strlen(type))
         {
             le_filtrer_restaurants_type(&restaurants, type);
