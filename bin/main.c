@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
 
     printf("\n*** Bienvenu sur LuminEats, la livraison à vitesse luminique ***\n");
 
-    vector ecrans = make_vector(sizeof(ecran), 0, 2.0);
+    vector ecrans = make_vector(sizeof(ecran), 0);
 
     ecran e = initial;
     push_back(&ecrans, &e);

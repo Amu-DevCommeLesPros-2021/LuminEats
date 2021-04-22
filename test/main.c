@@ -522,7 +522,7 @@ int main()
 
         // Tests de filtre par type. 
         vector const* rs = le_liste_restaurants();
-        vector restaurants = make_vector(sizeof(restaurant), 0, 2.0);
+        vector restaurants = make_vector(sizeof(restaurant), 0);
         assign(&restaurants, begin(rs), end(rs));
         le_filtrer_restaurants_type(&restaurants, "provencal");
         
@@ -675,7 +675,7 @@ int main()
 
         TEST(size(*items) == 2);
 
-        // Si on enlève un item de tous les menus, l'item na''parait plus dans le BdD.
+        // Si on enlève un item de tous les menus, l'item n'apparait plus dans le BdD.
         le_enlever_item_menu(ixi1, ixr2);
 
         TEST(size(*items) == 1);

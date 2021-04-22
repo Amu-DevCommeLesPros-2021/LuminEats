@@ -34,7 +34,7 @@ void ouverture_db(
     }
     else
     {
-        table_restaurants = make_vector(sizeof(restaurant), 0, 2.0);
+        table_restaurants = make_vector(sizeof(restaurant), 0);
     }
 
     // Read and copy items.
@@ -47,7 +47,7 @@ void ouverture_db(
     }
     else
     {
-        table_items = make_vector(sizeof(item), 0, 2.0);
+        table_items = make_vector(sizeof(item), 0);
     }
 
     // Read and copy deliverers.
@@ -60,7 +60,7 @@ void ouverture_db(
     }
     else
     {
-        table_livreurs = make_vector(sizeof(livreur), 0, 2.0);
+        table_livreurs = make_vector(sizeof(livreur), 0);
     }
 
     // Read and copy customers.
@@ -73,7 +73,7 @@ void ouverture_db(
     }
     else
     {
-        table_clients = make_vector(sizeof(client), 0, 2.0);
+        table_clients = make_vector(sizeof(client), 0);
     }
 }
 

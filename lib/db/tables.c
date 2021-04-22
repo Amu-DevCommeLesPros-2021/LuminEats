@@ -10,7 +10,7 @@ vector table_restaurants = {0}, table_items = {0}, table_livreurs = {0}, table_c
 vector lecture_table_restaurants(
     FILE* fichier)
 {
-    vector restaurants = make_vector(sizeof(restaurant), 0, 2.0);
+    vector restaurants = make_vector(sizeof(restaurant), 0);
 
     rewind(fichier);
 
@@ -65,7 +65,7 @@ void ecriture_table_restaurants(
 vector lecture_table_items(
     FILE* fichier)
 {
-    vector items = make_vector(sizeof(item), 0, 2.0);
+    vector items = make_vector(sizeof(item), 0);
 
     rewind(fichier);
 
@@ -120,7 +120,7 @@ void ecriture_table_items(
 vector lecture_table_livreurs(
     FILE* fichier)
 {
-    vector livreurs = make_vector(sizeof(livreur), 0, 2.0);
+    vector livreurs = make_vector(sizeof(livreur), 0);
 
     rewind(fichier);
 
@@ -175,7 +175,7 @@ void ecriture_table_livreurs(
 vector lecture_table_clients(
     FILE* fichier)
 {
-    vector clients = make_vector(sizeof(client), 0, 2.0);
+    vector clients = make_vector(sizeof(client), 0);
 
     rewind(fichier);
 

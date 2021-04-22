@@ -819,7 +819,7 @@ void client_lister_restaurants(
     vector* pile)
 {
     vector const* rs = le_liste_restaurants();
-    vector restaurants = make_vector(sizeof(restaurant), 0, 2.0);
+    vector restaurants = make_vector(sizeof(restaurant), 0);
 
     char type[TAILLE_CHAMP_TYPE] = {'\0'};
     char code_postal[TAILLE_CHAMP_CODEPOSTAL] = {'\0'};
