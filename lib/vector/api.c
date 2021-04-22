@@ -18,7 +18,7 @@ void grow(
     }
     else
     {
-        while(v->capacity <= needed)
+        while(v->capacity < needed)
         {
             v->capacity *= v->growth_factor;
             v->data = realloc(v->data, v->capacity * v->element_size);
