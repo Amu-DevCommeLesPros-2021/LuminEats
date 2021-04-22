@@ -130,4 +130,6 @@ void le_enlever_item_menu(
 
         llog("Item [%zu] supprimé définitivement.\n", index);
     }
+
+    destroy(&restaurants);
 }
