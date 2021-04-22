@@ -10,7 +10,7 @@
 
 #include <string.h>
 
-restaurant* le_creer_compte_restaurateur(
+cle_t le_creer_compte_restaurateur(
     char const* nom,
     char const* code_postal,
     char const* telephone,
@@ -18,7 +18,7 @@ restaurant* le_creer_compte_restaurateur(
 {
     if(le_compte_existe(nom) || le_compte_existe(telephone))
     {
-        return NULL;
+        return 0;
     }
 
     size_t const index = size(table_restaurants) ? ((restaurant*)back(&table_restaurants))->index + 1 : 1;
@@ -36,9 +36,9 @@ restaurant* le_creer_compte_restaurateur(
 
     push_back(&table_restaurants, &r);
 
-    llog("Compte 'restaurateur' [%s,%s] créé.", nom, telephone);
+    llog("Compte 'restaurateur' [%zu,%s,%s] créé.", index, nom, telephone);
 
-    return back(&table_restaurants);
+    return index;
 }
 
 void analyse_deplacements(
@@ -60,7 +60,7 @@ void analyse_deplacements(
     }
 }
 
-livreur* le_creer_compte_livreur(
+cle_t le_creer_compte_livreur(
     char const* nom,
     char const* telephone,
     char const* deplacements_s,
@@ -68,12 +68,12 @@ livreur* le_creer_compte_livreur(
 {
     if(le_compte_existe(nom) || le_compte_existe(telephone))
     {
-        return NULL;
+        return 0;
     }
 
     if(index_restaurant != 0 && le_cherche_restaurant_i(index_restaurant) == NULL)
     {
-        return NULL;
+        return 0;
     }
 
     size_t const index = size(table_livreurs) ? ((livreur*)back(&table_livreurs))->index + 1 : 1;
@@ -90,9 +90,9 @@ livreur* le_creer_compte_livreur(
 
     push_back(&table_livreurs, &l);
 
-    llog("Compte 'livreur' [%s,%s,%s,%zu] créé.", nom, telephone, deplacements_s, index_restaurant);
+    llog("Compte 'livreur' [%zu,%s,%s,%s,%zu] créé.", index, nom, telephone, deplacements_s, index_restaurant);
 
-    return back(&table_livreurs);
+    return index;
 }
 
 bool le_modifier_profil_livreur(
@@ -127,14 +127,14 @@ bool le_modifier_profil_livreur(
     return true;
 }
 
-client* le_creer_compte_client(
+cle_t le_creer_compte_client(
     char const* nom,
     char const* code_postal,
     char const* telephone)
 {
     if(le_compte_existe(nom) || le_compte_existe(telephone))
     {
-        return NULL;
+        return 0;
     }
 
     size_t const index = size(table_clients) ? ((client*)back(&table_clients))->index + 1 : 1;
@@ -149,9 +149,9 @@ client* le_creer_compte_client(
 
     push_back(&table_clients, &c);
 
-    llog("Compte 'client' [%s,%s] créé.", nom, telephone);
+    llog("Compte 'client' [%zu,%s,%s] créé.", index, nom, telephone);
 
-    return back(&table_clients);
+    return index;
 }
 
 bool le_modifier_profil_client(

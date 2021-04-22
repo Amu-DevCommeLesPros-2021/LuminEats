@@ -15,7 +15,7 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 194;
+int const tests_total = 198;
 int const test_column_width = 60;
 
 int main()
@@ -266,8 +266,9 @@ int main()
         // Création d'un compte Restaurateur.
         ouverture_db("build/test-db/creation-compte");
         char nom_restaurant[] = "Snack-Bar Chez Raymond";
-        restaurant *r = le_creer_compte_restaurateur(nom_restaurant, "13001", "04 00 00 00 00", "fast food");
-
+        cle_t ixr = le_creer_compte_restaurateur(nom_restaurant, "13001", "04 00 00 00 00", "fast food");
+        restaurant const* const r = le_cherche_restaurant_i(ixr);
+        
         TEST(le_compte_existe(nom_restaurant) == true);
         TEST(strcmp(r->nom, nom_restaurant) == 0);
 
@@ -287,7 +288,8 @@ int main()
         // Création d'un compte Livreur.
         ouverture_db("build/test-db/creation-compte");
         char nom_livreur[] = "Bob Binette";
-        livreur *l = le_creer_compte_livreur(nom_livreur, "04 99 99 99 99", "13001", 0);
+        cle_t ixl = le_creer_compte_livreur(nom_livreur, "04 99 99 99 99", "13001", 0);
+        livreur const* const l = le_cherche_livreur_i(ixl);
 
         TEST(le_compte_existe(nom_livreur) == true);
         TEST(strcmp(l->nom, nom_livreur) == 0);
@@ -306,7 +308,8 @@ int main()
         // Création d'un compte Client.
         ouverture_db("build/test-db/creation-compte");
         char nom_client[] = "Paul Pitron";
-        client *c = le_creer_compte_client(nom_client, "13001", "06 66 66 66 66");
+        cle_t ixc = le_creer_compte_client(nom_client, "13001", "06 66 66 66 66");
+        client const* const c = le_cherche_client_i(ixc);
 
         TEST(le_compte_existe(nom_client) == true);
         TEST(strcmp(c->nom, nom_client) == 0);
@@ -325,14 +328,15 @@ int main()
 
         // Tests négatifs. Les noms ou téléphones existent déjà dans la BdD.
         ouverture_db("build/test-db/creation-compte");
-        r = le_creer_compte_restaurateur("Snack-Bar Chez Raymond", "13001", "04 11 11 11 11", "fast food");
-        TEST(r == NULL);
+        ixr = le_creer_compte_restaurateur("Snack-Bar Chez Raymond", "13001", "04 11 11 11 11", "fast food");
+        TEST(ixr == 0);
 
-        l = le_creer_compte_livreur("Bobby Binette", "04 99 99 99 99", "", 0);
-        TEST(l == NULL);
+        ixl = le_creer_compte_livreur("Bobby Binette", "04 99 99 99 99", "", 0);
+        TEST(ixl == 0);
 
-        c = le_creer_compte_client("Paul Pitron", "13001", "06 66 66 66 66");
-        TEST(c == NULL);
+        ixc = le_creer_compte_client("Paul Pitron", "13001", "06 66 66 66 66");
+        TEST(ixc == 0);
+        
         fermeture_db("build/test-db/creation-compte");
     }
 
@@ -416,7 +420,8 @@ int main()
 
         // Modification d'un compte livreur.
         char nom_livreur[] = "Louis Lamotte";
-        livreur *l = le_creer_compte_livreur(nom_livreur, "06 11 11 11 11", "" , 0);
+        cle_t ixl = le_creer_compte_livreur(nom_livreur, "06 11 11 11 11", "" , 0);
+        livreur const* l = le_cherche_livreur_i(ixl);
 
         // On peut modifier le profil d'un livreur avec un nouveau téléphone.
         TEST(le_modifier_profil_livreur(l->index, "", "06 22 22 22 22", 0) == true);
@@ -437,13 +442,16 @@ int main()
         TEST(strcmp(l->deplacements[3], "") == 0);
 
         // On peut modifier le profile d'un livreur avec l'index d'un restaurateur.
-        restaurant *r = le_creer_compte_restaurateur("Cafe de la Gare", "13001", "000", "cafe");
+        cle_t const ixr = le_creer_compte_restaurateur("Cafe de la Gare", "13001", "000", "cafe");
+        restaurant const* r = le_cherche_restaurant_i(ixr);
+
         TEST(le_modifier_profil_livreur(l->index, "13001;13002;13003", "06 22 22 22 22", r->index) == true);
-        l = le_cherche_livreur(nom_livreur);
+        l = le_cherche_livreur_i(ixl);
         TEST(l->restaurant == r->index);
 
         // On ne peut pas modifier un compte livreur pour lui donner un téléphone existant.
-        l = le_creer_compte_livreur("Lucas Lamotte", "06 33 33 33 33", "", 0);
+        ixl = le_creer_compte_livreur("Lucas Lamotte", "06 33 33 33 33", "", 0);
+        l = le_cherche_livreur_i(ixl);
         TEST(le_modifier_profil_livreur(l->index, "13002", "06 22 22 22 22", 0) == false);
 
         // On ne peut pas modifier un compte ivreur pour lui donner un index de restaurant inexistant.
@@ -455,26 +463,29 @@ int main()
 
         // Modification d'un compte client.
         char nom_client[] = "Paul Pitron";
-        client *c = le_creer_compte_client(nom_client, "13001", "06 66 66 66 66");
+        cle_t ixc = le_creer_compte_client(nom_client, "13001", "06 66 66 66 66");
+        client const* c = le_cherche_client_i(ixc);
 
         // On peut modifier le profil d'un client avec un nouveau code postal .
-        TEST(le_modifier_profil_client(c->index, "13002", "06 66 66 66 66"));
-        c = le_cherche_client(nom_client);
+        TEST(le_modifier_profil_client(ixc, "13002", "06 66 66 66 66"));
+        c = le_cherche_client_i(ixc);
         TEST(strcmp(c->code_postal, "13002") == 0);
 
         // On peut modifier le profil d'un client avec un nouveau téléphone.
         TEST(le_modifier_profil_client(c->index, "13002", "05 55 55 55 55"));
-        c = le_cherche_client(nom_client);
+        c = le_cherche_client_i(ixc);
         TEST(strcmp(c->telephone, "05 55 55 55 55") == 0);
 
         // On peut modifier le profil d'un client avec de nouveaux code postal et téléphone.
         TEST(le_modifier_profil_client(c->index, "13002", "07 77 77 77 77"));
-        c = le_cherche_client(nom_client);
+        c = le_cherche_client_i(ixc);
         TEST(strcmp(c->code_postal, "13002") == 0);
         TEST(strcmp(c->telephone, "07 77 77 77 77") == 0);
 
         // On  ne peut pas modifier un compte client pour lui donner un téléphone existant.
-        c = le_creer_compte_client("Raoul Pitron", "13001", "08 88 88 88 88");
+        ixc = le_creer_compte_client("Raoul Pitron", "13001", "08 88 88 88 88");
+        c = le_cherche_client_i(ixc);
+
         TEST(le_modifier_profil_client(c->index, "13002", "07 77 77 77 77") == false);
 
         // Client inexistant.
@@ -489,15 +500,17 @@ int main()
         ouverture_db("build/test-db/modification-solde");
 
         char nom_client[] = "Paul Pitron";
-        client *c = le_creer_compte_client(nom_client, "13001", "06 66 66 66 66");
+        cle_t const ixc = le_creer_compte_client(nom_client, "13001", "06 66 66 66 66");
+        client const* c = le_cherche_client_i(ixc);
+
         TEST(c->solde == 0);
 
         le_crediter_solde_client(c->index, 1);
-        c = le_cherche_client(nom_client);
+        c = le_cherche_client_i(ixc);
         TEST(c->solde == 1);
 
         le_crediter_solde_client(c->index, 10);
-        c = le_cherche_client(nom_client);
+        c = le_cherche_client_i(ixc);
         TEST(c->solde == 1 + 10);
 
         fermeture_db("build/test-db/modification-solde");
@@ -642,24 +655,27 @@ int main()
         TEST(size(items) == 2);
 
         // Ajoute des items au menu d'un restaurant.
-        restaurant *r = le_creer_compte_restaurateur("Café de la gare", "13001", "04 01 01 01 01", "boulangerie");
-        le_ajouter_item_menu(ix1, r->index);
+        cle_t const ixr = le_creer_compte_restaurateur("Café de la gare", "13001", "04 01 01 01 01", "boulangerie");
+        le_ajouter_item_menu(ix1, ixr);
 
+        restaurant const* r = le_cherche_restaurant_i(ixr);
         TEST(r->menu[0] == ix1);
         TEST(r->menu[1] == 0);
         TEST(strcmp(r->menu_s, "1") == 0);
 
-        le_ajouter_item_menu(ix2, r->index);
+        le_ajouter_item_menu(ix2, ixr);
         TEST(r->menu[0] == ix1);
         TEST(r->menu[1] == ix2);
         TEST(r->menu[2] == 0);
         TEST(strcmp(r->menu_s, "1;2") == 0);
 
         // Ajoute les même items au menu d'un deuxième restaurant.
-        r = le_creer_compte_restaurateur("Café en face du Café de la gare", "13001", "04 02 02 02 02", "boulangerie");
-        le_ajouter_item_menu(ix1, r->index);
-        le_ajouter_item_menu(ix2, r->index);
+        cle_t const ixr2 = le_creer_compte_restaurateur("Café en face du Café de la gare", "13001", "04 02 02 02 02", "boulangerie");
+        le_ajouter_item_menu(ix1, ixr2);
+        le_ajouter_item_menu(ix2, ixr2);
         
+        r = le_cherche_restaurant_i(ix2);
+
         TEST(r->menu[0] == ix1);
         TEST(r->menu[1] == ix2);
         TEST(r->menu[2] == 0);

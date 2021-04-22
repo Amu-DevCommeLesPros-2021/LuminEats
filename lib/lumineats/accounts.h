@@ -9,7 +9,7 @@ bool le_compte_existe(
 // Ajoute un nouveau restaurant à la BdD et renvoie un pointeur au restaurant nouvellement créé.
 // Les arguments 'nom' et 'telephone' ne doivent pas déjà dans la BdD.
 // Si 'nom' ou 'telephone' existent déjà dans la BdD, ne crée rien et renvoie 'NULL'.
-restaurant* le_creer_compte_restaurateur(
+cle_t le_creer_compte_restaurateur(
     char const* nom,
     char const* code_postal,
     char const* telephone,
@@ -18,7 +18,7 @@ restaurant* le_creer_compte_restaurateur(
 // Ajoute un nouveau livreur  à la BdD et renvoie un pointeur au livreur nouvellement créé.
 // Les arguments 'nom' et 'telephone' ne doivent pas déjà dans la BdD.
 // Si 'nom' ou 'telephone' existent déjà dans la BdD, ne crée rien et renvoie 'NULL'.
-livreur* le_creer_compte_livreur(
+cle_t le_creer_compte_livreur(
     char const* nom,
     char const* telephone,
     char const* deplacements_s,
@@ -37,7 +37,7 @@ bool le_modifier_profil_livreur(
 // Ajoute un nouveau client à la BdD et renvoie un pointeur au client nouvellement créé.
 // Les arguments 'nom' et 'telephone' ne doivent pas déjà dans la BdD.
 // Si 'nom' ou 'telephone' existent déjà dans la BdD, ne crée rien et renvoie 'NULL'.
-client* le_creer_compte_client(
+cle_t le_creer_compte_client(
     char const* nom,
     char const* code_postal,
     char const* telephone);
