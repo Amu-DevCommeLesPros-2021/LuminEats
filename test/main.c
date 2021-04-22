@@ -15,7 +15,7 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 187;
+int const tests_total = 194;
 int const test_column_width = 60;
 
 int main()
@@ -617,8 +617,9 @@ int main()
         vector items = le_liste_items();
         TEST(size(items) == 0);
 
-        item const* i1 = le_creer_item("croissant", "beurre;farine;oeuf;levure", 1);
-        TEST(i1 != NULL);
+        cle_t const ix1 = le_creer_item("croissant", "beurre;farine;oeuf;levure", 1);
+        TEST(ix1 != 0);
+        item const* const i1 = le_cherche_item_i(ix1);
         TEST(strcmp(i1->nom, "croissant") == 0);
         TEST(strcmp(i1->ingredients[0], "beurre") == 0);
         TEST(strcmp(i1->ingredients[1], "farine") == 0);
@@ -631,14 +632,41 @@ int main()
         TEST(size(items) == 1);
 
         // Il est possible de créer plus d'un item avec le même nom.
-        item const* i2 = le_creer_item("croissant", "margarine;farine;oeuf;levure", 1);
-        TEST(i2 != NULL);
+        cle_t const ix2 = le_creer_item("croissant", "margarine;farine;oeuf;levure", 1);
+        TEST(ix2 != 0);
+        item const* const i2 = le_cherche_item_i(ix2);
         TEST(strcmp(i2->nom, "croissant") == 0);
         TEST(strcmp(i2->ingredients[0], "margarine") == 0);
 
         items = le_liste_items();
         TEST(size(items) == 2);
 
+        // Ajoute des items au menu d'un restaurant.
+        restaurant *r = le_creer_compte_restaurateur("Café de la gare", "13001", "04 01 01 01 01", "boulangerie");
+        le_ajouter_item_menu(ix1, r->index);
+
+        TEST(r->menu[0] == ix1);
+        TEST(r->menu[1] == 0);
+        TEST(strcmp(r->menu_s, "1") == 0);
+
+        le_ajouter_item_menu(ix2, r->index);
+        TEST(r->menu[0] == ix1);
+        TEST(r->menu[1] == ix2);
+        TEST(r->menu[2] == 0);
+        TEST(strcmp(r->menu_s, "1;2") == 0);
+
+        // Ajoute les même items au menu d'un deuxième restaurant.
+        r = le_creer_compte_restaurateur("Café en face du Café de la gare", "13001", "04 02 02 02 02", "boulangerie");
+        le_ajouter_item_menu(ix1, r->index);
+        le_ajouter_item_menu(ix2, r->index);
+        
+        TEST(r->menu[0] == ix1);
+        TEST(r->menu[1] == ix2);
+        TEST(r->menu[2] == 0);
+        TEST(strcmp(r->menu_s, "1;2") == 0);
+
+
+        // Si on enlève un tiem d'un menu, l'item existe encore puisqu'il fait toujours parti d'au moins un menu.
 
         fermeture_db("build/test-db/items");
     }

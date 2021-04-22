@@ -41,7 +41,7 @@ void analyse_ingredients(
     }
 }
 
-item* le_creer_item(
+cle_t le_creer_item(
     char const* nom,
     char const* ingredients_s,
     size_t const prix)
@@ -60,7 +60,32 @@ item* le_creer_item(
 
     llog("Nouvel 'item' [%s,%s,%s,%zu] créé.", nom, ingredients_s, prix);
 
-    return back(&table_items);
+    return index;
+}
+
+void le_ajouter_item_menu(
+    cle_t const index,
+    cle_t const index_restaurant)
+{
+    restaurant *r = le_cherche_restaurant_i(index_restaurant);
+
+    // Search for the item in this restaurant's menu.
+    int i;
+    for(i = 0; i != TAILLE_MENU && r->menu[i] != index && r->menu[i] != 0; ++i)
+    {}
+
+    // Add it if need be.
+    if(i != TAILLE_MENU && r->menu[i] == 0)
+    {
+        r->menu[i] = index;
+    }
+
+    // Adjust menu_s.
+    char *m = r->menu_s;
+    for(i = 0; i != TAILLE_MENU && r->menu[i] != 0; ++i)
+    {
+        m += sprintf(m, "%s%zu", (i == 0) ? "" : ";", r->menu[i]);
+    }
 }
 
 void le_enlever_item_menu(
