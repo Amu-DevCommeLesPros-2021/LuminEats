@@ -34,7 +34,7 @@ void analyse_ingredients(
     strcpy(i, ingredients_s);
 
     char *ingredient = strtok(i, ";");
-    for(int j = 0; j != TAILLE_INGREDIENTS && ingredients_s; ++j)
+    for(int j = 0; ingredient && j != TAILLE_INGREDIENTS; ++j)
     {
         strcpy(ingredients[j], ingredient);
         ingredient = strtok(NULL, ";");

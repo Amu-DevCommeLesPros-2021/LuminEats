@@ -15,7 +15,7 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 173;
+int const tests_total = 187;
 int const test_column_width = 60;
 
 int main()
@@ -607,6 +607,40 @@ int main()
 
 
         fermeture_db("build/test-db/ecriture");
+    }
+
+    // Tests de modification des items.
+    mkdir("build/test-db/items", 0755);
+    {
+        ouverture_db("build/test-db/items");
+
+        vector items = le_liste_items();
+        TEST(size(items) == 0);
+
+        item const* i1 = le_creer_item("croissant", "beurre;farine;oeuf;levure", 1);
+        TEST(i1 != NULL);
+        TEST(strcmp(i1->nom, "croissant") == 0);
+        TEST(strcmp(i1->ingredients[0], "beurre") == 0);
+        TEST(strcmp(i1->ingredients[1], "farine") == 0);
+        TEST(strcmp(i1->ingredients[2], "oeuf") == 0);
+        TEST(strcmp(i1->ingredients[3], "levure") == 0);
+        TEST(strcmp(i1->ingredients[4], "") == 0);
+        TEST(i1->prix == 1);
+
+        items = le_liste_items();
+        TEST(size(items) == 1);
+
+        // Il est possible de créer plus d'un item avec le même nom.
+        item const* i2 = le_creer_item("croissant", "margarine;farine;oeuf;levure", 1);
+        TEST(i2 != NULL);
+        TEST(strcmp(i2->nom, "croissant") == 0);
+        TEST(strcmp(i2->ingredients[0], "margarine") == 0);
+
+        items = le_liste_items();
+        TEST(size(items) == 2);
+
+
+        fermeture_db("build/test-db/items");
     }
 
     return 0;

@@ -55,7 +55,7 @@ build/liblumineats.a: \
 	$(CC) $(CFLAGS) -I lib -c lib/lumineats/menu.c -o build/menu.o
 	$(CC) $(CFLAGS) -I lib -c lib/lumineats/predicates.c -o build/predicates.o
 	$(CC) $(CFLAGS) -I lib -c lib/lumineats/search.c -o build/search.o
-	$(AR) $(ARFLAGS) build/liblumineats.a build/accounts.o build/filter.o build/lumineats.o build/predicates.o build/search.o
+	$(AR) $(ARFLAGS) build/liblumineats.a build/accounts.o build/filter.o build/lumineats.o build/menu.o build/predicates.o build/search.o
 
 # Programme de tests.
 build/test: build/libalgorithm.a build/libdb.a build/liblogger.a build/liblumineats.a build/libvector.a test/main.c | build
