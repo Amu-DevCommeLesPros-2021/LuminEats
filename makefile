@@ -62,9 +62,20 @@ build/test: build/libalgorithm.a build/libdb.a build/liblogger.a build/liblumine
 	$(CC) $(CFLAGS) test/main.c -I lib -L build -l lumineats -l algorithm -l db -l logger -l vector -o build/test
 
 # Application.
-build/lumineats: build/libalgorithm.a build/libdb.a build/liblogger.a build/liblumineats.a build/libvector.a bin/ecrans.c bin/ecrans.h bin/main.c | build
+build/lumineats: \
+ bin/ecrans/client.c \
+ bin/ecrans/connexion_creation_suppression.c \
+ bin/ecrans/ecrans.c \
+ bin/ecrans/ecrans.h \
+ bin/ecrans/initial.c \
+ bin/ecrans/livreur.c \
+ bin/ecrans/restaurant.c \
+ bin/main.c \
+ bin/prompt.c \
+ bin/prompt.h \
+ build/libalgorithm.a build/libdb.a build/liblogger.a build/liblumineats.a build/libvector.a | build
 	cp bin/*.csv build
-	$(CC) $(CFLAGS) bin/ecrans.c bin/main.c -I bin -I lib -L build -l lumineats -l algorithm -l db -l logger -l vector -o build/lumineats
+	$(CC) $(CFLAGS) bin/ecrans/client.c bin/ecrans/connexion_creation_suppression.c bin/ecrans/ecrans.c bin/ecrans/initial.c bin/ecrans/livreur.c bin/ecrans/restaurant.c bin/main.c bin/prompt.c -I bin -I lib -L build -l lumineats -l algorithm -l db -l logger -l vector -o build/lumineats
 
 # S'assure de l'existence tout les programmes finaux (application, test, etc.)
 # Par exemple : all: build/test build/appli
