@@ -23,9 +23,11 @@ vector lecture_table_restaurants(
         sscanf(buffer, "%zu,%[^,],%[^,],%[^,],%[^,],%[^,],%zu\n", &r.index, r.nom, r.code_postal, r.telephone, r.type, r.menu_s, &r.solde);
         
         // Parse string of semicolon separated items.
+        char m[TAILLE_MENU * 3];
+        strcpy(m, r.menu_s);
         memset(r.menu, 0, sizeof(r.menu));
         int i = 0;
-        for(char *item = strtok(r.menu_s, ";"); item; item = strtok(NULL, ";"))
+        for(char *item = strtok(m, ";"); item; item = strtok(NULL, ";"))
         {
             r.menu[i++] = atoi(item);
         }
@@ -78,9 +80,11 @@ vector lecture_table_items(
         sscanf(buffer, "%zu,%[^,],%[^,],%zu\n", &i.index, i.nom, i.ingredients_s, &i.prix);
         
         // Parse string of semicolon separated ingredients.
+        char g[TAILLE_INGREDIENTS * TAILLE_CHAMP_INGREDIENT];
+        strcpy(g, i.ingredients_s);
         memset(i.ingredients, 0, TAILLE_INGREDIENTS * TAILLE_CHAMP_INGREDIENT);
         int j = 0;
-        for(char *ingredient = strtok(i.ingredients_s, ";"); ingredient; ingredient = strtok(NULL, ";"))
+        for(char *ingredient = strtok(g, ";"); ingredient; ingredient = strtok(NULL, ";"))
         {
             strcpy(i.ingredients[j++], ingredient);
         }
@@ -133,9 +137,11 @@ vector lecture_table_livreurs(
         sscanf(buffer, "%zu,%[^,],%[^,],%[^,],%zu,%zu\n", &l.index, l.nom, l.telephone, l.deplacements_s, &l.restaurant, &l.solde);
         
         // Parse string of semicolon separated postal codes.
+        char d[TAILLE_DEPLACEMENTS * TAILLE_CHAMP_CODEPOSTAL];
+        strcpy(d, l.deplacements_s);
         memset(l.deplacements, 0, TAILLE_DEPLACEMENTS * TAILLE_CHAMP_CODEPOSTAL);
         int j = 0;
-        for(char *deplacement = strtok(l.deplacements_s, ";"); deplacement; deplacement = strtok(NULL, ";"))
+        for(char *deplacement = strtok(d, ";"); deplacement; deplacement = strtok(NULL, ";"))
         {
             strcpy(l.deplacements[j++], deplacement);
         }
