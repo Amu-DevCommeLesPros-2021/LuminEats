@@ -115,6 +115,11 @@ void restaurateur_principal(
     switch(choice)
     {
         case '1':
+            {
+                ecran e = restaurateur_modification_menu;
+                push_back(pile, &e);
+            }
+            break;
             break;
         case '2':
             {
@@ -132,6 +137,108 @@ void restaurateur_principal(
             clear(pile);
             ecran e = initial;
             push_back(pile, &e);
+            break;
+        case 'q':
+            clear(pile);
+            break;
+    }
+}
+
+void restaurateur_modification_menu(
+    vector* pile)
+{
+    printf("\n\
+* Menu Restaurateur * %s *\n\
+\n\
+1. Voir votre menu\n\
+2. Créer un nouvel item\n\
+3. Ajouter un item\n\
+4. Supprimer un item\n\
+\n", nom_utilisateur);
+
+    char const choice = prompt_choice("Votre choix ('q' pour quitter, 'p' pour menu précédent) : ");
+    switch(choice)
+    {
+        case '1':
+            {
+                cle_t const* menu = le_cherche_restaurant(nom_utilisateur)->menu;
+                for(size_t c = 0; c != TAILLE_MENU && menu[c] != 0; ++c)
+                {
+                    item const* const i = le_cherche_item_i(menu[c]);
+                    printf("\n- %s (%s) %zu", i->nom, i->ingredients_s, i->prix);
+                }
+                getchar();
+            }
+            break;
+        case '2':
+            {
+                char nom[TAILLE_CHAMP_NOM] = {'\0'};
+                char const* saisie = prompt_string(TAILLE_CHAMP_NOM, "Nom de cet item : ");
+                strcpy(nom, saisie);
+
+                char ingredients_s[TAILLE_INGREDIENTS * TAILLE_CHAMP_INGREDIENT] = {'\0'};
+                saisie = prompt_string(TAILLE_INGREDIENTS * TAILLE_CHAMP_INGREDIENT, "Ingrédients (séparés par ';') : " );
+                strcpy(ingredients_s, saisie);
+
+                char prix[5] = {'\0'};
+                saisie = prompt_string(sizeof(prix), "Prix : " );
+                strcpy(prix, saisie);
+
+                le_creer_item(nom, ingredients_s, atoll(prix));
+            }
+            break;
+        case '3':
+            {
+                cle_t const* menu = le_cherche_restaurant(nom_utilisateur)->menu;
+                
+                vector const* const items = le_liste_items();
+                for(iterator i = begin(items), e = end(items); compare(i, e) != 0; increment(&i, 1))
+                {
+                    item const* p = value(i);
+
+                    // Cherche si l'item est déjà présent dans le menu.
+                    bool present = false;
+                    for(int j = 0; j != TAILLE_MENU && menu[j] != 0 && !present; ++j)
+                    {
+                        if(menu[j] == p->index)
+                        {
+                            present = true;
+                        }
+                    }
+
+                    if(!present)
+                    {
+                        printf("\n[%zu] %s (%s)", p->index, p->nom, p->ingredients_s);
+                    }
+                }
+
+                char const choice = prompt_choice("\n\nVotre choix ('0' pour ne rien ajouter) : ");
+                cle_t const c = choice - '0';
+                if(c != 0)
+                {
+                    le_ajouter_item_menu(c, le_cherche_restaurant(nom_utilisateur)->index);
+                }
+            }
+            break;
+        case '4':
+            {
+                cle_t const* menu = le_cherche_restaurant(nom_utilisateur)->menu;
+                for(size_t c = 0; c != TAILLE_MENU && menu[c] != 0; ++c)
+                {
+                    item const* const i = le_cherche_item_i(menu[c]);
+                    printf("\n[%zu] %s (%s)", i->index, i->nom, i->ingredients_s);
+                }
+
+                char const choice = prompt_choice("\n\nVotre choix ('0' pour ne rien supprimer) : ");
+                cle_t const c = choice - '0';
+                if(c != 0)
+                {
+                    le_enlever_item_menu(c, le_cherche_restaurant(nom_utilisateur)->index);
+                }
+            }
+            break;
+        case 'p':
+            pop_back(pile);
             break;
         case 'q':
             clear(pile);

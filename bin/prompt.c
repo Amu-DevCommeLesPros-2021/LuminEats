@@ -8,7 +8,7 @@
 #endif
 #include <string.h>
 
-#define TAILLE_SAISIE 128
+#define TAILLE_SAISIE 256
 
 int strcpy_s(
     char *dest,
