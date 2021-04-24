@@ -54,7 +54,7 @@ cle_t le_creer_item(
 
     push_back(&table_items, &i);
 
-    llog("Nouvel 'item' [%s,%s,%s,%zu] créé.", nom, ingredients_s, prix);
+    llog("Nouvel item [%zu,%s,%s,%zu] créé.", index, nom, ingredients_s, prix);
 
     return index;
 }
@@ -83,7 +83,7 @@ void le_ajouter_item_menu(
         m += sprintf(m, "%s%zu", (i == 0) ? "" : ";", r->menu[i]);
     }
 
-    llog("Item [%zu] ajouté au menu de [%s].\n", index, r->nom);
+    llog("Item [%zu] ajouté au menu de [%s].", index, r->nom);
 }
 
 void le_enlever_item_menu(
@@ -113,7 +113,7 @@ void le_enlever_item_menu(
         }
     }
 
-    llog("Item [%zu] supprimé du menu de [%s].\n", index, r->nom);
+    llog("Item [%zu] supprimé du menu de [%s].", index, r->nom);
 
 
     // Remove the item from the DB if it is no longer referenced by any restaurants.
