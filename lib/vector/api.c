@@ -1,6 +1,6 @@
-#include "vector_api.h"
+#include "vector/api.h"
 
-#include "vector_types.h"
+#include "vector/types.h"
 
 #include <assert.h>
 #include <stdbool.h>
@@ -18,7 +18,7 @@ void grow(
     }
     else
     {
-        while(v->capacity <= needed)
+        while(v->capacity < needed)
         {
             v->capacity *= v->growth_factor;
             v->data = realloc(v->data, v->capacity * v->element_size);
@@ -28,12 +28,11 @@ void grow(
 
 vector make_vector(
     size_t const element_size,
-    size_t const num_elements,
-    float const growth_factor)
+    size_t const num_elements)
 {
     return (vector){
             .element_size = element_size,
-            .growth_factor = growth_factor,
+            .growth_factor = 2.0,
             .data = num_elements ? malloc(num_elements * element_size) : NULL,
             .size = num_elements,
             .capacity = num_elements,

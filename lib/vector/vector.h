@@ -1,4 +1,4 @@
 #pragma once
 
-#include "vector/vector_api.h"
-#include "vector/vector_types.h"
+#include "vector/api.h"
+#include "vector/types.h"

@@ -1,26 +1,16 @@
-#include "db.h"
+#include "db/types.h"
 
-#include "vector/vector_api.h"
-#include "vector/vector_types.h"
+#include "vector/vector.h"
 
-#if defined(__linux__)
-    #include <linux/limits.h>
-#else
-    #include <sys/syslimits.h>
-#endif
-#if defined(__linux__)
-    #define  _POSIX_C_SOURCE 200809L
-#endif
 #include <stdio.h>
 #include <string.h>
-
 
 vector table_restaurants = {0}, table_items = {0}, table_livreurs = {0}, table_clients = {0};
 
 vector lecture_table_restaurants(
     FILE* fichier)
 {
-    vector restaurants = make_vector(sizeof(restaurant), 0, 2.0);
+    vector restaurants = make_vector(sizeof(restaurant), 0);
 
     rewind(fichier);
 
@@ -30,14 +20,16 @@ vector lecture_table_restaurants(
     while(getline(&buffer, &buffer_size, fichier) != -1)
     {
         restaurant r = {0};
-        sscanf(buffer, "%zu,%[^,],%[^,],%[^,],%[^,],%[^,],%zu\n", &r.index, r.nom, r.code_postal, r.telephone, r.type, r.items_s, &r.solde);
+        sscanf(buffer, "%zu,%[^,],%[^,],%[^,],%[^,],%[^,],%zu\n", &r.index, r.nom, r.code_postal, r.telephone, r.type, r.menu_s, &r.solde);
         
         // Parse string of semicolon separated items.
-        memset(r.items, 0, sizeof(r.items));
+        char m[TAILLE_MENU * 3];
+        strcpy(m, r.menu_s);
+        memset(r.menu, 0, sizeof(r.menu));
         int i = 0;
-        for(char *item = strtok(r.items_s, ";"); item; item = strtok(NULL, ";"))
+        for(char *item = strtok(m, ";"); item; item = strtok(NULL, ";"))
         {
-            r.items[i++] = atoi(item);
+            r.menu[i++] = atoi(item);
         }
 
         push_back(&restaurants, &r);
@@ -59,12 +51,12 @@ void ecriture_table_restaurants(
 
         fprintf(fichier, "%zu,%s,%s,%s,%s,", r->index, r->nom, r->code_postal, r->telephone, r->type);
 
-        for(int i = 0; i != TAILLE_ITEMS && r->items[i] != 0; ++i)
+        for(int i = 0; i != TAILLE_MENU && r->menu[i] != 0; ++i)
         {
-            fprintf(fichier, "%zu", r->items[i]);
-            if(i != TAILLE_ITEMS && r->items[i + 1] != 0)
+            fprintf(fichier, "%zu", r->menu[i]);
+            if(i != TAILLE_MENU && r->menu[i + 1] != 0)
             {
-                fprintf(fichier,";");
+                fprintf(fichier, ";");
             }
         }
 
@@ -75,7 +67,7 @@ void ecriture_table_restaurants(
 vector lecture_table_items(
     FILE* fichier)
 {
-    vector items = make_vector(sizeof(item), 0, 2.0);
+    vector items = make_vector(sizeof(item), 0);
 
     rewind(fichier);
 
@@ -88,9 +80,11 @@ vector lecture_table_items(
         sscanf(buffer, "%zu,%[^,],%[^,],%zu\n", &i.index, i.nom, i.ingredients_s, &i.prix);
         
         // Parse string of semicolon separated ingredients.
+        char g[TAILLE_INGREDIENTS * TAILLE_CHAMP_INGREDIENT];
+        strcpy(g, i.ingredients_s);
         memset(i.ingredients, 0, TAILLE_INGREDIENTS * TAILLE_CHAMP_INGREDIENT);
         int j = 0;
-        for(char *ingredient = strtok(i.ingredients_s, ";"); ingredient; ingredient = strtok(NULL, ";"))
+        for(char *ingredient = strtok(g, ";"); ingredient; ingredient = strtok(NULL, ";"))
         {
             strcpy(i.ingredients[j++], ingredient);
         }
@@ -130,7 +124,7 @@ void ecriture_table_items(
 vector lecture_table_livreurs(
     FILE* fichier)
 {
-    vector livreurs = make_vector(sizeof(livreur), 0, 2.0);
+    vector livreurs = make_vector(sizeof(livreur), 0);
 
     rewind(fichier);
 
@@ -143,9 +137,11 @@ vector lecture_table_livreurs(
         sscanf(buffer, "%zu,%[^,],%[^,],%[^,],%zu,%zu\n", &l.index, l.nom, l.telephone, l.deplacements_s, &l.restaurant, &l.solde);
         
         // Parse string of semicolon separated postal codes.
+        char d[TAILLE_DEPLACEMENTS * TAILLE_CHAMP_CODEPOSTAL];
+        strcpy(d, l.deplacements_s);
         memset(l.deplacements, 0, TAILLE_DEPLACEMENTS * TAILLE_CHAMP_CODEPOSTAL);
         int j = 0;
-        for(char *deplacement = strtok(l.deplacements_s, ";"); deplacement; deplacement = strtok(NULL, ";"))
+        for(char *deplacement = strtok(d, ";"); deplacement; deplacement = strtok(NULL, ";"))
         {
             strcpy(l.deplacements[j++], deplacement);
         }
@@ -185,7 +181,7 @@ void ecriture_table_livreurs(
 vector lecture_table_clients(
     FILE* fichier)
 {
-    vector clients = make_vector(sizeof(client), 0, 2.0);
+    vector clients = make_vector(sizeof(client), 0);
 
     rewind(fichier);
 
@@ -215,116 +211,4 @@ void ecriture_table_clients(
 
         fprintf(fichier, "%zu,%s,%s,%s,%zu\n", c->index, c->nom, c->code_postal, c->telephone, c->solde);
     }
-}
-
-void ouverture_db(
-    char const* dossier)
-{
-    char chemin[PATH_MAX];
-    
-    // To help testing and allow to re-open the DB without closing (and thus writing) it first, destroy the current tables.
-    destroy(&table_restaurants);
-    destroy(&table_items);
-    destroy(&table_livreurs);
-    destroy(&table_clients);
-
-    // Read and copy restaurants.
-    sprintf(chemin, "%s/%s", dossier, "restaurants.csv");
-    FILE *test_db_restaurants = fopen(chemin, "r");
-    if(test_db_restaurants)
-    {
-        table_restaurants = lecture_table_restaurants(test_db_restaurants);
-        fclose(test_db_restaurants);
-    }
-    else
-    {
-        table_restaurants = make_vector(sizeof(restaurant), 0, 2.0);
-    }
-
-    // Read and copy items.
-    sprintf(chemin, "%s/%s", dossier, "items.csv");
-    FILE *test_db_items = fopen(chemin, "r");
-    if(test_db_items)
-    {
-        table_items = lecture_table_items(test_db_items);
-        fclose(test_db_items);
-    }
-    else
-    {
-        table_items = make_vector(sizeof(item), 0, 2.0);
-    }
-
-    // Read and copy deliverers.
-    sprintf(chemin, "%s/%s", dossier, "livreurs.csv");
-    FILE *test_db_livreurs = fopen(chemin, "r");
-    if(test_db_livreurs)
-    {
-        table_livreurs = lecture_table_livreurs(test_db_livreurs);
-        fclose(test_db_livreurs);
-    }
-    else
-    {
-        table_livreurs = make_vector(sizeof(livreur), 0, 2.0);
-    }
-
-    // Read and copy customers.
-    sprintf(chemin, "%s/%s", dossier, "clients.csv");
-    FILE *test_db_clients = fopen(chemin, "r");
-    if(test_db_clients)
-    {
-        table_clients = lecture_table_clients(test_db_clients);
-        fclose(test_db_clients);
-    }
-    else
-    {
-        table_clients = make_vector(sizeof(client), 0, 2.0);
-    }
-}
-
-void fermeture_db(
-    char const* dossier)
-{
-    char chemin[PATH_MAX];
-    
-    sprintf(chemin, "%s/%s", dossier, "restaurants.csv");
-    FILE *test_db_restaurants = fopen(chemin, "w");
-    ecriture_table_restaurants(test_db_restaurants, &table_restaurants);
-    fclose(test_db_restaurants);
-    destroy(&table_restaurants);
-
-    sprintf(chemin, "%s/%s", dossier, "items.csv");
-    FILE *test_db_items = fopen(chemin, "w");
-    ecriture_table_items(test_db_items, &table_items);
-    fclose(test_db_items);
-    destroy(&table_items);
-
-    sprintf(chemin, "%s/%s", dossier, "livreurs.csv");
-    FILE *test_db_livreurs = fopen(chemin, "w");
-    ecriture_table_livreurs(test_db_livreurs, &table_livreurs);
-    fclose(test_db_livreurs);
-    destroy(&table_livreurs);
-
-    sprintf(chemin, "%s/%s", dossier, "clients.csv");
-    FILE *test_db_clients = fopen(chemin, "w");
-    ecriture_table_clients(test_db_clients, &table_clients);
-    fclose(test_db_clients);
-    destroy(&table_clients);
-}
-
-void efface_db(
-    char const* dossier)
-{
-    char chemin[PATH_MAX];
-
-    sprintf(chemin, "%s/%s", dossier, "restaurants.csv");
-    remove(chemin);
-
-    sprintf(chemin, "%s/%s", dossier, "livreurs.csv");
-    remove(chemin);
-
-    sprintf(chemin, "%s/%s", dossier, "items.csv");
-    remove(chemin);
-
-    sprintf(chemin, "%s/%s", dossier, "clients.csv");
-    remove(chemin);
 }

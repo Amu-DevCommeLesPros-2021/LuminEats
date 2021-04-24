@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vector_types.h"
+#include "vector/types.h"
 
 #include <stdbool.h>
 #include <stdlib.h>
@@ -13,8 +13,7 @@
 // Renvoie le vecteur nouvellement créé.
 vector make_vector(
     size_t const element_size,  // Taille d'un seul élément (sizeof(int), TAILLE_CHAINE, etc.)
-    size_t const num_elements,  // Le nombre d'éléments à prévoir.
-    float const growth_factor);
+    size_t const num_elements); // Le nombre d'éléments à prévoir.
 
 // Libère la mémoire utilsée par le vecteur.
 void destroy(

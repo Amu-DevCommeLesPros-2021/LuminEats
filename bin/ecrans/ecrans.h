@@ -1,8 +1,12 @@
 #pragma once
 
+#include "db/types.h"
 #include "vector/vector.h"
 
 typedef void (*ecran)(vector*);    // Un fonction qui va afficher un écran manipule la pile d'écrans.
+
+// Currently logged in user.
+extern char nom_utilisateur[TAILLE_CHAMP_NOM];
 
 // Écran initial.
 void initial(

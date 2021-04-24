@@ -1,0 +1,33 @@
+#include "lumineats/filter.h"
+
+#include "lumineats/predicates.h"
+
+#include "db/db.h"
+#include "db/tables.h"
+#include "vector/vector.h"
+
+vector const* le_liste_restaurants()
+{
+    return &table_restaurants;
+}
+
+void le_filtrer_restaurants_type(
+    vector *restaurants,
+    char const* type)
+{
+    keep_if(restaurants, restaurant_a_type, type);
+}
+
+void le_filtrer_restaurants_livraison(
+    vector *restaurants,
+    char const* code_postal)
+{
+    keep_if(restaurants, restaurant_peut_livrer, code_postal);
+}
+
+void le_filtrer_restaurants_item(
+    vector *restaurants,
+    cle_t const index_item)
+{
+    keep_if(restaurants, restaurant_menu_contient, &index_item);
+}
