@@ -74,13 +74,13 @@ Au fils des commandes des clients, un montant est crédité dans le compte.
     - [x] Téléphone
     - [x] Type de cuisine
 - [x] Supprimer un compte
-- [ ] Modifier le menu
-    - [ ] Ajouter un nouvel item au menu
-        - [ ] Nom
-        - [ ] Ingrédients principaux
-        - [ ] Prix
-    - [ ] Ajouter un item au menu parmi la liste des items existants
-    - [ ] Supprimer un item
+- [x] Modifier le menu
+    - [x] Ajouter un nouvel item au menu
+        - [x] Nom
+        - [x] Ingrédients principaux
+        - [x] Prix
+    - [x] Ajouter un item au menu parmi la liste des items existants
+    - [x] Supprimer un item
 - [x] Solde
     - [x] Voir le solde courant
 
