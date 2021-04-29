@@ -15,7 +15,7 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 231;
+int const tests_total = 252;
 int const test_column_width = 60;
 
 int main()
@@ -789,6 +789,77 @@ int main()
 
         TEST(size(items) == 0);
 
+
+        // Tests par possibilité de livraison.
+
+        // Test des items qui peuvent être livrés dans le 13001.
+        assign(&items, begin(is), end(is));
+
+        le_filtrer_items_livraison(&items, "13001");
+
+        TEST(size(items) == 5);
+        // L'ordre n'est évidement pas strictement important mais il sera dans l'ordre de la table des items.
+        TEST(strcmp(((item*)value(at(&items, 0)))->nom, "bouillabaise") == 0);
+        TEST(strcmp(((item*)value(at(&items, 4)))->nom, "salade nicoise") == 0);
+
+        // Test des items qui peuvent être livrés dans le 13002.
+        assign(&items, begin(is), end(is));
+
+        le_filtrer_items_livraison(&items, "13002");
+        
+        TEST(size(items) == 3);
+        TEST(strcmp(((item*)value(at(&items, 0)))->nom, "bouillabaise") == 0);
+        TEST(strcmp(((item*)value(at(&items, 2)))->nom, "salade nicoise") == 0);
+
+        // Test des items qui peuvent être livrés dans le 13005.
+        assign(&items, begin(is), end(is));
+        le_filtrer_items_livraison(&items, "13005");
+
+        TEST(size(items) == 5);
+        TEST(strcmp(((item*)value(at(&items, 0)))->nom, "bouillabaise") == 0);
+        TEST(strcmp(((item*)value(at(&items, 4)))->nom, "salade nicoise") == 0);
+
+        // Test des items qui peuvent être livrés dans le 13009.
+        assign(&items, begin(is), end(is));
+        le_filtrer_items_livraison(&items, "13009");
+
+        TEST(size(items) == 7);
+        TEST(strcmp(((item*)value(at(&items, 0)))->nom, "bouillabaise") == 0);
+        TEST(strcmp(((item*)value(at(&items, 6)))->nom, "petit-dej du champion") == 0);
+
+        // Test des items qui peuvent être livrés dans le 13010.
+        assign(&items, begin(is), end(is));
+        le_filtrer_items_livraison(&items, "13010");
+
+        TEST(size(items) == 2);
+        TEST(strcmp(((item*)value(at(&items, 0)))->nom, "pancakes aux myrtilles") == 0);
+        TEST(strcmp(((item*)value(at(&items, 1)))->nom, "petit-dej du champion") == 0);
+
+        // Test des items qui peuvent être livrés dans le 13012.
+        assign(&items, begin(is), end(is));
+        le_filtrer_items_livraison(&items, "13012");
+
+        TEST(size(items) == 0);
+
+
+        // Tests de plusieurs filtres.
+
+        // Quel items coûtant 9€ ou mins peuvent être livré dans le 13009 ?
+        assign(&items, begin(is), end(is));
+        le_filtrer_items_livraison(&items, "13005");
+        le_filtrer_items_prix(&items, 9);
+
+        TEST(size(items) == 2);
+        TEST(strcmp(((item*)value(at(&items, 0)))->nom, "taco") == 0);
+        TEST(strcmp(((item*)value(at(&items, 1)))->nom, "houmous") == 0);
+
+        // Quels items sont de cuisine 'américaine' et peuvent coûte moins de 10€ ?
+        assign(&items, begin(is), end(is));
+        le_filtrer_items_prix(&items, 9);
+        le_filtrer_items_type(&items, "americain");
+
+        TEST(size(items) == 1);
+        TEST(strcmp(((item*)value(at(&items, 0)))->nom, "pancakes aux myrtilles") == 0);
 
         fermeture_db("build/test-db/items");
     }

@@ -87,3 +87,9 @@ bool item_menu_restaurant(
 bool item_prix_moindre(
     void const* i,
     void const* prix);
+
+// Renvoie 'vrai' si cet item est offert par les restaurants donné.
+bool item_offert_restaurants(
+    void const *i,
+    void const *restaurants);   // 'restaurants' est un vecteur.
+

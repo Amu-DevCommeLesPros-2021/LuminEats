@@ -44,8 +44,13 @@ void le_filtrer_items_livraison(
     vector *items,
     char const* code_postal)
 {
-    (void)items;
-    (void)code_postal;
+    vector const* rs = le_liste_restaurants();
+    vector restaurants = make_vector(sizeof(restaurant), 0);
+    assign(&restaurants, begin(rs), end(rs));
+
+    le_filtrer_restaurants_livraison(&restaurants, code_postal);
+
+    keep_if(items, item_offert_restaurants, &restaurants);
 }
 
 void le_filtrer_items_restaurant(

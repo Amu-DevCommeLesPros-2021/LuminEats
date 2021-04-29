@@ -230,3 +230,25 @@ bool item_prix_moindre(
 {
     return ((item*)i)->prix <= *(size_t*)prix;
 }
+
+bool item_offert_restaurants(
+    void const *i,
+    void const *restaurants)
+{
+    vector const* v = (vector const*)restaurants;
+    size_t const ix = ((item*)i)->index;
+
+    for(iterator j = begin(v), e = end(v); compare(j, e) != 0; increment(&j, 1))
+    {
+        restaurant const* r = (restaurant const*)value(j);
+        for(int k = 0; k != TAILLE_MENU && r->menu[k] != 0; ++k)
+        {
+            if(r->menu[k] == ix)
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
