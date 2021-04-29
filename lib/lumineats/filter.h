@@ -33,7 +33,7 @@ void le_filtrer_items_livraison(
     char const* code_postal);
 
 // Filtre une liste d'items pour un restaurant en particulier.
-void le_filtre_items_restaurant(
+void le_filtrer_items_restaurant(
     vector *items,
     char const* restaurant);
 

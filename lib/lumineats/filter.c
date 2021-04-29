@@ -48,12 +48,11 @@ void le_filtrer_items_livraison(
     (void)code_postal;
 }
 
-void le_filtre_items_restaurant(
+void le_filtrer_items_restaurant(
     vector *items,
     char const* restaurant)
 {
-    (void)items;
-    (void)restaurant;
+    keep_if(items, item_menu_restaurant, restaurant);
 }
 
 void le_filtre_items_prix(

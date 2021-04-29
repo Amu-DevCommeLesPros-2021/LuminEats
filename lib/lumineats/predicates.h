@@ -77,3 +77,8 @@ bool item_est_nomme(
 bool item_a_type(
     void const* i,
     void const* type);
+
+// Renvoie 'vrai' si cet item figure au menu du restaurant donné.
+bool item_menu_restaurant(
+    void const* i,
+    void const* nom);

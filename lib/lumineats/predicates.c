@@ -1,5 +1,6 @@
 #include "lumineats/predicates.h"
 
+#include "algorithm/algorithm.h"
 #include "db/db.h"
 #include "db/tables.h"
 
@@ -197,6 +198,26 @@ bool item_a_type(
                     return true;
                 }
             }
+        }
+    }
+
+    return false;
+}
+
+bool item_menu_restaurant(
+    void const* i,
+    void const* nom)
+{
+    size_t const ix = ((item*)i)->index;
+
+    iterator j = find_if_2(begin(&table_restaurants), end(&table_restaurants), restaurant_est_nomme, nom);
+    restaurant const* r = (restaurant const*)value(j);
+
+    for(int k = 0; k != TAILLE_MENU && r->menu[k] != 0; ++k)
+    {
+        if(r->menu[k] == ix)
+        {
+            return true;
         }
     }
 

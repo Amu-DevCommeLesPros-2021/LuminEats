@@ -15,7 +15,7 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 211;
+int const tests_total = 218;
 int const test_column_width = 60;
 
 int main()
@@ -716,6 +716,36 @@ int main()
         le_filtrer_items_type(&items, "americain");
 
         TEST(size(items) == 0);
+
+
+        // Filtrer par restaurant.
+        assign(&items, begin(is), end(is));
+
+        le_filtrer_items_restaurant(&items, "Chez Michel");
+
+        TEST(size(items) == 3);
+        TEST(strcmp(((item*)value(at(&items, 0)))->nom, "bouillabaise") == 0);
+        TEST(strcmp(((item*)value(at(&items, 1)))->nom, "ratatouille") == 0);
+        TEST(strcmp(((item*)value(at(&items, 2)))->nom, "salade nicoise") == 0);
+
+        // Re-filtrer avec le même restaurant ne devrait rien changer.
+        le_filtrer_items_restaurant(&items, "Chez Michel");
+
+        TEST(size(items) == 3);
+
+        // En pratique, j'imagine que l'application ne va pas offrir de «re-filtrer» par restaurant.
+        // Ce serait d'une utilité un peu incongrue. 
+
+        // En théorie, on s'attendrait à ce que re-filtrer avec un autre restaurant ne 
+        // laisse rien mais ce n'est pas ce qui va se passer ici car la fonction ne peut pas
+        // savoir qu'on a déjà filtrer une première fois. Re-filtrer nous donne donc comme 
+        // résultat une intersection des items offert par restaurants.
+
+        le_filtrer_items_restaurant(&items, "Le Veg");
+
+        TEST(size(items) == 1);
+        TEST(strcmp(((item*)value(at(&items, 0)))->nom, "ratatouille") == 0);
+
 
     }
 
