@@ -37,9 +37,6 @@ void restaurateur_principal(
 void restaurateur_creation_compte(
     vector* pile);
 
-void restaurateur_suppression_compte(
-    vector* pile);
-
 void restaurateur_modification_menu(
     vector* pile);
 
