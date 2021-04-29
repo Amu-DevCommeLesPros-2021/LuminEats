@@ -60,7 +60,7 @@ Son utilisation ne se fera que par l'invite de commandes.
 
 Sur cette platforme, on distingue trois profils d'utilisateur avec des besoins et des fonctionalités qui leurs sont propres : les restaurateurs, les livreurs et les clients.
 
-## Fonctionalités pour un restaurateur
+## Fonctionnalités pour un restaurateur
 
 À un restaurant correspond un type de cuisine : fast-food, sushi, sandwicherie, etc.
 Chaque restaurant a son menu composé de plusieurs items.
@@ -84,7 +84,7 @@ Au fils des commandes des clients, un montant est crédité dans le compte.
 - [x] Solde
     - [x] Voir le solde courant
 
-## Fonctionalités pour un livreur
+## Fonctionnalités pour un livreur
 
 Un livreur n'a pas un rayon d'action infini.
 Chaque livreur a une liste de code postaux dans lesquels il peut se déplacer.
@@ -106,7 +106,7 @@ Au fils des commandes des clients, un montant est crédité dans le compte.
 - [x] Solde
     - [x] Voir le solde courant
 
-## Fonctionalités pour un client
+## Fonctionnalités pour un client
 
 Un client informe son profil à la création de son compte.
 Son solde de départ sera de zéro.
