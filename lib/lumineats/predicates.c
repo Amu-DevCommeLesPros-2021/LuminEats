@@ -178,3 +178,27 @@ bool item_est_nomme(
 {
     return strcmp(((item*)i)->nom, nom) == 0;
 }
+
+bool item_a_type(
+    void const* i,
+    void const* type) 
+{
+    size_t const ix = ((item*)i)->index;
+
+    for(iterator j = begin(&table_restaurants), e = end(&table_restaurants); compare(j, e) != 0; increment(&j, 1))
+    {
+        restaurant const* r = (restaurant const*)value(j);
+        if(strcmp(r->type, type) == 0)
+        {
+            for(int k = 0; k != TAILLE_MENU && r->menu[k] != 0; ++k)
+            {
+                if(r->menu[k] == ix)
+                {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}

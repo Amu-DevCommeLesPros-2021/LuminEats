@@ -31,3 +31,35 @@ void le_filtrer_restaurants_item(
 {
     keep_if(restaurants, restaurant_menu_contient, &index_item);
 }
+
+
+void le_filtrer_items_type(
+    vector *items,
+    char const* type)
+{
+    keep_if(items, item_a_type, type);
+}
+
+void le_filtrer_items_livraison(
+    vector *items,
+    char const* code_postal)
+{
+    (void)items;
+    (void)code_postal;
+}
+
+void le_filtre_items_restaurant(
+    vector *items,
+    char const* restaurant)
+{
+    (void)items;
+    (void)restaurant;
+}
+
+void le_filtre_items_prix(
+    vector *items,
+    size_t const prix)
+{
+    (void)items;
+    (void)prix;
+}

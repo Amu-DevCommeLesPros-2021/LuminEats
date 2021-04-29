@@ -26,6 +26,9 @@ bool restaurant_a_type(
     void const* r,
     void const* type);
 
+// Renvoie 'vrai' si :
+// 1. un livreur attitré au restaurant peut se déplacer vers le code postal donné.
+// 2. un livreur «agent libre» peut se déplacer vers le code postal du restaurant et le code postal donné.
 bool restaurant_peut_livrer(
     void const* r,
     void const* code_postal);
@@ -69,3 +72,8 @@ bool item_a_index(
 bool item_est_nomme(
     void const* i,
     void const* nom);
+
+// Renvoie 'vrai' si cet item est offer par un restaurant du type donné.
+bool item_a_type(
+    void const* i,
+    void const* type);

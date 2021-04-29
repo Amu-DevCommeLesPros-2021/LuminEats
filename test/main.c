@@ -15,7 +15,7 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 203;
+int const tests_total = 211;
 int const test_column_width = 60;
 
 int main()
@@ -675,7 +675,7 @@ int main()
 
         TEST(size(*items) == 2);
 
-        // Si on enlève un item de tous les menus, l'item n'apparait plus dans le BdD.
+        // Si on enlève un item de tous les menus, l'item n'apparait plus dans la BdD.
         le_enlever_item_menu(ixi1, ixr2);
 
         TEST(size(*items) == 1);
@@ -683,5 +683,41 @@ int main()
         fermeture_db("build/test-db/items");
     }
 
-    return 0;
+    // Tests des filtres pour items de menu.
+    {
+        ouverture_db("build/test-db");
+
+        // Tests de filtre par type. 
+        vector const* is = le_liste_items();
+        vector items = make_vector(sizeof(item), 0);
+        assign(&items, begin(is), end(is));
+
+
+        // Filtrer par type 'provencal' devrait nous donner tous les items de 'Chez Michel'.
+        le_filtrer_items_type(&items, "provencal");
+
+        TEST(size(items) == 3);
+        TEST(strcmp(((item*)value(at(&items, 0)))->nom, "bouillabaise") == 0);
+        TEST(strcmp(((item*)value(at(&items, 1)))->nom, "ratatouille") == 0);
+        TEST(strcmp(((item*)value(at(&items, 2)))->nom, "salade nicoise") == 0);
+
+        // Re-filtrer avec le même type ne devrait rien changer.
+        le_filtrer_items_type(&items, "provencal");
+
+        TEST(size(items) == 3);
+
+        // Re-filtrer avec le type 'vegetarien' devrait nous laisser avec la ratatouille qui est aussi offerte par 'Le Veg'. 
+        le_filtrer_items_type(&items, "vegetarien");
+
+        TEST(size(items) == 1);
+        TEST(strcmp(((item*)value(at(&items, 0)))->nom, "ratatouille") == 0);
+
+        // Re-re-filtrer avec 'americain' ne devrait plus rien laisser de disponible.
+        le_filtrer_items_type(&items, "americain");
+
+        TEST(size(items) == 0);
+
+    }
+
+    return tests_total - tests_successful;
 }
