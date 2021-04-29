@@ -223,3 +223,10 @@ bool item_menu_restaurant(
 
     return false;
 }
+
+bool item_prix_moindre(
+    void const* i,
+    void const* prix)
+{
+    return ((item*)i)->prix <= *(size_t*)prix;
+}

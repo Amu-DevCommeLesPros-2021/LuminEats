@@ -55,10 +55,9 @@ void le_filtrer_items_restaurant(
     keep_if(items, item_menu_restaurant, restaurant);
 }
 
-void le_filtre_items_prix(
+void le_filtrer_items_prix(
     vector *items,
     size_t const prix)
 {
-    (void)items;
-    (void)prix;
+    keep_if(items, item_prix_moindre, &prix);
 }

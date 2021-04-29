@@ -82,3 +82,8 @@ bool item_a_type(
 bool item_menu_restaurant(
     void const* i,
     void const* nom);
+
+// Renvoie 'vrai' si cet item coûte aussi cher ou moins cher que le prix donné.
+bool item_prix_moindre(
+    void const* i,
+    void const* prix);

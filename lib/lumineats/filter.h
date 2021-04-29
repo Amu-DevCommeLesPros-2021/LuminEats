@@ -38,6 +38,6 @@ void le_filtrer_items_restaurant(
     char const* restaurant);
 
 // Filtre une liste d'items par prix moindre que le solde donné.
-void le_filtre_items_prix(
+void le_filtrer_items_prix(
     vector *items,
     size_t const prix);

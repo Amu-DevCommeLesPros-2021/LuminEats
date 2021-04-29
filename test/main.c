@@ -15,7 +15,7 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 218;
+int const tests_total = 231;
 int const test_column_width = 60;
 
 int main()
@@ -665,7 +665,7 @@ int main()
         TEST(strcmp(r2->menu_s, "1;2") == 0);
 
 
-        // Si on enlève un item d'un menu, l'item existe encore puisqu'il fait toujours parti d'au moins un menu.
+        // Si on enlève cet item d'un menu, l'item existe encore puisqu'il fait toujours parti d'au moins un menu.
         le_enlever_item_menu(ixi1, ixr1);
         r1 = le_cherche_restaurant_i(ixr1);
 
@@ -675,7 +675,7 @@ int main()
 
         TEST(size(*items) == 2);
 
-        // Si on enlève un item de tous les menus, l'item n'apparait plus dans la BdD.
+        // Si on enlève cet item de tous les menus, l'item n'apparait plus dans la BdD.
         le_enlever_item_menu(ixi1, ixr2);
 
         TEST(size(*items) == 1);
@@ -739,7 +739,7 @@ int main()
         // En théorie, on s'attendrait à ce que re-filtrer avec un autre restaurant ne 
         // laisse rien mais ce n'est pas ce qui va se passer ici car la fonction ne peut pas
         // savoir qu'on a déjà filtrer une première fois. Re-filtrer nous donne donc comme 
-        // résultat une intersection des items offert par restaurants.
+        // résultat une intersection des items offert par plusieurs restaurants.
 
         le_filtrer_items_restaurant(&items, "Le Veg");
 
@@ -747,6 +747,50 @@ int main()
         TEST(strcmp(((item*)value(at(&items, 0)))->nom, "ratatouille") == 0);
 
 
+        // Filtrer par prix.
+        assign(&items, begin(is), end(is));
+
+        // Devrait garder tous les items car aucun ne dépasse 100€.
+        le_filtrer_items_prix(&items, 100);
+
+        TEST(size(items) == 7);
+
+        // Re-filter avec 20€ comme plafond devrait enelver la bouillabaise.
+        le_filtrer_items_prix(&items, 20);
+
+        TEST(size(items) == 6);
+        TEST(strcmp(((item*)value(at(&items, 0)))->nom, "taco") == 0);
+        TEST(strcmp(((item*)value(at(&items, 5)))->nom, "petit-dej du champion") == 0);
+
+        // Re-re-filter avec 9€ comme plafond ne devrait plus laisser que les trois items les moins chers.
+        le_filtrer_items_prix(&items, 9);
+
+        TEST(size(items) == 3);
+        TEST(strcmp(((item*)value(at(&items, 0)))->nom, "taco") == 0);
+        TEST(strcmp(((item*)value(at(&items, 1)))->nom, "houmous") == 0);
+        TEST(strcmp(((item*)value(at(&items, 2)))->nom, "pancakes aux myrtilles") == 0);
+
+        // Re-re-re-filtrer avec 4€ comme plafond ne devrait plus laisser que le taco.
+        le_filtrer_items_prix(&items, 4);
+
+        TEST(size(items) == 1);
+        TEST(strcmp(((item*)value(at(&items, 0)))->nom, "taco") == 0);
+
+        // Filtrer la liste originale avec 4€ comme plafond ne devrait laisser que le taco.
+        assign(&items, begin(is), end(is));
+        le_filtrer_items_prix(&items, 4);
+
+        TEST(size(items) == 1);
+        TEST(strcmp(((item*)value(at(&items, 0)))->nom, "taco") == 0);
+
+
+        // Re-filtrer avec 0€ ne devrait plus rien laisser.
+        le_filtrer_items_prix(&items, 0);
+
+        TEST(size(items) == 0);
+
+
+        fermeture_db("build/test-db/items");
     }
 
     return tests_total - tests_successful;
