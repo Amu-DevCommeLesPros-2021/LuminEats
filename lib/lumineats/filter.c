@@ -2,13 +2,18 @@
 
 #include "lumineats/predicates.h"
 
+#include "algorithm/algorithm.h"
 #include "db/db.h"
 #include "db/tables.h"
 #include "vector/vector.h"
 
-vector const* le_liste_restaurants()
+
+vector le_liste_restaurants()
 {
-    return &table_restaurants;
+    vector index = make_vector(sizeof(cle_t), size(table_restaurants));
+    transform(begin(&table_restaurants), end(&table_restaurants), begin(&index), index_de);
+
+    return index;
 }
 
 void le_filtrer_restaurants_type(
@@ -44,9 +49,9 @@ void le_filtrer_items_livraison(
     vector *items,
     char const* code_postal)
 {
-    vector const* rs = le_liste_restaurants();
-    vector restaurants = make_vector(sizeof(restaurant), 0);
-    assign(&restaurants, begin(rs), end(rs));
+    vector rs = le_liste_restaurants();
+    vector restaurants = make_vector(sizeof(cle_t), 0);
+    assign(&restaurants, begin(&rs), end(&rs));
 
     le_filtrer_restaurants_livraison(&restaurants, code_postal);
 

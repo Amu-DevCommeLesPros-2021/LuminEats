@@ -4,7 +4,7 @@
 #include "vector/types.h"
 
 // Renvoie tous les restaurants.
-vector const* le_liste_restaurants();
+vector le_liste_restaurants();
 
 // Filtre une liste de restaurants par type.
 void le_filtrer_restaurants_type(

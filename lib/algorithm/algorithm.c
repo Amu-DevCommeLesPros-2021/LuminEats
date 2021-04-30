@@ -153,12 +153,14 @@ iterator transform(
     iterator first,
     iterator last,
     iterator destination,
-    void (*unary_operation)(void* data))
+    void (*unary_operation)(void const* in, void* out))
 {
     for(;compare(first, last) != 0; increment(&first, 1))
     {
-        memcpy(destination.element, first.element, first.element_size);
-        unary_operation(destination.element);
+        unary_operation(first.element, destination.element);
+        // memcpy(destination.element, first.element, first.element_size);
+        // unary_operation(destination.element);
+
         increment(&destination, 1);
     }
 

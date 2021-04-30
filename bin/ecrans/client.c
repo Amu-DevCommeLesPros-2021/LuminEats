@@ -210,8 +210,8 @@ printf("\n\
 void client_lister_restaurants(
     vector* pile)
 {
-    vector const* rs = le_liste_restaurants();
-    vector restaurants = make_vector(sizeof(restaurant), 0);
+    vector rs = le_liste_restaurants();
+    vector restaurants = make_vector(sizeof(cle_t), 0);
 
     char type[TAILLE_CHAMP_TYPE] = {'\0'};
     char code_postal[TAILLE_CHAMP_CODEPOSTAL] = {'\0'};
@@ -222,7 +222,7 @@ void client_lister_restaurants(
 
         printf("\nListe des restaurants filtrée par [%c] type (%s) [%c] qui peut me livrer : \n\n", (type[0] ? 'x' : ' '), (type[0] ? type : ""), (code_postal[0] ? 'x' : ' '));
 
-        assign(&restaurants, begin(rs), end(rs));
+        assign(&restaurants, begin(&rs), end(&rs));
 
         if(strlen(type))
         {

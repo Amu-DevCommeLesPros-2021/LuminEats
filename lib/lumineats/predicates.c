@@ -1,5 +1,7 @@
 #include "lumineats/predicates.h"
 
+#include "lumineats/search.h"
+
 #include "algorithm/algorithm.h"
 #include "db/db.h"
 #include "db/tables.h"
@@ -8,38 +10,38 @@
 #include <string.h>
 
 bool restaurant_a_index(
-    void const* c,
+    void const* r,
     void const* index)
 {
-    return ((restaurant*)c)->index == *(size_t*)index;
+    return ((restaurant*)r)->index == *(size_t*)index;
 }
 
 bool restaurant_est_nomme(
-    void const* r,
+    void const* ix,
     void const* nom)
 {
-    return strcmp(((restaurant*)r)->nom, nom) == 0;
+    return strcmp(le_cherche_restaurant_i(*(cle_t const*)ix)->nom, nom) == 0;
 }
 
 bool restaurant_a_telephone(
-    void const* r,
+    void const* ix,
     void const* telephone)
 {
-    return strcmp(((restaurant*)r)->telephone, telephone) == 0;
+    return strcmp(le_cherche_restaurant_i(*(cle_t const*)ix)->telephone, telephone) == 0;
 }
 
 bool restaurant_a_nom_ou_telephone(
-    void const* r,
+    void const* ix,
     void const* chaine)
 {
-    return restaurant_est_nomme(r, chaine) || restaurant_a_telephone(r, chaine);
+    return restaurant_est_nomme(ix, chaine) || restaurant_a_telephone(ix, chaine);
 }
 
 bool restaurant_menu_contient(
-    void const* r,
+    void const* ix,
     void const* index)
 {
-    cle_t *m = ((restaurant*)r)->menu;
+    cle_t *m = le_cherche_restaurant_i(*(cle_t const*)ix)->menu;
 
     for(int j = 0; j != TAILLE_MENU && m[j] != 0; ++j)
     {
@@ -53,22 +55,23 @@ bool restaurant_menu_contient(
 }
 
 bool restaurant_a_type(
-    void const* r,
+    void const* ix,
     void const* type)
 {
-    return strcmp(((restaurant*)r)->type, type) == 0;
+    return strcmp(le_cherche_restaurant_i(*(cle_t const*)ix)->type, type) == 0;
 }
 
 bool restaurant_peut_livrer(
-    void const* r,
+    void const* ix,
     void const* code_postal)
 {
     // Il suffit de trouver un livreur qui peut se déplacer chez le restaurant et le client.
     for(iterator i = begin(&table_livreurs), e = end(&table_livreurs); compare(i, e) != 0; increment(&i, 1))
     {
         livreur const* l = (livreur*)value(i);
+        restaurant const* r = le_cherche_restaurant_i(*(cle_t const*)ix);
 
-        if(l->restaurant == ((restaurant*)r)->index)
+        if(l->restaurant == r->index)
         {
             // C'est un livreur qui nous est exclusif. Il suffit de trouver le code postal dans ses déplacements possible.
             for(int j = 0; j != TAILLE_DEPLACEMENTS; ++j)
@@ -85,7 +88,7 @@ bool restaurant_peut_livrer(
             bool deplace_restaurant = false;
             for(int j = 0; j != TAILLE_DEPLACEMENTS && !deplace_restaurant; ++j)
             {
-                if(strcmp(l->deplacements[j], ((restaurant*)r)->code_postal) == 0)
+                if(strcmp(l->deplacements[j], r->code_postal) == 0)
                 {
                     deplace_restaurant = true;
                 }
@@ -111,31 +114,31 @@ bool restaurant_peut_livrer(
 }
 
 bool livreur_a_index(
-    void const* c,
+    void const* l,
     void const* index)
 {
-    return ((livreur*)c)->index == *(size_t*)index;
+    return ((livreur*)l)->index == *(size_t*)index;
 }
 
 bool livreur_est_nomme(
-    void const* l,
+    void const* ix,
     void const* nom)
 {
-    return strcmp(((livreur*)l)->nom, nom) == 0;
+    return strcmp(le_cherche_livreur_i(*(cle_t const*)ix)->nom, nom) == 0;
 }
 
 bool livreur_a_telephone(
-    void const* l,
+    void const* ix,
     void const* telephone)
 {
-    return strcmp(((livreur*)l)->telephone, telephone) == 0;
+    return strcmp(le_cherche_livreur_i(*(cle_t const*)ix)->telephone, telephone) == 0;
 }
 
 bool livreur_a_nom_ou_telephone(
-    void const* l,
+    void const* ix,
     void const* chaine)
 {
-    return livreur_est_nomme(l, chaine) || livreur_a_telephone(l, chaine);
+    return livreur_est_nomme(ix, chaine) || livreur_a_telephone(ix, chaine);
 }
 
 bool client_a_index(
@@ -146,24 +149,24 @@ bool client_a_index(
 }
 
 bool client_est_nomme(
-    void const* c,
+    void const* ix,
     void const* nom)
 {
-    return strcmp(((client*)c)->nom, nom) == 0;
+    return strcmp(le_cherche_client_i(*(cle_t const*)ix)->nom, nom) == 0;
 }
 
 bool client_a_telephone(
-    void const* c,
+    void const* ix,
     void const* telephone)
 {
-    return strcmp(((client*)c)->telephone, telephone) == 0;
+    return strcmp(le_cherche_client_i(*(cle_t const*)ix)->telephone, telephone) == 0;
 }
 
 bool client_a_nom_ou_telephone(
-    void const* c,
+    void const* ix,
     void const* chaine)
 {
-    return client_est_nomme(c, chaine) || client_a_telephone(c, chaine);
+    return client_est_nomme(ix, chaine) || client_a_telephone(ix, chaine);
 }
 
 bool item_a_index(
@@ -174,18 +177,16 @@ bool item_a_index(
 }
 
 bool item_est_nomme(
-    void const* i,
+    void const* ix,
     void const* nom)
 {
-    return strcmp(((item*)i)->nom, nom) == 0;
+    return strcmp(le_cherche_item_i(*(cle_t const*)ix)->nom, nom) == 0;
 }
 
 bool item_a_type(
-    void const* i,
+    void const* ix,
     void const* type) 
 {
-    size_t const ix = ((item*)i)->index;
-
     for(iterator j = begin(&table_restaurants), e = end(&table_restaurants); compare(j, e) != 0; increment(&j, 1))
     {
         restaurant const* r = (restaurant const*)value(j);
@@ -193,7 +194,7 @@ bool item_a_type(
         {
             for(int k = 0; k != TAILLE_MENU && r->menu[k] != 0; ++k)
             {
-                if(r->menu[k] == ix)
+                if(r->menu[k] == *(cle_t const*)ix)
                 {
                     return true;
                 }
@@ -205,17 +206,15 @@ bool item_a_type(
 }
 
 bool item_menu_restaurant(
-    void const* i,
+    void const* ix,
     void const* nom)
 {
-    size_t const ix = ((item*)i)->index;
-
     iterator j = find_if_2(begin(&table_restaurants), end(&table_restaurants), restaurant_est_nomme, nom);
     restaurant const* r = (restaurant const*)value(j);
 
     for(int k = 0; k != TAILLE_MENU && r->menu[k] != 0; ++k)
     {
-        if(r->menu[k] == ix)
+        if(r->menu[k] == *(cle_t const*)ix)
         {
             return true;
         }
@@ -225,25 +224,24 @@ bool item_menu_restaurant(
 }
 
 bool item_prix_moindre(
-    void const* i,
+    void const* ix,
     void const* prix)
 {
-    return ((item*)i)->prix <= *(size_t*)prix;
+    return le_cherche_item_i(*(cle_t const*)ix)->prix <= *(size_t*)prix;
 }
 
 bool item_offert_restaurants(
-    void const *i,
+    void const *ix,
     void const *restaurants)
 {
     vector const* v = (vector const*)restaurants;
-    size_t const ix = ((item*)i)->index;
 
     for(iterator j = begin(v), e = end(v); compare(j, e) != 0; increment(&j, 1))
     {
-        restaurant const* r = (restaurant const*)value(j);
+        restaurant const* r = le_cherche_restaurant_i(*(cle_t*)value(j));
         for(int k = 0; k != TAILLE_MENU && r->menu[k] != 0; ++k)
         {
-            if(r->menu[k] == ix)
+            if(r->menu[k] == *(cle_t const*)ix)
             {
                 return true;
             }

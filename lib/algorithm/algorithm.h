@@ -102,7 +102,7 @@ iterator transform(
     iterator first,
     iterator last,
     iterator destination,
-    void (*unary_operation)(void* data));
+    void (*unary_operation)(void const* in, void* out));
 
 // Copie ce que la fonction 'generator' renvoie à tout les éléments de 'first' à 
 // 'last' non-inclus.

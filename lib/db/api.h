@@ -1,5 +1,7 @@
 #pragma once
 
+#include "db/types.h"
+
 #include "vector/vector.h"
 
 #include <stdio.h>
@@ -18,8 +20,13 @@ void fermeture_db(
 void efface_db(
     char const* dossier);
 
-
 // Fonction de débogage.
 // Affiche les contenu des tables dans 'f'.
 void le_dump_tables(
     FILE* f);
+
+// Copie l'index d'un type.
+// Prends avantage du fait que tous les types ont leur index comme premier membre.
+void index_de(
+    void const* type,
+    void* index);
