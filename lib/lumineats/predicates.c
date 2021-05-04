@@ -1,5 +1,6 @@
 #include "lumineats/predicates.h"
 
+#include "lumineats/commande.h"
 #include "lumineats/search.h"
 
 #include "algorithm/algorithm.h"
@@ -65,52 +66,7 @@ bool restaurant_peut_livrer(
     void const* ix,
     void const* code_postal)
 {
-    // Il suffit de trouver un livreur qui peut se déplacer chez le restaurant et le client.
-    for(iterator i = begin(&table_livreurs), e = end(&table_livreurs); compare(i, e) != 0; increment(&i, 1))
-    {
-        livreur const* l = (livreur*)value(i);
-        restaurant const* r = le_cherche_restaurant_i(*(cle_t const*)ix);
-
-        if(l->restaurant == r->index)
-        {
-            // C'est un livreur qui nous est exclusif. Il suffit de trouver le code postal dans ses déplacements possible.
-            for(int j = 0; j != TAILLE_DEPLACEMENTS; ++j)
-            {
-                if(strcmp(l->deplacements[j], (char*)code_postal) == 0)
-                {
-                    return true;
-                }
-            }
-        }
-        else if(l->restaurant == 0)
-        {
-            // C'est un livreur freelance. Il faut trouver dans ses déplacements le code postal du restaurant et celui donné.
-            bool deplace_restaurant = false;
-            for(int j = 0; j != TAILLE_DEPLACEMENTS && !deplace_restaurant; ++j)
-            {
-                if(strcmp(l->deplacements[j], r->code_postal) == 0)
-                {
-                    deplace_restaurant = true;
-                }
-            }
-
-            bool deplace_client = false;
-            for(int j = 0; j != TAILLE_DEPLACEMENTS && !deplace_client; ++j)
-            {
-                if(strcmp(l->deplacements[j], (char*)code_postal) == 0)
-                {
-                    deplace_client = true;
-                }
-            }
-
-            if(deplace_restaurant && deplace_client)
-            {
-                return true;
-            }
-        }
-    }
-
-    return false;
+   return le_livreur_commande(*(cle_t*)ix, code_postal) != 0;
 }
 
 bool livreur_a_index(

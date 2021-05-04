@@ -15,7 +15,7 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 289;
+int const tests_total = 301;
 int const test_column_width = 60;
 
 int main()
@@ -142,7 +142,7 @@ int main()
         vector clients = lecture_table_clients(test_db_clients);
         fclose(test_db_clients);
 
-        TEST(size(clients) == 3);
+        TEST(size(clients) == 4);
 
         client *c = (client*)value(begin(&clients));
         TEST(c->index == 1);
@@ -179,7 +179,7 @@ int main()
         TEST(size(table_livreurs) == 3);
         TEST(strcmp(((livreur*)value(begin(&table_livreurs)))->nom, "Francois Pignon") == 0);
 
-        TEST(size(table_clients) == 3);
+        TEST(size(table_clients) == 4);
         TEST(strcmp(((client*)value(begin(&table_clients)))->nom, "Francoise Perrin") == 0);
 
         mkdir("build/test-db/ecriture", 0755);
@@ -1001,7 +1001,84 @@ int main()
         fermeture_db("build/test-db");
     }
 
+    // Tests des commandes et débit et crédit des soldes.
+    // Pour une livraison, un livreur gagne 3 euros, soustraits du total.
+    {
+        ouverture_db("build/test-db");
 
+        vector items = make_vector(sizeof(cle_t), 0);
+        cle_t ixi;
+
+        // Une commande remplie par un seul restaurant (3) et livrée par un seul livreur (3).
+        ixi = 6; push_back(&items, &ixi);
+        ixi = 7; push_back(&items, &ixi);
+        int total_commande = le_total_commande(&items);
+
+        le_crediter_solde_client(2, total_commande);
+        int solde_client_2_avant = le_cherche_client_i(2)->solde;
+        int solde_livreur_3_avant = le_cherche_livreur_i(3)->solde;
+        int solde_restaurant_3_avant = le_cherche_restaurant_i(3)->solde;
+
+        le_passer_commande(2, &items);
+
+        TEST(solde_client_2_avant - total_commande == le_cherche_client_i(2)->solde);
+        TEST(solde_livreur_3_avant + 3 == le_cherche_livreur_i(3)->solde);
+        TEST(solde_restaurant_3_avant + total_commande - 3 == le_cherche_restaurant_i(3)->solde);
+
+
+        // Une commande remplie par deux restaurants (1 et 2) et livrée par un seul livreur (2).
+        // Le livreur touchera deux commissions de trois euros chacune.
+        clear(&items);
+        ixi = 1; push_back(&items, &ixi);
+        ixi = 2; push_back(&items, &ixi);
+        ixi = 3; push_back(&items, &ixi);
+        ixi = 4; push_back(&items, &ixi);
+        ixi = 5; push_back(&items, &ixi);
+        total_commande = le_total_commande(&items);
+
+        le_crediter_solde_client(1, total_commande);
+        int solde_client_1_avant = le_cherche_client_i(1)->solde;
+        int solde_restaurant_1_avant = le_cherche_restaurant_i(1)->solde;
+        int solde_restaurant_2_avant = le_cherche_restaurant_i(2)->solde;
+        int solde_livreur_2_avant = le_cherche_livreur_i(2)->solde;
+
+        le_passer_commande(1, &items);
+
+        TEST(solde_client_1_avant - total_commande == le_cherche_client_i(1)->solde);
+        TEST(solde_livreur_2_avant + 3 + 3 == le_cherche_livreur_i(2)->solde);
+        // Le reste du total revient à cahque restaurant, dépendement de ce qu'il a fourni pour la commande.
+        TEST(solde_restaurant_1_avant + 47 == le_cherche_restaurant_i(1)->solde);
+        TEST(solde_restaurant_2_avant + 7 == le_cherche_restaurant_i(2)->solde);
+
+
+        // Une commande remplie par deux restaurants (2, 3) et livrée par deux livreurs (2, 3).
+        // Chaque livreur touchera une commission de trois euros.
+        clear(&items);
+        ixi = 2; push_back(&items, &ixi);
+        ixi = 3; push_back(&items, &ixi);
+        ixi = 6; push_back(&items, &ixi);
+        ixi = 7; push_back(&items, &ixi);
+        total_commande = le_total_commande(&items);
+
+        le_crediter_solde_client(4, total_commande);
+        int solde_client_4_avant = le_cherche_client_i(4)->solde;
+            solde_restaurant_2_avant = le_cherche_restaurant_i(2)->solde;
+            solde_restaurant_3_avant = le_cherche_restaurant_i(3)->solde;
+            solde_livreur_2_avant = le_cherche_livreur_i(2)->solde;
+            solde_livreur_3_avant = le_cherche_livreur_i(3)->solde;
+
+        le_passer_commande(4, &items);
+
+        TEST(solde_client_4_avant - total_commande == le_cherche_client_i(4)->solde);
+        TEST(solde_livreur_2_avant + 3 == le_cherche_livreur_i(2)->solde);
+        TEST(solde_livreur_3_avant + 3 == le_cherche_livreur_i(3)->solde);
+        // Le reste du total revient à chaque restaurant, dépendamment de ce qu'il a fourni pour la commande.
+        TEST(solde_restaurant_2_avant + 7 == le_cherche_restaurant_i(2)->solde);
+        TEST(solde_restaurant_3_avant + 17 == le_cherche_restaurant_i(3)->solde);
+
+        destroy(&items);
+
+        fermeture_db("build/test-db");
     }
 
 
