@@ -15,7 +15,7 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 252;
+int const tests_total = 289;
 int const test_column_width = 60;
 
 int main()
@@ -860,8 +860,131 @@ int main()
         TEST(size(items) == 1);
         TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "pancakes aux myrtilles") == 0);
 
-        fermeture_db("build/test-db/items");
+        fermeture_db("build/test-db");
     }
+
+    // Tests de commandes.
+    mkdir("build/test-db/commande", 0755);
+    {
+        ouverture_db("build/test-db");
+
+        vector items = make_vector(sizeof(cle_t), 0);
+        vector non_livrables = make_vector(sizeof(cle_t), 0);
+        vector depassent_solde = make_vector(sizeof(cle_t), 0);
+
+        size_t ixi;
+        // Une commande simple et valide.
+        ixi = 6; push_back(&items, &ixi);
+        ixi = 7; push_back(&items, &ixi);
+
+        TEST(le_valider_commande(2, &items, &non_livrables, &depassent_solde) == true);
+        TEST(size(items) == 2);
+        TEST(size(non_livrables) == 0);
+        TEST(size(depassent_solde) == 0);
+
+        // Une commande qui ne contient que des items qui ne peuvent être livrés.
+        clear(&items);
+        ixi = 1; push_back(&items, &ixi);
+        ixi = 2; push_back(&items, &ixi);
+        ixi = 3; push_back(&items, &ixi);
+        ixi = 4; push_back(&items, &ixi);
+        ixi = 5; push_back(&items, &ixi);
+
+        TEST(le_valider_commande(2, &items, &non_livrables, &depassent_solde) == false);
+        TEST(size(items) == 0);
+        TEST(size(non_livrables) == 5);
+        TEST(*(cle_t*)value(at(&non_livrables, 0)) == 1);
+        TEST(*(cle_t*)value(at(&non_livrables, 4)) == 5);
+        TEST(size(depassent_solde) == 0);
+
+        // Une commande qui va dépasser le solde disponible.
+        clear(&items);
+        clear(&non_livrables);
+        clear(&depassent_solde);
+        ixi = 6; push_back(&items, &ixi);
+        ixi = 7; push_back(&items, &ixi);
+        ixi = 6; push_back(&items, &ixi);
+        ixi = 7; push_back(&items, &ixi);
+        ixi = 6; push_back(&items, &ixi);
+        ixi = 7; push_back(&items, &ixi);   // À partir de cet item, le total dépasse le solde disponible.
+        ixi = 6; push_back(&items, &ixi);
+        ixi = 7; push_back(&items, &ixi);
+
+        TEST(le_valider_commande(2, &items, &non_livrables, &depassent_solde) == false);
+        TEST(size(items) == 5);
+        TEST(size(non_livrables) == 0);
+        TEST(size(depassent_solde) == 3);
+        TEST(*(cle_t*)value(at(&depassent_solde, 0)) == 7);
+        TEST(*(cle_t*)value(at(&depassent_solde, 1)) == 6);
+        TEST(*(cle_t*)value(at(&depassent_solde, 2)) == 7);
+
+        // Une commande qui contient des items dont seulement certains peuvent être livrés et
+        // parmi ceux-ci, des items qui vont dépasser le solde disponible.
+        clear(&items);
+        clear(&non_livrables);
+        clear(&depassent_solde);
+        ixi = 1; push_back(&items, &ixi);
+        ixi = 2; push_back(&items, &ixi);
+        ixi = 3; push_back(&items, &ixi);
+        ixi = 4; push_back(&items, &ixi);
+        ixi = 5; push_back(&items, &ixi);
+        ixi = 6; push_back(&items, &ixi);
+        ixi = 7; push_back(&items, &ixi);
+
+        TEST(le_valider_commande(3, &items, &non_livrables, &depassent_solde) == false);
+        TEST(size(items) == 1);
+        TEST(*(cle_t*)value(at(&items, 0)) == 6);
+
+        TEST(size(non_livrables) == 5);
+        TEST(*(cle_t*)value(at(&non_livrables, 0)) == 1);
+        TEST(*(cle_t*)value(at(&non_livrables, 4)) == 5);
+
+        TEST(size(depassent_solde) == 1);
+        TEST(*(cle_t*)value(at(&depassent_solde, 0)) == 7);
+
+
+        // Une commande invalide dû à un trop petit solde, devient valide après crédité 
+        // suffisament d'euros au solde.
+        // De plus, ces items viendront de deux restaurants à la fois.
+        clear(&items);
+        clear(&non_livrables);
+        clear(&depassent_solde);
+        ixi = 1; push_back(&items, &ixi);
+        ixi = 2; push_back(&items, &ixi);
+        ixi = 3; push_back(&items, &ixi);
+        ixi = 4; push_back(&items, &ixi);
+        ixi = 5; push_back(&items, &ixi);
+
+        TEST(le_valider_commande(1, &items, &non_livrables, &depassent_solde) == false);
+        TEST(size(items) == 0);
+        TEST(size(non_livrables) == 0);
+        TEST(size(depassent_solde) == 5);
+        TEST(*(cle_t*)value(at(&depassent_solde, 0)) == 1);
+        TEST(*(cle_t*)value(at(&depassent_solde, 4)) == 5);
+
+        le_crediter_solde_client(1, 100);
+        clear(&items);
+        clear(&non_livrables);
+        clear(&depassent_solde);
+        ixi = 1; push_back(&items, &ixi);
+        ixi = 2; push_back(&items, &ixi);
+        ixi = 3; push_back(&items, &ixi);
+        ixi = 4; push_back(&items, &ixi);
+        ixi = 5; push_back(&items, &ixi);
+
+        TEST(le_valider_commande(1, &items, &non_livrables, &depassent_solde) == true);
+        TEST(size(items) == 5);
+        TEST(*(cle_t*)value(at(&items, 0)) == 1);
+        TEST(*(cle_t*)value(at(&items, 4)) == 5);
+        TEST(size(non_livrables) == 0);
+        TEST(size(depassent_solde) == 0);
+
+
+        fermeture_db("build/test-db");
+
+
+    }
+
 
     return tests_total - tests_successful;
 }

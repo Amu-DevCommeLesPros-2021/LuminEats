@@ -37,6 +37,8 @@
         "__string": "c",
         "stdio.h": "c",
         "search.h": "c",
-        "vector_types.h": "c"
+        "vector_types.h": "c",
+        "atomic": "c",
+        "ios": "c"
     }
 }
