@@ -73,7 +73,7 @@ int main()
 
         item *i = (item*)value(begin(&items));
         TEST(i->index == 1);
-        TEST(strcmp(i->nom, "bouillabaise") == 0);
+        TEST(strcmp(i->nom, "bouillabaisse") == 0);
         TEST(strcmp(i->ingredients[0], "poissons de roche") == 0);
         TEST(strcmp(i->ingredients[1], "pommes de terre") == 0);
         TEST(strcmp(i->ingredients[2], "") == 0);
@@ -174,7 +174,7 @@ int main()
         TEST(strcmp(((restaurant*)value(begin(&table_restaurants)))->nom, "Chez Michel") == 0);
 
         TEST(size(table_items) == 7);
-        TEST(strcmp(((item*)value(begin(&table_items)))->nom, "bouillabaise") == 0);
+        TEST(strcmp(((item*)value(begin(&table_items)))->nom, "bouillabaisse") == 0);
 
         TEST(size(table_livreurs) == 3);
         TEST(strcmp(((livreur*)value(begin(&table_livreurs)))->nom, "Francois Pignon") == 0);
@@ -708,7 +708,7 @@ int main()
         le_filtrer_items_type(&items, "provencal");
 
         TEST(size(items) == 3);
-        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "bouillabaise") == 0);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "bouillabaisse") == 0);
         TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 1)))->nom, "ratatouille") == 0);
         TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 2)))->nom, "salade nicoise") == 0);
 
@@ -735,7 +735,7 @@ int main()
         le_filtrer_items_restaurant(&items, "Chez Michel");
 
         TEST(size(items) == 3);
-        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "bouillabaise") == 0);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "bouillabaisse") == 0);
         TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 1)))->nom, "ratatouille") == 0);
         TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 2)))->nom, "salade nicoise") == 0);
 
@@ -766,7 +766,7 @@ int main()
 
         TEST(size(items) == 7);
 
-        // Re-filter avec 20€ comme plafond devrait enelver la bouillabaise.
+        // Re-filter avec 20€ comme plafond devrait enelver la bouillabaisse.
         le_filtrer_items_prix(&items, 20);
 
         TEST(size(items) == 6);
@@ -810,7 +810,7 @@ int main()
 
         TEST(size(items) == 5);
         // L'ordre n'est évidement pas strictement important mais il sera dans l'ordre de la table des items.
-        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "bouillabaise") == 0);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "bouillabaisse") == 0);
         TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 4)))->nom, "salade nicoise") == 0);
 
         // Test des items qui peuvent être livrés dans le 13002.
@@ -819,7 +819,7 @@ int main()
         le_filtrer_items_livraison(&items, "13002");
         
         TEST(size(items) == 3);
-        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "bouillabaise") == 0);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "bouillabaisse") == 0);
         TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 2)))->nom, "salade nicoise") == 0);
 
         // Test des items qui peuvent être livrés dans le 13005.
@@ -827,7 +827,7 @@ int main()
         le_filtrer_items_livraison(&items, "13005");
 
         TEST(size(items) == 5);
-        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "bouillabaise") == 0);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "bouillabaisse") == 0);
         TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 4)))->nom, "salade nicoise") == 0);
 
         // Test des items qui peuvent être livrés dans le 13009.
@@ -835,7 +835,7 @@ int main()
         le_filtrer_items_livraison(&items, "13009");
 
         TEST(size(items) == 7);
-        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "bouillabaise") == 0);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "bouillabaisse") == 0);
         TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 6)))->nom, "petit-dej du champion") == 0);
 
         // Test des items qui peuvent être livrés dans le 13010.

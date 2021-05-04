@@ -38,7 +38,6 @@ client* le_cherche_client(
 client* le_cherche_client_i(
     cle_t const index);
 
-
 // Renvoie le item avec le nom correspondant.
 // Renvoie 'NULL' si non-trouvé.
 item* le_cherche_item(

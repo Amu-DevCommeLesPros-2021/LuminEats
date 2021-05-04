@@ -13,9 +13,9 @@ Vous n'êtes pas dans l'obligation de garder exactment les mêmes équipes que p
 
 - [Objectif](#objectif)
 - [Spécifications fonctionelles](#sp%C3%A9cifications-fonctionelles)
-    - [Fonctionalités pour un restaurateur](#fonctionalit%C3%A9s-pour-un-restaurateur)
-    - [Fonctionalités pour un livreur](#fonctionalit%C3%A9s-pour-un-livreur)
-    - [Fonctionalités pour un client](#fonctionalit%C3%A9s-pour-un-client)
+    - [Fonctionnalités pour un restaurateur](#fonctionnalit%C3%A9s-pour-un-restaurateur)
+    - [Fonctionnalités pour un livreur](#fonctionnalit%C3%A9s-pour-un-livreur)
+    - [Fonctionnalités pour un client](#fonctionnalit%C3%A9s-pour-un-client)
 - [Spécifications de conception](#sp%C3%A9cifications-de-conception)
     - [Interface](#interface)
     - [Base de données](#base-de-donn%C3%A9es)
@@ -221,7 +221,7 @@ id,nom,code postal,telephone,type,menu,solde
 
 ```
 id,nom,ingredients,prix
-1,bouillabaise,poissons de roche;pommes de terre,25
+1,bouillabaisse,poissons de roche;pommes de terre,25
 2,taco,haricots;salsa;lime;tortilla,4
 3,houmous,pois chiche;tahini;ail;citron,6
 4,ratatouille,aubergine;courgette;poivron;tomate,15
