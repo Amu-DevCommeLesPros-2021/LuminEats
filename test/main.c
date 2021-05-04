@@ -604,6 +604,8 @@ int main()
         TEST(size(restaurants) == 0);
 
         destroy(&restaurants);
+        destroy(&rs);
+
         fermeture_db("build/test-db/ecriture");
     }
 
@@ -612,7 +614,9 @@ int main()
     {
         ouverture_db("build/test-db/items");
 
-        TEST(size(le_liste_items()) == 0);
+        vector items = le_liste_items();
+        TEST(size(items) == 0);
+        destroy(&items);
 
         cle_t const ixi1 = le_creer_item("croissant", "beurre;farine;oeuf;levure", 1);
         TEST(ixi1 != 0);
@@ -625,7 +629,9 @@ int main()
         TEST(strcmp(i1->ingredients[4], "") == 0);
         TEST(i1->prix == 1);
 
-        TEST(size(le_liste_items()) == 1);
+        items = le_liste_items();
+        TEST(size(items) == 1);
+        destroy(&items);
 
         // Il est possible de créer plus d'un item avec le même nom.
         cle_t const ixi2 = le_creer_item("croissant", "margarine;farine;oeuf;levure", 1);
@@ -634,7 +640,9 @@ int main()
         TEST(strcmp(i2->nom, "croissant") == 0);
         TEST(strcmp(i2->ingredients[0], "margarine") == 0);
 
-        TEST(size(le_liste_items()) == 2);
+        items = le_liste_items();
+        TEST(size(items) == 2);
+        destroy(&items);
 
         // Ajoute des items au menu d'un restaurant.
         cle_t const ixr1 = le_creer_compte_restaurateur("Café de la gare", "13001", "04 01 01 01 01", "boulangerie");
@@ -672,12 +680,16 @@ int main()
         TEST(r1->menu[1] == 0);
         TEST(strcmp(r1->menu_s, "2") == 0);
 
-        TEST(size(le_liste_items()) == 2);
+        items = le_liste_items();
+        TEST(size(items) == 2);
+        destroy(&items);
 
         // Si on enlève cet item de tous les menus, l'item n'apparait plus dans la BdD.
         le_enlever_item_menu(ixi1, ixr2);
 
-        TEST(size(le_liste_items()) == 1);
+        items = le_liste_items();
+        TEST(size(items) == 1);
+        destroy(&items);
 
         fermeture_db("build/test-db/items");
     }
@@ -860,6 +872,9 @@ int main()
         TEST(size(items) == 1);
         TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "pancakes aux myrtilles") == 0);
 
+        destroy(&items);
+        destroy(&is);
+
         fermeture_db("build/test-db");
     }
 
@@ -872,7 +887,7 @@ int main()
         vector non_livrables = make_vector(sizeof(cle_t), 0);
         vector depassent_solde = make_vector(sizeof(cle_t), 0);
 
-        size_t ixi;
+        cle_t ixi;
         // Une commande simple et valide.
         ixi = 6; push_back(&items, &ixi);
         ixi = 7; push_back(&items, &ixi);
@@ -979,8 +994,12 @@ int main()
         TEST(size(non_livrables) == 0);
         TEST(size(depassent_solde) == 0);
 
+        destroy(&items);
+        destroy(&non_livrables);
+        destroy(&depassent_solde);
 
         fermeture_db("build/test-db");
+    }
 
 
     }

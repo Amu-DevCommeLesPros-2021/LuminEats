@@ -120,9 +120,7 @@ void le_enlever_item_menu(
 
 
     // Remove the item from the DB if it is no longer referenced by any restaurants.
-    vector rs = le_liste_restaurants();
-    vector restaurants = make_vector(sizeof(cle_t), 0);
-    assign(&restaurants, begin(&rs), end(&rs));
+    vector restaurants = le_liste_restaurants();
 
     le_filtrer_restaurants_item(&restaurants, index);
 

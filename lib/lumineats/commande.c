@@ -18,9 +18,7 @@ bool le_valider_commande(
 {
     char const* const code_postal = le_cherche_client_i(ix)->code_postal;
 
-    vector const rs = le_liste_restaurants();
-    vector restaurants = make_vector(sizeof(cle_t), 0);
-    assign(&restaurants, begin(&rs), end(&rs));
+    vector restaurants = le_liste_restaurants();
 
     le_filtrer_restaurants_livraison(&restaurants, code_postal);
 
