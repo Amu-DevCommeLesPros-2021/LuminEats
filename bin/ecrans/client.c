@@ -201,7 +201,7 @@ printf("\n\
 
     client const* const c = le_cherche_client(nom_utilisateur);
 
-    printf("Votre solde courant : €%zu\n\n('enter' pour menu précédent)", c->solde);
+    printf("Votre solde courant : €%d\n\n('enter' pour menu précédent)", c->solde);
     getchar();
 
     pop_back(pile);
@@ -266,4 +266,36 @@ void client_lister_restaurants(
     }
 
     destroy(&restaurants);
+}
+
+void client_commande(
+    vector* pile)
+{
+    printf("\n\
+* Menu Client * %s *\n\
+\n", nom_utilisateur);
+
+    // client const* const c = le_cherche_client(nom_utilisateur);
+
+    // size_t solde = c->solde;
+    // vector commande = make_vector(sizeof(item), 0);
+
+
+    char const choice = prompt_choice("Votre choix ('q' pour quitter, 'p' pour précedent, 'c' pour passer la commande, ) : ");
+    switch(choice)
+    {
+        case '1':
+            break;
+        case '2':
+            break;
+        case 'c':
+            break;
+        case 'p':
+            pop_back(pile);
+            break;
+        case 'q':
+            clear(pile);
+            break;
+    }
+
 }

@@ -165,7 +165,7 @@ void restaurateur_modification_menu(
                 for(size_t c = 0; c != TAILLE_MENU && menu[c] != 0; ++c)
                 {
                     item const* const i = le_cherche_item_i(menu[c]);
-                    printf("\n- %s (%s) %zu", i->nom, i->ingredients_s, i->prix);
+                    printf("\n- %s (%s) %d", i->nom, i->ingredients_s, i->prix);
                 }
                 getchar();
             }
@@ -255,7 +255,7 @@ printf("\n\
 
     restaurant const* const r = le_cherche_restaurant(nom_utilisateur);
 
-    printf("Votre solde courant : €%zu\n\n", r->solde);
+    printf("Votre solde courant : €%d\n\n", r->solde);
     getchar();
 
     pop_back(pile);

@@ -227,7 +227,7 @@ bool item_prix_moindre(
     void const* ix,
     void const* prix)
 {
-    return le_cherche_item_i(*(cle_t const*)ix)->prix <= *(size_t*)prix;
+    return le_cherche_item_i(*(cle_t const*)ix)->prix <= *(int*)prix;
 }
 
 bool item_offert_restaurants(

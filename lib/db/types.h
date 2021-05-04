@@ -23,7 +23,7 @@ typedef struct restaurant
     char type[TAILLE_CHAMP_TYPE];
     char menu_s[TAILLE_MENU * 3];
     cle_t menu[TAILLE_MENU];    // Clé étrangère 'item'.
-    size_t solde;
+    int solde;
 } restaurant;
 
 typedef struct item
@@ -32,7 +32,7 @@ typedef struct item
     char nom[TAILLE_CHAMP_NOM];
     char ingredients_s[TAILLE_INGREDIENTS * TAILLE_CHAMP_INGREDIENT];
     char ingredients[TAILLE_INGREDIENTS][TAILLE_CHAMP_INGREDIENT];
-    size_t prix;
+    int prix;
 } item;
 
 
@@ -44,7 +44,7 @@ typedef struct livreur
     char deplacements_s[TAILLE_DEPLACEMENTS * TAILLE_CHAMP_CODEPOSTAL];
     char deplacements[TAILLE_DEPLACEMENTS][TAILLE_CHAMP_CODEPOSTAL];
     cle_t restaurant;   // Clé étrangère 'restaurant'.
-    size_t solde;
+    int solde;
 } livreur;
 
 typedef struct client
@@ -53,5 +53,5 @@ typedef struct client
     char nom[TAILLE_CHAMP_NOM];
     char telephone[TAILLE_CHAMP_TELEPHONE];
     char code_postal[TAILLE_CHAMP_CODEPOSTAL];
-    size_t solde;
+    int solde;
 } client;

@@ -92,4 +92,3 @@ bool item_prix_moindre(
 bool item_offert_restaurants(
     void const *ix,
     void const *restaurants);   // 'restaurants' est un vecteur.
-
