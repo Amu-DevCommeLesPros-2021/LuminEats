@@ -133,18 +133,18 @@ Par exemple, si j'habite dans le 13009, je peux me faire livrer d'un restaurant 
         - [x] À un type de cuisine
         - [x] À une combinaison de ces paramètres
 - [ ] Commande 
-    - [ ] Voir la liste des items
+    - [x] Voir la liste des items
         - [ ] Restreindre la liste...
             - [ ] À qui peut me livrer
             - [ ] À un type de cuisine
             - [ ] À un seul restaurant
             - [ ] Aux items moins chers que mon solde disponible
             - [ ] À une combinaison de ces paramètres
-    - [ ] Ajouter un item
-    - [ ] Enlever un item
-    - [ ] Passer la commande
-        - [ ] Débite le solde du client
-        - [ ] Crédite les soldes du restaurant et du livreur
+    - [x] Ajouter un item
+    - [x] Enlever un item
+    - [x] Passer la commande
+        - [x] Débite le solde du client
+        - [x] Crédite les soldes du restaurant et du livreur
 
 # Spécifications de conception
 
