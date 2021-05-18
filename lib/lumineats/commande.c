@@ -6,6 +6,7 @@
 
 #include "algorithm/algorithm.h"
 #include "db/types.h"
+#include "logger/logger.h"
 #include "vector/api.h"
 #include "vector/types.h"
 
@@ -142,6 +143,27 @@ void le_passer_commande(
         le_cherche_livreur_i(ll->livreur)->solde += 3;
         le_cherche_restaurant_i(ll->restaurant)->solde += sous_total - 3;
     }
+
+    // Log the order.
+    char line[1024] = {'\0'};
+    sprintf(line, "Client %zu a passé commande {", ix);
+    for(iterator l = begin(&livraisons), e = end(&livraisons); compare(l, e) != 0; increment(&l, 1))
+    {
+        livraison *ll = (livraison*)value(l);
+
+        sprintf(line + strlen(line), "{%zu, [", ll->restaurant);
+        for(size_t k = 0; k != TAILLE_MENU && ll->items[k] != 0; ++k)
+        {
+            if(k != 0)
+            {
+                sprintf(line + strlen(line), ", ");
+            }
+            sprintf(line + strlen(line), "%zu", ll->items[k]);
+        }
+        sprintf(line + strlen(line), "], %zu} ", ll->livreur);
+    }
+    sprintf(line + strlen(line), "}");
+    llog("%s", line);
 
     destroy(&restaurants);
     destroy(&livraisons);
