@@ -958,8 +958,8 @@ int main()
         TEST(*(cle_t*)value(at(&depassent_solde, 0)) == 7);
 
 
-        // Une commande invalide dû à un trop petit solde, devient valide après crédité 
-        // suffisament d'euros au solde.
+        // Une commande invalide dû à un trop petit solde, devient valide après 
+        // créditer suffisament d'euros au solde.
         // De plus, ces items viendront de deux restaurants à la fois.
         clear(&items);
         clear(&non_livrables);
