@@ -80,3 +80,6 @@ void client_voir_solde(
 
 void client_lister_restaurants(
     vector* pile);
+
+void client_commande(
+    vector* pile);
