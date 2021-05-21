@@ -16,6 +16,11 @@ void le_filtrer_restaurants_livraison(
     vector *restaurants,
     char const* code_postal);
 
+// Filtre une liste de restaurants par nom.
+void le_filtrer_restaurants_nom(
+    vector *restaurants,
+    char const* nom);
+
 // Filtre une liste de restaurants par ceux qui ont 'index_item' au menu.
 void le_filtrer_restaurants_item(
     vector *restaurants,

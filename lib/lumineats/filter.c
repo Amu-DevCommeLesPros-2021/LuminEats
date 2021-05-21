@@ -30,6 +30,13 @@ void le_filtrer_restaurants_livraison(
     keep_if(restaurants, restaurant_peut_livrer, code_postal);
 }
 
+void le_filtrer_restaurants_nom(
+    vector *restaurants,
+    char const* nom)
+{
+    keep_if(restaurants, restaurant_a_nom_ou_telephone, nom);
+}
+
 void le_filtrer_restaurants_item(
     vector *restaurants,
     cle_t const index_item)
