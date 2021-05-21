@@ -244,22 +244,32 @@ void client_lister_restaurants(
 
         for(iterator i = begin(&restaurants), e = end(&restaurants); compare(i, e) != 0; increment(&i, 1))
         {
-            printf("- %s\n", ((restaurant*)value(i))->nom);
+            printf("- %s\n", le_cherche_restaurant_i(*(cle_t*)value(i))->nom);
         }
 
-        printf("\nFiltrer par :\n1. type de cuisine\n2. qui peut me livrer\n3. enlever les filtres\n\n");
-        char const c = prompt_choice("Votre choix ('q' pour quitter, 'p' pour précedent) : ");
+        printf("\nFiltrer par :\n1. type de cuisine\n2. qui peut me livrer\n\n");
+        char const c = prompt_choice("Votre choix ('q' pour quitter, 'p' pour précedent, 'N' pour alterner les filtres) : ");
         switch(c)
         {
             case '1':
-                strcpy(type, prompt_string(TAILLE_CHAMP_TYPE, "Type de cuisine : "));
+                if(strlen(type))
+                {
+                    strcpy(type, "");
+                }
+                else
+                {
+                    strcpy(type, prompt_string(TAILLE_CHAMP_TYPE, "Type de cuisine : "));
+                }
                 break;
             case '2':
-                strcpy(code_postal, le_cherche_client(nom_utilisateur)->code_postal);
-                break;
-            case '3':
-                strcpy(type, "");
-                strcpy(code_postal, "");
+                if(strlen(code_postal))
+                {
+                    strcpy(code_postal, "");
+                }
+                else
+                {
+                    strcpy(code_postal, le_cherche_client(nom_utilisateur)->code_postal);
+                }
                 break;
             case 'p':
                 pop_back(pile);
@@ -289,13 +299,15 @@ void client_commande_ajouter_item(
 
     char type[TAILLE_CHAMP_TYPE] = {'\0'};
     char code_postal[TAILLE_CHAMP_CODEPOSTAL] = {'\0'};
+    char restaurant[TAILLE_CHAMP_NOM] = {'\0'};
+    bool abordable = false;
 
     for(bool retour = false; !retour;)
     {
         system("clear");
         printf("\n* Menu Client * %s *\n", nom_utilisateur);
 
-        printf("\nListe des items filtrée par [%c] type (%s) [%c] qui peut me livrer : \n\n", (type[0] ? 'x' : ' '), (type[0] ? type : ""), (code_postal[0] ? 'x' : ' '));
+        printf("\nListe des items filtrée par [%c] qui peut me livrer [%c] type (%s) [%c] restaurant (%s) [%c] items abordables : \n\n", (code_postal[0] ? 'x' : ' '), (type[0] ? 'x' : ' '), (type[0] ? type : ""), (restaurant[0] ? 'x' : ' '), (restaurant[0] ? restaurant : ""), (abordable ? 'x' : ' '));
 
         assign(&items, begin(&is), end(&is));
 
@@ -306,7 +318,7 @@ void client_commande_ajouter_item(
             ++n;
         }
 
-        char const choice = prompt_choice("Votre choix ('p' pour précédent) : ");
+        char const choice = prompt_choice("\nVotre choix ('p' pour précédent) : ");
 
         if(choice == 'p')
         {
