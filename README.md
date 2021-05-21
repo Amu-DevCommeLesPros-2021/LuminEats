@@ -134,12 +134,12 @@ Par exemple, si j'habite dans le 13009, je peux me faire livrer d'un restaurant 
         - [x] À une combinaison de ces paramètres
 - [ ] Commande 
     - [x] Voir la liste des items
-        - [ ] Restreindre la liste...
-            - [ ] À qui peut me livrer
-            - [ ] À un type de cuisine
-            - [ ] À un seul restaurant
-            - [ ] Aux items moins chers que mon solde disponible
-            - [ ] À une combinaison de ces paramètres
+        - [x] Restreindre la liste...
+            - [x] À qui peut me livrer
+            - [x] À un type de cuisine
+            - [x] À un seul restaurant
+            - [x] Aux items moins chers que mon solde disponible
+            - [x] À une combinaison de ces paramètres
     - [x] Ajouter un item
     - [x] Enlever un item
     - [x] Passer la commande
