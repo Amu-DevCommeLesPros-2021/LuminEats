@@ -39,6 +39,8 @@
         "search.h": "c",
         "vector_types.h": "c",
         "atomic": "c",
-        "ios": "c"
+        "ios": "c",
+        "predicates.h": "c",
+        "filter.h": "c"
     }
 }
