@@ -2,6 +2,7 @@
 
 #include "prompt.h"
 
+#include "algorithm/algorithm.h"
 #include "db/types.h"
 #include "lumineats/lumineats.h"
 
@@ -228,7 +229,7 @@ void client_lister_restaurants(
         system("clear");
         printf("\n* Menu Client * %s *\n", nom_utilisateur);
 
-        printf("\nListe des restaurants filtrée par [%c] type (%s) [%c] qui peut me livrer : \n\n", (type[0] ? 'x' : ' '), (type[0] ? type : ""), (code_postal[0] ? 'x' : ' '));
+        printf("\nListe des restaurants filtrée par [%c] {t}ype (%s) [%c] qui peut me {l}ivrer : \n\n", (type[0] ? 'x' : ' '), (type[0] ? type : ""), (code_postal[0] ? 'x' : ' '));
 
         assign(&restaurants, begin(&rs), end(&rs));
 
@@ -247,11 +248,10 @@ void client_lister_restaurants(
             printf("- %s\n", le_cherche_restaurant_i(*(cle_t*)value(i))->nom);
         }
 
-        printf("\nFiltrer par :\n1. type de cuisine\n2. qui peut me livrer\n\n");
-        char const c = prompt_choice("Votre choix ('q' pour quitter, 'p' pour précedent, 'N' pour alterner les filtres) : ");
+        char const c = prompt_choice("\nVotre choix ('q' pour quitter, 'p' pour précedent, '{}' pour alterner les filtres) : ");
         switch(c)
         {
-            case '1':
+            case 't':
                 if(strlen(type))
                 {
                     strcpy(type, "");
@@ -261,7 +261,7 @@ void client_lister_restaurants(
                     strcpy(type, prompt_string(TAILLE_CHAMP_TYPE, "Type de cuisine : "));
                 }
                 break;
-            case '2':
+            case 'l':
                 if(strlen(code_postal))
                 {
                     strcpy(code_postal, "");
@@ -294,12 +294,12 @@ typedef struct panier_t
 void client_commande_ajouter_item(
     panier_t* panier)
 {
-    vector is = le_liste_items();
-    vector items = make_vector(sizeof(cle_t), 0);
+    vector rs = le_liste_restaurants();
+    vector restaurants = make_vector(sizeof(cle_t), 0);
 
     char type[TAILLE_CHAMP_TYPE] = {'\0'};
     char code_postal[TAILLE_CHAMP_CODEPOSTAL] = {'\0'};
-    char restaurant[TAILLE_CHAMP_NOM] = {'\0'};
+    char nom[TAILLE_CHAMP_NOM] = {'\0'};
     bool abordable = false;
 
     for(bool retour = false; !retour;)
@@ -307,9 +307,42 @@ void client_commande_ajouter_item(
         system("clear");
         printf("\n* Menu Client * %s *\n", nom_utilisateur);
 
-        printf("\nListe des items filtrée par [%c] qui peut me livrer [%c] type (%s) [%c] restaurant (%s) [%c] items abordables : \n\n", (code_postal[0] ? 'x' : ' '), (type[0] ? 'x' : ' '), (type[0] ? type : ""), (restaurant[0] ? 'x' : ' '), (restaurant[0] ? restaurant : ""), (abordable ? 'x' : ' '));
+        printf("\nListe des items filtrée par [%c] qui peut me {l}ivrer [%c] {t}ype (%s) [%c] {r}estaurant (%s) [%c] items {a}bordables : \n\n", (code_postal[0] ? 'x' : ' '), (type[0] ? 'x' : ' '), (type[0] ? type : ""), (nom[0] ? 'x' : ' '), (nom[0] ? nom : ""), (abordable ? 'x' : ' '));
 
-        assign(&items, begin(&is), end(&is));
+        assign(&restaurants, begin(&rs), end(&rs));
+
+        if(strlen(type))
+        {
+            le_filtrer_restaurants_type(&restaurants, type);
+        }
+
+        if(strlen(code_postal))
+        {
+            le_filtrer_restaurants_livraison(&restaurants, code_postal);
+        }
+
+        if(strlen(nom))
+        {
+            le_filtrer_restaurants_nom(&restaurants, nom);
+        }
+
+        vector items = make_vector(sizeof(cle_t), 0);
+        for(iterator rr = begin(&restaurants), e = end(&restaurants); compare(rr, e) != 0; increment(&rr, 1))
+        {
+            restaurant const* r = le_cherche_restaurant_i(*(cle_t*)value(rr));
+            for(size_t i = 0; i != TAILLE_MENU && r->menu[i] != 0; ++i)
+            {
+                if(compare(find_if_2(begin(&items), end(&items), item_a_index, &(r->menu[i])), end(&items)) == 0)
+                {
+                    push_back(&items, &(r->menu[i]));
+                }
+            }
+        }
+
+        if(abordable)
+        {
+            le_filtrer_items_prix(&items, le_cherche_client(nom_utilisateur)->solde - panier->total);
+        }
 
         int n = 1;
         for(iterator i = begin(&items), e = end(&items); compare(i, e) != 0; increment(&i, 1))
@@ -318,24 +351,60 @@ void client_commande_ajouter_item(
             ++n;
         }
 
-        char const choice = prompt_choice("\nVotre choix ('p' pour précédent) : ");
+        char const choice = prompt_choice("\nVotre choix ('p' pour précedent, 'N' pour ajouter au panier, '{}' pour alterner les filtres) : ");
+        switch(choice)
+        {
+            case 'l':
+                if(strlen(code_postal))
+                {
+                    strcpy(code_postal, "");
+                }
+                else
+                {
+                    strcpy(code_postal, le_cherche_client(nom_utilisateur)->code_postal);
+                }
+                break;
+            case 't':
+                if(strlen(type))
+                {
+                    strcpy(type, "");
+                }
+                else
+                {
+                    strcpy(type, prompt_string(TAILLE_CHAMP_TYPE, "Type de cuisine : "));
+                }
+                break;
+            case 'r':
+                if(strlen(nom))
+                {
+                    strcpy(nom, "");
+                }
+                else
+                {
+                    strcpy(nom, prompt_string(TAILLE_CHAMP_NOM, "Nom du restaurant : "));
+                }
+                break;
+            case 'a':
+                abordable = !abordable;
+                break;
+            case 'p':
+                retour = true;
+                break;
+            default:
+                if(choice - '1' < (int)size(items))
+                {
+                    cle_t ix = *(cle_t*)value(at(&items, choice - '1'));
+                    push_back(&(panier->items), &ix);
+                    panier->total += le_cherche_item_i(ix)->prix;
 
-        if(choice == 'p')
-        {
-            retour = true;
-        }
-        else if(choice - '1' < (int)size(items))
-        {
-            cle_t ix = *(cle_t*)value(at(&items, choice - '1'));
-            push_back(&(panier->items), &ix);
-            panier->total += le_cherche_item_i(ix)->prix;
-
-            retour = true;
-        }
-        else
-        {
-            printf("Désolé. Cet item ne figure pas sur la liste.\n");
-            getchar();
+                    retour = true;
+                }
+                else
+                {
+                    printf("Désolé. Cet item ne figure pas sur la liste.\n");
+                    getchar();
+                }
+                break;
         }
     }
 }
@@ -356,7 +425,7 @@ void client_commande_enlever_item(
             ++n;
         }
 
-        char const choice = prompt_choice("Votre choix ('p' pour précédent) : ");
+        char const choice = prompt_choice("\nVotre choix ('p' pour précédent) : ");
 
         if(choice == 'p')
         {
