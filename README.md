@@ -13,9 +13,9 @@ Vous n'êtes pas dans l'obligation de garder exactment les mêmes équipes que p
 
 - [Objectif](#objectif)
 - [Spécifications fonctionelles](#sp%C3%A9cifications-fonctionelles)
-    - [Fonctionalités pour un restaurateur](#fonctionalit%C3%A9s-pour-un-restaurateur)
-    - [Fonctionalités pour un livreur](#fonctionalit%C3%A9s-pour-un-livreur)
-    - [Fonctionalités pour un client](#fonctionalit%C3%A9s-pour-un-client)
+    - [Fonctionnalités pour un restaurateur](#fonctionnalit%C3%A9s-pour-un-restaurateur)
+    - [Fonctionnalités pour un livreur](#fonctionnalit%C3%A9s-pour-un-livreur)
+    - [Fonctionnalités pour un client](#fonctionnalit%C3%A9s-pour-un-client)
 - [Spécifications de conception](#sp%C3%A9cifications-de-conception)
     - [Interface](#interface)
     - [Base de données](#base-de-donn%C3%A9es)
@@ -60,7 +60,7 @@ Son utilisation ne se fera que par l'invite de commandes.
 
 Sur cette platforme, on distingue trois profils d'utilisateur avec des besoins et des fonctionalités qui leurs sont propres : les restaurateurs, les livreurs et les clients.
 
-## Fonctionalités pour un restaurateur
+## Fonctionnalités pour un restaurateur
 
 À un restaurant correspond un type de cuisine : fast-food, sushi, sandwicherie, etc.
 Chaque restaurant a son menu composé de plusieurs items.
@@ -84,7 +84,7 @@ Au fils des commandes des clients, un montant est crédité dans le compte.
 - [x] Solde
     - [x] Voir le solde courant
 
-## Fonctionalités pour un livreur
+## Fonctionnalités pour un livreur
 
 Un livreur n'a pas un rayon d'action infini.
 Chaque livreur a une liste de code postaux dans lesquels il peut se déplacer.
@@ -106,7 +106,7 @@ Au fils des commandes des clients, un montant est crédité dans le compte.
 - [x] Solde
     - [x] Voir le solde courant
 
-## Fonctionalités pour un client
+## Fonctionnalités pour un client
 
 Un client informe son profil à la création de son compte.
 Son solde de départ sera de zéro.
@@ -133,18 +133,18 @@ Par exemple, si j'habite dans le 13009, je peux me faire livrer d'un restaurant 
         - [x] À un type de cuisine
         - [x] À une combinaison de ces paramètres
 - [ ] Commande 
-    - [ ] Voir la liste des items
-        - [ ] Restreindre la liste...
-            - [ ] À qui peut me livrer
-            - [ ] À un type de cuisine
-            - [ ] À un seul restaurant
-            - [ ] Aux items moins chers que mon solde disponible
-            - [ ] À une combinaison de ces paramètres
-    - [ ] Ajouter un item
-    - [ ] Enlever un item
-    - [ ] Passer la commande
-        - [ ] Débite le solde du client
-        - [ ] Crédite les soldes du restaurant et du livreur
+    - [x] Voir la liste des items
+        - [x] Restreindre la liste...
+            - [x] À qui peut me livrer
+            - [x] À un type de cuisine
+            - [x] À un seul restaurant
+            - [x] Aux items moins chers que mon solde disponible
+            - [x] À une combinaison de ces paramètres
+    - [x] Ajouter un item
+    - [x] Enlever un item
+    - [x] Passer la commande
+        - [x] Débite le solde du client
+        - [x] Crédite les soldes du restaurant et du livreur
 
 # Spécifications de conception
 
@@ -221,7 +221,7 @@ id,nom,code postal,telephone,type,menu,solde
 
 ```
 id,nom,ingredients,prix
-1,bouillabaise,poissons de roche;pommes de terre,25
+1,bouillabaisse,poissons de roche;pommes de terre,25
 2,taco,haricots;salsa;lime;tortilla,4
 3,houmous,pois chiche;tahini;ail;citron,6
 4,ratatouille,aubergine;courgette;poivron;tomate,15

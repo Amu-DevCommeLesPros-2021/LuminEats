@@ -101,10 +101,18 @@ void erase(
     vector* v,
     iterator const i)
 {
-    size_t const chunk_offset = i.element - v->data;     // En octets.
-    size_t const chunk_size = end(v).element - i.element - v->element_size;    // En octets.
+    // If we're erasing the last element, we don't need to shuffle any elements around.
+    // If we're not, we need the shuffle backwards all elements after it.
+    iterator ii = i;
+    increment(&ii, 1);
+    if(compare(ii, end(v)) != 0)
+    {
+        size_t const chunk_offset = i.element - v->data;     // En octets.
+        size_t const chunk_size = (end(v).element - i.element) - v->element_size;    // En octets.
 
-    memmove(v->data + chunk_offset, v->data + chunk_offset + v->element_size, chunk_size);
+        memmove(v->data + chunk_offset, v->data + chunk_offset + v->element_size, chunk_size);
+    }
+
     --v->size;
 }
 

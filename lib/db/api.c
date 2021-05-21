@@ -133,3 +133,10 @@ void le_dump_tables(
     ecriture_table_livreurs(f, &table_livreurs);
     ecriture_table_clients(f, &table_clients);
 }
+
+void index_de(
+    void const* type,
+    void* index)
+{
+    *(cle_t*)index = *(cle_t*)type;
+}

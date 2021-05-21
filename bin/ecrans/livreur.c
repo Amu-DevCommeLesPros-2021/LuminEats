@@ -215,7 +215,7 @@ printf("\n\
 
     livreur const* const l = le_cherche_livreur(nom_utilisateur);
 
-    printf("Votre solde courant : €%zu\n\n", l->solde);
+    printf("Votre solde courant : €%d\n\n", l->solde);
     getchar();
 
     pop_back(pile);

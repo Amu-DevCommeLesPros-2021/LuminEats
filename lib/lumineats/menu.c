@@ -12,9 +12,12 @@
 
 #include <string.h>
 
-vector const* le_liste_items()
+vector le_liste_items()
 {
-    return &table_items;
+    vector index = make_vector(sizeof(cle_t), size(table_items));
+    transform(begin(&table_items), end(&table_items), begin(&index), index_de);
+
+    return index;
 }
 
 
@@ -117,9 +120,7 @@ void le_enlever_item_menu(
 
 
     // Remove the item from the DB if it is no longer referenced by any restaurants.
-    vector const* rs = le_liste_restaurants();
-    vector restaurants = make_vector(sizeof(restaurant), 0);
-    assign(&restaurants, begin(rs), end(rs));
+    vector restaurants = le_liste_restaurants();
 
     le_filtrer_restaurants_item(&restaurants, index);
 

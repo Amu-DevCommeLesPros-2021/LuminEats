@@ -20,7 +20,7 @@ vector lecture_table_restaurants(
     while(getline(&buffer, &buffer_size, fichier) != -1)
     {
         restaurant r = {0};
-        sscanf(buffer, "%zu,%[^,],%[^,],%[^,],%[^,],%[^,],%zu\n", &r.index, r.nom, r.code_postal, r.telephone, r.type, r.menu_s, &r.solde);
+        sscanf(buffer, "%zu,%[^,],%[^,],%[^,],%[^,],%[^,],%d\n", &r.index, r.nom, r.code_postal, r.telephone, r.type, r.menu_s, &r.solde);
         
         // Parse string of semicolon separated items.
         char m[TAILLE_MENU * 3];
@@ -60,7 +60,7 @@ void ecriture_table_restaurants(
             }
         }
 
-        fprintf(fichier, ",%zu\n", r->solde);
+        fprintf(fichier, ",%d\n", r->solde);
     }
 }
 
@@ -77,7 +77,7 @@ vector lecture_table_items(
     while(getline(&buffer, &buffer_size, fichier) != -1)
     {
         item i = {0};
-        sscanf(buffer, "%zu,%[^,],%[^,],%zu\n", &i.index, i.nom, i.ingredients_s, &i.prix);
+        sscanf(buffer, "%zu,%[^,],%[^,],%d\n", &i.index, i.nom, i.ingredients_s, &i.prix);
         
         // Parse string of semicolon separated ingredients.
         char g[TAILLE_INGREDIENTS * TAILLE_CHAMP_INGREDIENT];
@@ -117,7 +117,7 @@ void ecriture_table_items(
             }
         }
 
-        fprintf(fichier, ",%zu\n", i->prix);
+        fprintf(fichier, ",%d\n", i->prix);
     }
 }
 
@@ -134,7 +134,7 @@ vector lecture_table_livreurs(
     while(getline(&buffer, &buffer_size, fichier) != -1)
     {
         livreur l = {0};
-        sscanf(buffer, "%zu,%[^,],%[^,],%[^,],%zu,%zu\n", &l.index, l.nom, l.telephone, l.deplacements_s, &l.restaurant, &l.solde);
+        sscanf(buffer, "%zu,%[^,],%[^,],%[^,],%zu,%d\n", &l.index, l.nom, l.telephone, l.deplacements_s, &l.restaurant, &l.solde);
         
         // Parse string of semicolon separated postal codes.
         char d[TAILLE_DEPLACEMENTS * TAILLE_CHAMP_CODEPOSTAL];
@@ -174,7 +174,7 @@ void ecriture_table_livreurs(
             }
         }
 
-        fprintf(fichier, ",%zu,%zu\n", l->restaurant, l->solde);
+        fprintf(fichier, ",%zu,%d\n", l->restaurant, l->solde);
     }
 }
 
@@ -191,7 +191,7 @@ vector lecture_table_clients(
     while(getline(&buffer, &buffer_size, fichier) != -1)
     {
         client c = {0};
-        sscanf(buffer, "%zu,%[^,],%[^,],%[^,],%zu\n", &c.index, c.nom, c.code_postal, c.telephone, &c.solde);
+        sscanf(buffer, "%zu,%[^,],%[^,],%[^,],%d\n", &c.index, c.nom, c.code_postal, c.telephone, &c.solde);
         push_back(&clients, &c);
     }
     free(buffer);
@@ -209,6 +209,6 @@ void ecriture_table_clients(
     {
         client *c = (client*)value(j);
 
-        fprintf(fichier, "%zu,%s,%s,%s,%zu\n", c->index, c->nom, c->code_postal, c->telephone, c->solde);
+        fprintf(fichier, "%zu,%s,%s,%s,%d\n", c->index, c->nom, c->code_postal, c->telephone, c->solde);
     }
 }

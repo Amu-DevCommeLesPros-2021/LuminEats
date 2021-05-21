@@ -15,7 +15,7 @@
 #include <stdio.h>
 
 // Valeurs pour le harnais de test spécifiques à ce programme.
-int const tests_total = 203;
+int const tests_total = 301;
 int const test_column_width = 60;
 
 int main()
@@ -73,7 +73,7 @@ int main()
 
         item *i = (item*)value(begin(&items));
         TEST(i->index == 1);
-        TEST(strcmp(i->nom, "bouillabaise") == 0);
+        TEST(strcmp(i->nom, "bouillabaisse") == 0);
         TEST(strcmp(i->ingredients[0], "poissons de roche") == 0);
         TEST(strcmp(i->ingredients[1], "pommes de terre") == 0);
         TEST(strcmp(i->ingredients[2], "") == 0);
@@ -142,7 +142,7 @@ int main()
         vector clients = lecture_table_clients(test_db_clients);
         fclose(test_db_clients);
 
-        TEST(size(clients) == 3);
+        TEST(size(clients) == 4);
 
         client *c = (client*)value(begin(&clients));
         TEST(c->index == 1);
@@ -174,12 +174,12 @@ int main()
         TEST(strcmp(((restaurant*)value(begin(&table_restaurants)))->nom, "Chez Michel") == 0);
 
         TEST(size(table_items) == 7);
-        TEST(strcmp(((item*)value(begin(&table_items)))->nom, "bouillabaise") == 0);
+        TEST(strcmp(((item*)value(begin(&table_items)))->nom, "bouillabaisse") == 0);
 
         TEST(size(table_livreurs) == 3);
         TEST(strcmp(((livreur*)value(begin(&table_livreurs)))->nom, "Francois Pignon") == 0);
 
-        TEST(size(table_clients) == 3);
+        TEST(size(table_clients) == 4);
         TEST(strcmp(((client*)value(begin(&table_clients)))->nom, "Francoise Perrin") == 0);
 
         mkdir("build/test-db/ecriture", 0755);
@@ -521,13 +521,13 @@ int main()
         ouverture_db("build/test-db");
 
         // Tests de filtre par type. 
-        vector const* rs = le_liste_restaurants();
-        vector restaurants = make_vector(sizeof(restaurant), 0);
-        assign(&restaurants, begin(rs), end(rs));
+        vector rs = le_liste_restaurants();
+        vector restaurants = make_vector(sizeof(cle_t), 0);
+        assign(&restaurants, begin(&rs), end(&rs));
         le_filtrer_restaurants_type(&restaurants, "provencal");
         
         TEST(size(restaurants) == 1);
-        TEST(strcmp(((restaurant*)value(at(&restaurants, 0)))->nom, "Chez Michel") == 0);
+        TEST(strcmp(le_cherche_restaurant_i(*(cle_t*)value(at(&restaurants, 0)))->nom, "Chez Michel") == 0);
 
         // Re-filtrer avec le même type ne devrait rien changer.
         le_filtrer_restaurants_type(&restaurants, "provencal");
@@ -542,68 +542,70 @@ int main()
         // Tests par possibilité de livraison.
 
         // Test de qui peut livrer dans le 13001.
-        assign(&restaurants, begin(rs), end(rs));
+        assign(&restaurants, begin(&rs), end(&rs));
         le_filtrer_restaurants_livraison(&restaurants, "13001");
 
         TEST(size(restaurants) == 2);
-        TEST(strcmp(((restaurant*)value(at(&restaurants, 0)))->nom, "Chez Michel") == 0);
-        TEST(strcmp(((restaurant*)value(at(&restaurants, 1)))->nom, "Le Veg") == 0);
+        TEST(strcmp(le_cherche_restaurant_i(*(cle_t*)value(at(&restaurants, 0)))->nom, "Chez Michel") == 0);
+        TEST(strcmp(le_cherche_restaurant_i(*(cle_t*)value(at(&restaurants, 1)))->nom, "Le Veg") == 0);
 
         // Test de qui peut livrer dans le 13002.
-        assign(&restaurants, begin(rs), end(rs));
+        assign(&restaurants, begin(&rs), end(&rs));
         le_filtrer_restaurants_livraison(&restaurants, "13002");
         
         TEST(size(restaurants) == 1);
-        TEST(strcmp(((restaurant*)value(at(&restaurants, 0)))->nom, "Chez Michel") == 0);
+        TEST(strcmp(le_cherche_restaurant_i(*(cle_t*)value(at(&restaurants, 0)))->nom, "Chez Michel") == 0);
 
         // Test de qui peut livrer dans le 13005.
-        assign(&restaurants, begin(rs), end(rs));
+        assign(&restaurants, begin(&rs), end(&rs));
         le_filtrer_restaurants_livraison(&restaurants, "13005");
         
         TEST(size(restaurants) == 2);
-        TEST(strcmp(((restaurant*)value(at(&restaurants, 0)))->nom, "Chez Michel") == 0);
-        TEST(strcmp(((restaurant*)value(at(&restaurants, 1)))->nom, "Le Veg") == 0);
+        TEST(strcmp(le_cherche_restaurant_i(*(cle_t*)value(at(&restaurants, 0)))->nom, "Chez Michel") == 0);
+        TEST(strcmp(le_cherche_restaurant_i(*(cle_t*)value(at(&restaurants, 1)))->nom, "Le Veg") == 0);
 
         // Test de qui peut livrer dans le 13009.
-        assign(&restaurants, begin(rs), end(rs));
+        assign(&restaurants, begin(&rs), end(&rs));
         le_filtrer_restaurants_livraison(&restaurants, "13009");
         
         TEST(size(restaurants) == 3);
-        TEST(strcmp(((restaurant*)value(at(&restaurants, 0)))->nom, "Chez Michel") == 0);
-        TEST(strcmp(((restaurant*)value(at(&restaurants, 1)))->nom, "Le Veg") == 0);
-        TEST(strcmp(((restaurant*)value(at(&restaurants, 2)))->nom, "Joe's International House of Pancakes") == 0);
+        TEST(strcmp(le_cherche_restaurant_i(*(cle_t*)value(at(&restaurants, 0)))->nom, "Chez Michel") == 0);
+        TEST(strcmp(le_cherche_restaurant_i(*(cle_t*)value(at(&restaurants, 1)))->nom, "Le Veg") == 0);
+        TEST(strcmp(le_cherche_restaurant_i(*(cle_t*)value(at(&restaurants, 2)))->nom, "Joe's International House of Pancakes") == 0);
 
         // Test de qui peut livrer dans le 13010.
-        assign(&restaurants, begin(rs), end(rs));
+        assign(&restaurants, begin(&rs), end(&rs));
         le_filtrer_restaurants_livraison(&restaurants, "13010");
         
         TEST(size(restaurants) == 1);
-        TEST(strcmp(((restaurant*)value(at(&restaurants, 0)))->nom, "Joe's International House of Pancakes") == 0);
+        TEST(strcmp(le_cherche_restaurant_i(*(cle_t*)value(at(&restaurants, 0)))->nom, "Joe's International House of Pancakes") == 0);
 
 
         // Test négatifs.
-        assign(&restaurants, begin(rs), end(rs));
+        assign(&restaurants, begin(&rs), end(&rs));
         le_filtrer_restaurants_livraison(&restaurants, "13012");
         
         TEST(size(restaurants) == 0);
 
 
         // Test de deux filtres.
-        assign(&restaurants, begin(rs), end(rs));
+        assign(&restaurants, begin(&rs), end(&rs));
         le_filtrer_restaurants_livraison(&restaurants, "13009");
         le_filtrer_restaurants_type(&restaurants, "americain");
         
         TEST(size(restaurants) == 1);
-        TEST(strcmp(((restaurant*)value(at(&restaurants, 0)))->nom, "Joe's International House of Pancakes") == 0);
+        TEST(strcmp(le_cherche_restaurant_i(*(cle_t*)value(at(&restaurants, 0)))->nom, "Joe's International House of Pancakes") == 0);
 
 
-        assign(&restaurants, begin(rs), end(rs));
+        assign(&restaurants, begin(&rs), end(&rs));
         le_filtrer_restaurants_livraison(&restaurants, "13001");
         le_filtrer_restaurants_type(&restaurants, "americain");
         
         TEST(size(restaurants) == 0);
 
         destroy(&restaurants);
+        destroy(&rs);
+
         fermeture_db("build/test-db/ecriture");
     }
 
@@ -612,8 +614,9 @@ int main()
     {
         ouverture_db("build/test-db/items");
 
-        vector const* const items = le_liste_items();
-        TEST(size(*items) == 0);
+        vector items = le_liste_items();
+        TEST(size(items) == 0);
+        destroy(&items);
 
         cle_t const ixi1 = le_creer_item("croissant", "beurre;farine;oeuf;levure", 1);
         TEST(ixi1 != 0);
@@ -626,7 +629,9 @@ int main()
         TEST(strcmp(i1->ingredients[4], "") == 0);
         TEST(i1->prix == 1);
 
-        TEST(size(*items) == 1);
+        items = le_liste_items();
+        TEST(size(items) == 1);
+        destroy(&items);
 
         // Il est possible de créer plus d'un item avec le même nom.
         cle_t const ixi2 = le_creer_item("croissant", "margarine;farine;oeuf;levure", 1);
@@ -635,7 +640,9 @@ int main()
         TEST(strcmp(i2->nom, "croissant") == 0);
         TEST(strcmp(i2->ingredients[0], "margarine") == 0);
 
-        TEST(size(*items) == 2);
+        items = le_liste_items();
+        TEST(size(items) == 2);
+        destroy(&items);
 
         // Ajoute des items au menu d'un restaurant.
         cle_t const ixr1 = le_creer_compte_restaurateur("Café de la gare", "13001", "04 01 01 01 01", "boulangerie");
@@ -665,7 +672,7 @@ int main()
         TEST(strcmp(r2->menu_s, "1;2") == 0);
 
 
-        // Si on enlève un item d'un menu, l'item existe encore puisqu'il fait toujours parti d'au moins un menu.
+        // Si on enlève cet item d'un menu, l'item existe encore puisqu'il fait toujours parti d'au moins un menu.
         le_enlever_item_menu(ixi1, ixr1);
         r1 = le_cherche_restaurant_i(ixr1);
 
@@ -673,15 +680,407 @@ int main()
         TEST(r1->menu[1] == 0);
         TEST(strcmp(r1->menu_s, "2") == 0);
 
-        TEST(size(*items) == 2);
+        items = le_liste_items();
+        TEST(size(items) == 2);
+        destroy(&items);
 
-        // Si on enlève un item de tous les menus, l'item n'apparait plus dans le BdD.
+        // Si on enlève cet item de tous les menus, l'item n'apparait plus dans la BdD.
         le_enlever_item_menu(ixi1, ixr2);
 
-        TEST(size(*items) == 1);
+        items = le_liste_items();
+        TEST(size(items) == 1);
+        destroy(&items);
 
         fermeture_db("build/test-db/items");
     }
 
-    return 0;
+    // Tests des filtres pour items de menu.
+    {
+        ouverture_db("build/test-db");
+
+        // Tests de filtre par type. 
+        vector is = le_liste_items();
+        vector items = make_vector(sizeof(cle_t), 0);
+        assign(&items, begin(&is), end(&is));
+
+
+        // Filtrer par type 'provencal' devrait nous donner tous les items de 'Chez Michel'.
+        le_filtrer_items_type(&items, "provencal");
+
+        TEST(size(items) == 3);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "bouillabaisse") == 0);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 1)))->nom, "ratatouille") == 0);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 2)))->nom, "salade nicoise") == 0);
+
+        // Re-filtrer avec le même type ne devrait rien changer.
+        le_filtrer_items_type(&items, "provencal");
+
+        TEST(size(items) == 3);
+
+        // Re-filtrer avec le type 'vegetarien' devrait nous laisser avec la ratatouille qui est aussi offerte par 'Le Veg'. 
+        le_filtrer_items_type(&items, "vegetarien");
+
+        TEST(size(items) == 1);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "ratatouille") == 0);
+
+        // Re-re-filtrer avec 'americain' ne devrait plus rien laisser de disponible.
+        le_filtrer_items_type(&items, "americain");
+
+        TEST(size(items) == 0);
+
+
+        // Filtrer par restaurant.
+        assign(&items, begin(&is), end(&is));
+
+        le_filtrer_items_restaurant(&items, "Chez Michel");
+
+        TEST(size(items) == 3);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "bouillabaisse") == 0);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 1)))->nom, "ratatouille") == 0);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 2)))->nom, "salade nicoise") == 0);
+
+        // Re-filtrer avec le même restaurant ne devrait rien changer.
+        le_filtrer_items_restaurant(&items, "Chez Michel");
+
+        TEST(size(items) == 3);
+
+        // En pratique, j'imagine que l'application ne va pas offrir de «re-filtrer» par restaurant.
+        // Ce serait d'une utilité un peu incongrue. 
+
+        // En théorie, on s'attendrait à ce que re-filtrer avec un autre restaurant ne 
+        // laisse rien mais ce n'est pas ce qui va se passer ici car la fonction ne peut pas
+        // savoir qu'on a déjà filtrer une première fois. Re-filtrer nous donne donc comme 
+        // résultat une intersection des items offert par plusieurs restaurants.
+
+        le_filtrer_items_restaurant(&items, "Le Veg");
+
+        TEST(size(items) == 1);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "ratatouille") == 0);
+
+
+        // Filtrer par prix.
+        assign(&items, begin(&is), end(&is));
+
+        // Devrait garder tous les items car aucun ne dépasse 100€.
+        le_filtrer_items_prix(&items, 100);
+
+        TEST(size(items) == 7);
+
+        // Re-filter avec 20€ comme plafond devrait enelver la bouillabaisse.
+        le_filtrer_items_prix(&items, 20);
+
+        TEST(size(items) == 6);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "taco") == 0);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 5)))->nom, "petit-dej du champion") == 0);
+
+        // Re-re-filter avec 9€ comme plafond ne devrait plus laisser que les trois items les moins chers.
+        le_filtrer_items_prix(&items, 9);
+
+        TEST(size(items) == 3);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "taco") == 0);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 1)))->nom, "houmous") == 0);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 2)))->nom, "pancakes aux myrtilles") == 0);
+
+        // Re-re-re-filtrer avec 4€ comme plafond ne devrait plus laisser que le taco.
+        le_filtrer_items_prix(&items, 4);
+
+        TEST(size(items) == 1);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "taco") == 0);
+
+        // Filtrer la liste originale avec 4€ comme plafond ne devrait laisser que le taco.
+        assign(&items, begin(&is), end(&is));
+        le_filtrer_items_prix(&items, 4);
+
+        TEST(size(items) == 1);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "taco") == 0);
+
+
+        // Re-filtrer avec 0€ ne devrait plus rien laisser.
+        le_filtrer_items_prix(&items, 0);
+
+        TEST(size(items) == 0);
+
+
+        // Tests par possibilité de livraison.
+
+        // Test des items qui peuvent être livrés dans le 13001.
+        assign(&items, begin(&is), end(&is));
+
+        le_filtrer_items_livraison(&items, "13001");
+
+        TEST(size(items) == 5);
+        // L'ordre n'est évidement pas strictement important mais il sera dans l'ordre de la table des items.
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "bouillabaisse") == 0);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 4)))->nom, "salade nicoise") == 0);
+
+        // Test des items qui peuvent être livrés dans le 13002.
+        assign(&items, begin(&is), end(&is));
+
+        le_filtrer_items_livraison(&items, "13002");
+        
+        TEST(size(items) == 3);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "bouillabaisse") == 0);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 2)))->nom, "salade nicoise") == 0);
+
+        // Test des items qui peuvent être livrés dans le 13005.
+        assign(&items, begin(&is), end(&is));
+        le_filtrer_items_livraison(&items, "13005");
+
+        TEST(size(items) == 5);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "bouillabaisse") == 0);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 4)))->nom, "salade nicoise") == 0);
+
+        // Test des items qui peuvent être livrés dans le 13009.
+        assign(&items, begin(&is), end(&is));
+        le_filtrer_items_livraison(&items, "13009");
+
+        TEST(size(items) == 7);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "bouillabaisse") == 0);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 6)))->nom, "petit-dej du champion") == 0);
+
+        // Test des items qui peuvent être livrés dans le 13010.
+        assign(&items, begin(&is), end(&is));
+        le_filtrer_items_livraison(&items, "13010");
+
+        TEST(size(items) == 2);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "pancakes aux myrtilles") == 0);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 1)))->nom, "petit-dej du champion") == 0);
+
+        // Test des items qui peuvent être livrés dans le 13012.
+        assign(&items, begin(&is), end(&is));
+        le_filtrer_items_livraison(&items, "13012");
+
+        TEST(size(items) == 0);
+
+
+        // Tests de plusieurs filtres.
+
+        // Quel items coûtant 9€ ou mins peuvent être livré dans le 13009 ?
+        assign(&items, begin(&is), end(&is));
+        le_filtrer_items_livraison(&items, "13005");
+        le_filtrer_items_prix(&items, 9);
+
+        TEST(size(items) == 2);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "taco") == 0);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 1)))->nom, "houmous") == 0);
+
+        // Quels items sont de cuisine 'américaine' et peuvent coûte moins de 10€ ?
+        assign(&items, begin(&is), end(&is));
+        le_filtrer_items_prix(&items, 9);
+        le_filtrer_items_type(&items, "americain");
+
+        TEST(size(items) == 1);
+        TEST(strcmp(le_cherche_item_i(*(cle_t*)value(at(&items, 0)))->nom, "pancakes aux myrtilles") == 0);
+
+        destroy(&items);
+        destroy(&is);
+
+        fermeture_db("build/test-db");
+    }
+
+    // Tests de commandes.
+    mkdir("build/test-db/commande", 0755);
+    {
+        ouverture_db("build/test-db");
+
+        vector items = make_vector(sizeof(cle_t), 0);
+        vector non_livrables = make_vector(sizeof(cle_t), 0);
+        vector depassent_solde = make_vector(sizeof(cle_t), 0);
+
+        cle_t ixi;
+        // Une commande simple et valide.
+        ixi = 6; push_back(&items, &ixi);
+        ixi = 7; push_back(&items, &ixi);
+
+        TEST(le_valider_commande(2, &items, &non_livrables, &depassent_solde) == true);
+        TEST(size(items) == 2);
+        TEST(size(non_livrables) == 0);
+        TEST(size(depassent_solde) == 0);
+
+        // Une commande qui ne contient que des items qui ne peuvent être livrés.
+        clear(&items);
+        ixi = 1; push_back(&items, &ixi);
+        ixi = 2; push_back(&items, &ixi);
+        ixi = 3; push_back(&items, &ixi);
+        ixi = 4; push_back(&items, &ixi);
+        ixi = 5; push_back(&items, &ixi);
+
+        TEST(le_valider_commande(2, &items, &non_livrables, &depassent_solde) == false);
+        TEST(size(items) == 0);
+        TEST(size(non_livrables) == 5);
+        TEST(*(cle_t*)value(at(&non_livrables, 0)) == 1);
+        TEST(*(cle_t*)value(at(&non_livrables, 4)) == 5);
+        TEST(size(depassent_solde) == 0);
+
+        // Une commande qui va dépasser le solde disponible.
+        clear(&items);
+        clear(&non_livrables);
+        clear(&depassent_solde);
+        ixi = 6; push_back(&items, &ixi);
+        ixi = 7; push_back(&items, &ixi);
+        ixi = 6; push_back(&items, &ixi);
+        ixi = 7; push_back(&items, &ixi);
+        ixi = 6; push_back(&items, &ixi);
+        ixi = 7; push_back(&items, &ixi);   // À partir de cet item, le total dépasse le solde disponible.
+        ixi = 6; push_back(&items, &ixi);
+        ixi = 7; push_back(&items, &ixi);
+
+        TEST(le_valider_commande(2, &items, &non_livrables, &depassent_solde) == false);
+        TEST(size(items) == 5);
+        TEST(size(non_livrables) == 0);
+        TEST(size(depassent_solde) == 3);
+        TEST(*(cle_t*)value(at(&depassent_solde, 0)) == 7);
+        TEST(*(cle_t*)value(at(&depassent_solde, 1)) == 6);
+        TEST(*(cle_t*)value(at(&depassent_solde, 2)) == 7);
+
+        // Une commande qui contient des items dont seulement certains peuvent être livrés et
+        // parmi ceux-ci, des items qui vont dépasser le solde disponible.
+        clear(&items);
+        clear(&non_livrables);
+        clear(&depassent_solde);
+        ixi = 1; push_back(&items, &ixi);
+        ixi = 2; push_back(&items, &ixi);
+        ixi = 3; push_back(&items, &ixi);
+        ixi = 4; push_back(&items, &ixi);
+        ixi = 5; push_back(&items, &ixi);
+        ixi = 6; push_back(&items, &ixi);
+        ixi = 7; push_back(&items, &ixi);
+
+        TEST(le_valider_commande(3, &items, &non_livrables, &depassent_solde) == false);
+        TEST(size(items) == 1);
+        TEST(*(cle_t*)value(at(&items, 0)) == 6);
+
+        TEST(size(non_livrables) == 5);
+        TEST(*(cle_t*)value(at(&non_livrables, 0)) == 1);
+        TEST(*(cle_t*)value(at(&non_livrables, 4)) == 5);
+
+        TEST(size(depassent_solde) == 1);
+        TEST(*(cle_t*)value(at(&depassent_solde, 0)) == 7);
+
+
+        // Une commande invalide dû à un trop petit solde, devient valide après 
+        // créditer suffisament d'euros au solde.
+        // De plus, ces items viendront de deux restaurants à la fois.
+        clear(&items);
+        clear(&non_livrables);
+        clear(&depassent_solde);
+        ixi = 1; push_back(&items, &ixi);
+        ixi = 2; push_back(&items, &ixi);
+        ixi = 3; push_back(&items, &ixi);
+        ixi = 4; push_back(&items, &ixi);
+        ixi = 5; push_back(&items, &ixi);
+
+        TEST(le_valider_commande(1, &items, &non_livrables, &depassent_solde) == false);
+        TEST(size(items) == 0);
+        TEST(size(non_livrables) == 0);
+        TEST(size(depassent_solde) == 5);
+        TEST(*(cle_t*)value(at(&depassent_solde, 0)) == 1);
+        TEST(*(cle_t*)value(at(&depassent_solde, 4)) == 5);
+
+        le_crediter_solde_client(1, 100);
+        clear(&items);
+        clear(&non_livrables);
+        clear(&depassent_solde);
+        ixi = 1; push_back(&items, &ixi);
+        ixi = 2; push_back(&items, &ixi);
+        ixi = 3; push_back(&items, &ixi);
+        ixi = 4; push_back(&items, &ixi);
+        ixi = 5; push_back(&items, &ixi);
+
+        TEST(le_valider_commande(1, &items, &non_livrables, &depassent_solde) == true);
+        TEST(size(items) == 5);
+        TEST(*(cle_t*)value(at(&items, 0)) == 1);
+        TEST(*(cle_t*)value(at(&items, 4)) == 5);
+        TEST(size(non_livrables) == 0);
+        TEST(size(depassent_solde) == 0);
+
+        destroy(&items);
+        destroy(&non_livrables);
+        destroy(&depassent_solde);
+
+        fermeture_db("build/test-db");
+    }
+
+    // Tests des commandes et débit et crédit des soldes.
+    // Pour une livraison, un livreur gagne 3 euros, soustraits du total.
+    {
+        ouverture_db("build/test-db");
+
+        vector items = make_vector(sizeof(cle_t), 0);
+        cle_t ixi;
+
+        // Une commande remplie par un seul restaurant (3) et livrée par un seul livreur (3).
+        ixi = 6; push_back(&items, &ixi);
+        ixi = 7; push_back(&items, &ixi);
+        int total_commande = le_total_commande(&items);
+
+        le_crediter_solde_client(2, total_commande);
+        int solde_client_2_avant = le_cherche_client_i(2)->solde;
+        int solde_livreur_3_avant = le_cherche_livreur_i(3)->solde;
+        int solde_restaurant_3_avant = le_cherche_restaurant_i(3)->solde;
+
+        le_passer_commande(2, &items);
+
+        TEST(solde_client_2_avant - total_commande == le_cherche_client_i(2)->solde);
+        TEST(solde_livreur_3_avant + 3 == le_cherche_livreur_i(3)->solde);
+        TEST(solde_restaurant_3_avant + total_commande - 3 == le_cherche_restaurant_i(3)->solde);
+
+
+        // Une commande remplie par deux restaurants (1 et 2) et livrée par un seul livreur (2).
+        // Le livreur touchera deux commissions de trois euros chacune.
+        clear(&items);
+        ixi = 1; push_back(&items, &ixi);
+        ixi = 2; push_back(&items, &ixi);
+        ixi = 3; push_back(&items, &ixi);
+        ixi = 4; push_back(&items, &ixi);
+        ixi = 5; push_back(&items, &ixi);
+        total_commande = le_total_commande(&items);
+
+        le_crediter_solde_client(1, total_commande);
+        int solde_client_1_avant = le_cherche_client_i(1)->solde;
+        int solde_restaurant_1_avant = le_cherche_restaurant_i(1)->solde;
+        int solde_restaurant_2_avant = le_cherche_restaurant_i(2)->solde;
+        int solde_livreur_2_avant = le_cherche_livreur_i(2)->solde;
+
+        le_passer_commande(1, &items);
+
+        TEST(solde_client_1_avant - total_commande == le_cherche_client_i(1)->solde);
+        TEST(solde_livreur_2_avant + 3 + 3 == le_cherche_livreur_i(2)->solde);
+        // Le reste du total revient à cahque restaurant, dépendement de ce qu'il a fourni pour la commande.
+        TEST(solde_restaurant_1_avant + 47 == le_cherche_restaurant_i(1)->solde);
+        TEST(solde_restaurant_2_avant + 7 == le_cherche_restaurant_i(2)->solde);
+
+
+        // Une commande remplie par deux restaurants (2, 3) et livrée par deux livreurs (2, 3).
+        // Chaque livreur touchera une commission de trois euros.
+        clear(&items);
+        ixi = 2; push_back(&items, &ixi);
+        ixi = 3; push_back(&items, &ixi);
+        ixi = 6; push_back(&items, &ixi);
+        ixi = 7; push_back(&items, &ixi);
+        total_commande = le_total_commande(&items);
+
+        le_crediter_solde_client(4, total_commande);
+        int solde_client_4_avant = le_cherche_client_i(4)->solde;
+            solde_restaurant_2_avant = le_cherche_restaurant_i(2)->solde;
+            solde_restaurant_3_avant = le_cherche_restaurant_i(3)->solde;
+            solde_livreur_2_avant = le_cherche_livreur_i(2)->solde;
+            solde_livreur_3_avant = le_cherche_livreur_i(3)->solde;
+
+        le_passer_commande(4, &items);
+
+        TEST(solde_client_4_avant - total_commande == le_cherche_client_i(4)->solde);
+        TEST(solde_livreur_2_avant + 3 == le_cherche_livreur_i(2)->solde);
+        TEST(solde_livreur_3_avant + 3 == le_cherche_livreur_i(3)->solde);
+        // Le reste du total revient à chaque restaurant, dépendamment de ce qu'il a fourni pour la commande.
+        TEST(solde_restaurant_2_avant + 7 == le_cherche_restaurant_i(2)->solde);
+        TEST(solde_restaurant_3_avant + 17 == le_cherche_restaurant_i(3)->solde);
+
+        destroy(&items);
+
+        fermeture_db("build/test-db");
+    }
+
+
+    return tests_total - tests_successful;
 }

@@ -165,7 +165,7 @@ void restaurateur_modification_menu(
                 for(size_t c = 0; c != TAILLE_MENU && menu[c] != 0; ++c)
                 {
                     item const* const i = le_cherche_item_i(menu[c]);
-                    printf("\n- %s (%s) %zu", i->nom, i->ingredients_s, i->prix);
+                    printf("\n- %s (%s) %d", i->nom, i->ingredients_s, i->prix);
                 }
                 getchar();
             }
@@ -191,10 +191,10 @@ void restaurateur_modification_menu(
             {
                 cle_t const* menu = le_cherche_restaurant(nom_utilisateur)->menu;
                 
-                vector const* const items = le_liste_items();
-                for(iterator i = begin(items), e = end(items); compare(i, e) != 0; increment(&i, 1))
+                vector items = le_liste_items();
+                for(iterator i = begin(&items), e = end(&items); compare(i, e) != 0; increment(&i, 1))
                 {
-                    item const* p = value(i);
+                    item const* const p = le_cherche_item_i(*(cle_t*)value(i));
 
                     // Cherche si l'item est déjà présent dans le menu.
                     bool present = false;
@@ -255,7 +255,7 @@ printf("\n\
 
     restaurant const* const r = le_cherche_restaurant(nom_utilisateur);
 
-    printf("Votre solde courant : €%zu\n\n", r->solde);
+    printf("Votre solde courant : €%d\n\n", r->solde);
     getchar();
 
     pop_back(pile);

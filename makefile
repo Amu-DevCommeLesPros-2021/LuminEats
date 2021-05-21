@@ -43,6 +43,7 @@ build/liblogger.a: lib/logger/logger.c lib/logger/logger.h | build
 
 build/liblumineats.a: \
  lib/lumineats/accounts.c lib/lumineats/accounts.h \
+ lib/lumineats/commande.c lib/lumineats/commande.h \
  lib/lumineats/filter.c lib/lumineats/filter.h \
  lib/lumineats/lumineats.c lib/lumineats/lumineats.h \
  lib/lumineats/menu.c lib/lumineats/menu.h \
@@ -50,12 +51,13 @@ build/liblumineats.a: \
  lib/lumineats/search.c lib/lumineats/search.h \
  lib/algorithm/algorithm.h lib/logger/logger.h lib/vector/api.h lib/vector/types.h | build
 	$(CC) $(CFLAGS) -I lib -c lib/lumineats/accounts.c -o build/accounts.o
+	$(CC) $(CFLAGS) -I lib -c lib/lumineats/commande.c -o build/commande.o
 	$(CC) $(CFLAGS) -I lib -c lib/lumineats/filter.c -o build/filter.o
 	$(CC) $(CFLAGS) -I lib -c lib/lumineats/lumineats.c -o build/lumineats.o
 	$(CC) $(CFLAGS) -I lib -c lib/lumineats/menu.c -o build/menu.o
 	$(CC) $(CFLAGS) -I lib -c lib/lumineats/predicates.c -o build/predicates.o
 	$(CC) $(CFLAGS) -I lib -c lib/lumineats/search.c -o build/search.o
-	$(AR) $(ARFLAGS) build/liblumineats.a build/accounts.o build/filter.o build/lumineats.o build/menu.o build/predicates.o build/search.o
+	$(AR) $(ARFLAGS) build/liblumineats.a build/accounts.o build/commande.o build/filter.o build/lumineats.o build/menu.o build/predicates.o build/search.o
 
 # Programme de tests.
 build/test: build/libalgorithm.a build/libdb.a build/liblogger.a build/liblumineats.a build/libvector.a test/main.c | build
@@ -64,7 +66,7 @@ build/test: build/libalgorithm.a build/libdb.a build/liblogger.a build/liblumine
 # Application.
 build/lumineats: \
  bin/ecrans/client.c \
- bin/ecrans/connexion_creation_suppression.c \
+ bin/ecrans/connexion_creation.c \
  bin/ecrans/ecrans.c \
  bin/ecrans/ecrans.h \
  bin/ecrans/initial.c \
@@ -75,7 +77,7 @@ build/lumineats: \
  bin/prompt.h \
  build/libalgorithm.a build/libdb.a build/liblogger.a build/liblumineats.a build/libvector.a | build
 	cp bin/*.csv build
-	$(CC) $(CFLAGS) bin/ecrans/client.c bin/ecrans/connexion_creation_suppression.c bin/ecrans/ecrans.c bin/ecrans/initial.c bin/ecrans/livreur.c bin/ecrans/restaurant.c bin/main.c bin/prompt.c -I bin -I lib -L build -l lumineats -l algorithm -l db -l logger -l vector -o build/lumineats
+	$(CC) $(CFLAGS) bin/ecrans/client.c bin/ecrans/connexion_creation.c bin/ecrans/ecrans.c bin/ecrans/initial.c bin/ecrans/livreur.c bin/ecrans/restaurant.c bin/main.c bin/prompt.c -I bin -I lib -L build -l lumineats -l algorithm -l db -l logger -l vector -o build/lumineats
 
 # S'assure de l'existence tout les programmes finaux (application, test, etc.)
 # Par exemple : all: build/test build/appli
